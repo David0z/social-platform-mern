@@ -1,0 +1,16 @@
+@import '../../variables';
+
+label {
+  display: block;
+}
+
+input {
+  border: none;
+  height: 2.5rem;
+  width: 24rem;
+  border-radius: $border-reg;
+
+  &:focus {
+    outline: .2rem solid $primary;
+  }
+}

@@ -1,0 +1,21 @@
+@import "../../variables";
+@import "../../templates";
+
+.signup {
+  width: 100%;
+  display: grid;
+  place-items: center;
+
+  &__title {
+    margin: 2rem 0;
+    font-weight: 400;
+  }
+
+  .form {
+    @extend %form;
+
+    &__button {
+      @extend %form-btn;
+    }
+  }
+}

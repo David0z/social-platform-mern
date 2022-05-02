@@ -1,0 +1,11 @@
+@import '../../variables';
+
+.button {
+  width: max-content;
+  border-radius: $border-reg;
+  border: none;
+  
+  &:hover {
+    cursor: pointer;
+  }
+}
