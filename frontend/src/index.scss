@@ -1,5 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 @import 'variables';
 
 body {
   margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+.routes-wrapper {
+  margin-top: 3.28rem;
 }

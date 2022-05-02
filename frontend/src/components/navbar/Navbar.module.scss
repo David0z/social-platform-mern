@@ -1,0 +1,47 @@
+@import '../../variables';
+
+.navbar {
+  box-sizing: border-box;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background-color: $primary;
+  padding: 0 2rem;
+
+  &__logo {
+    width: 11rem;
+    height: 100%;
+    path {
+      fill: $text;
+    }
+  }
+
+  &__buttons-wrapper {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+
+    &--button {
+      color: $text;
+      font-size: 1.1rem;
+      background-color: transparent;
+      border: .18rem solid $text;
+      border-radius: 1.5rem;
+      padding: .1rem 1rem;
+
+      &:hover {
+        background-color: $text;
+        color: $primary;
+        cursor: pointer;
+      }
+    }
+  }
+
+}

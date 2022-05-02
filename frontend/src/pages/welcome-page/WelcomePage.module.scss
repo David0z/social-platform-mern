@@ -1,0 +1,51 @@
+@import '../../variables';
+
+.main {
+  position: relative;
+  display: grid;
+  place-items: center;
+
+  .watermark {
+    position: absolute;
+    top: 2rem;
+    left: 3rem;
+  }
+
+  &__wrapper {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+
+    .logo {
+
+    }
+
+    .bio {
+      margin-top: 2rem;
+      width: 50%;
+      align-self: flex-end;
+    
+      p {
+        margin: 0;
+        color: $primary;
+        font-size: 2rem;
+        text-align: justify;
+      }
+
+      button {
+        margin-top: 2rem;
+        font-size: 2rem;
+        color: $text;
+        background-color: $primary;
+        border: none;
+        border-radius: .8rem;
+        padding: .5rem 2rem;
+
+        &:hover {
+          background-color: $secondary;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
