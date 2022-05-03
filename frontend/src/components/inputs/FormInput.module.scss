@@ -4,11 +4,17 @@ label {
   display: block;
 }
 
+.custom-label {
+  display: inline-block;
+  margin: 0 0 0 1rem;
+}
+
 input {
   border: none;
   height: 2.5rem;
   width: 24rem;
   border-radius: $border-reg;
+  font-size: 1.2rem;
 
   &:focus {
     outline: .2rem solid $primary;

@@ -15,16 +15,21 @@ const Login = () => {
     }
   });
 
+  const handleFormSubmit = (e) => {
+    e.preventDefault()
+    console.log('Form Submited');
+  }
+
   return (
     <div className={styles.login}>
       <h1 className={styles.login__title}>Login</h1>
-      <div className={styles.form}>
+      <form className={styles.form} onSubmit={handleFormSubmit}>
         <FormInput required type='email' name="email" label="Email" value={formValues.email.value} onChange={handleFormChange} />
         <FormInput required type='password' name="password" label="Password" value={formValues.password.value} onChange={handleFormChange} />
-        <Button className={styles.form__button} onClick={() => console.log('hello')}>
+        <Button className={styles.form__button}>
           LOGIN
         </Button>
-      </div>
+      </form>
     </div>
   )
 }
