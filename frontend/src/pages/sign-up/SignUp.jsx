@@ -1,12 +1,14 @@
+import { useEffect } from "react";
 import Button from "../../components/button/Button";
 import FormInput from "../../components/inputs/FormInput";
 import useForm from "../../hooks/useForm";
 import styles from "./SignUp.module.scss";
-import { useDispatch } from 'react-redux'
-import { signup } from '../../store/user/userSlice'
+import { useDispatch, useSelector } from "react-redux";
+import { signup, userActions } from "../../store/user/userSlice";
 
 const SignUp = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const { isError, errorMessages } = useSelector((state) => state.user);
 
   const { formValues, handleFormChange } = useForm({
     email: {
@@ -28,19 +30,25 @@ const SignUp = () => {
   });
 
   const handleFormSubmit = (e) => {
-    e.preventDefault()
-    console.log('Form Submited');
+    e.preventDefault();
+    console.log("Form Submited");
 
-    let userData = {}
+    let userData = {};
 
     for (const key in formValues) {
-      userData[key] = formValues[key].value
+      userData[key] = formValues[key].value;
     }
 
     // console.log(userData);
 
-    dispatch(signup(userData))
-  }
+    dispatch(signup(userData));
+  };
+
+  useEffect(() => {
+    return () => {
+      dispatch(userActions.resetErrors());
+    };
+  }, []);
 
   return (
     <div className={styles.signup}>
@@ -53,6 +61,8 @@ const SignUp = () => {
           label="Email"
           value={formValues.email.value}
           onChange={handleFormChange}
+          isError={isError}
+          errorMessage={errorMessages.email}
         />
         <FormInput
           required
@@ -61,6 +71,8 @@ const SignUp = () => {
           label="Password"
           value={formValues.password.value}
           onChange={handleFormChange}
+          isError={isError}
+          errorMessage={errorMessages.password}
         />
         <FormInput
           required
@@ -68,6 +80,8 @@ const SignUp = () => {
           label="Nickname"
           value={formValues.name.value}
           onChange={handleFormChange}
+          isError={isError}
+          errorMessage={errorMessages.name}
         />
         <FormInput
           type="file"
@@ -76,13 +90,9 @@ const SignUp = () => {
           value={formValues.photo.value}
           onChange={handleFormChange}
           customButton={true}
-          customButtonStyle={styles['form__file-btn']}
+          customButtonStyle={styles["form__file-btn"]}
         />
-        <Button
-          className={styles.form__button}
-        >
-          SIGN UP
-        </Button>
+        <Button className={styles.form__button}>SIGN UP</Button>
       </form>
     </div>
   );

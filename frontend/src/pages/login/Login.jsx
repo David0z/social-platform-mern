@@ -1,12 +1,14 @@
-import { useDispatch } from "react-redux";
-import { login } from "../../store/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { login, userActions } from "../../store/user/userSlice";
 import Button from "../../components/button/Button";
 import FormInput from "../../components/inputs/FormInput";
 import useForm from "../../hooks/useForm";
 import styles from "./Login.module.scss";
+import { useEffect } from "react";
 
 const Login = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const { isError, errorMessages } = useSelector((state) => state.user);
 
   const { formValues, handleFormChange } = useForm({
     email: {
@@ -23,14 +25,20 @@ const Login = () => {
     e.preventDefault();
     console.log("Form Submited");
 
-    let userData = {}
+    let userData = {};
 
     for (const key in formValues) {
-      userData[key] = formValues[key].value
+      userData[key] = formValues[key].value;
     }
 
-    dispatch(login(userData))
+    dispatch(login(userData));
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(userActions.resetErrors());
+    };
+  }, []);
 
   return (
     <div className={styles.login}>
@@ -43,6 +51,8 @@ const Login = () => {
           label="Email"
           value={formValues.email.value}
           onChange={handleFormChange}
+          isError={isError}
+          errorMessage={errorMessages.email}
         />
         <FormInput
           required
@@ -51,6 +61,8 @@ const Login = () => {
           label="Password"
           value={formValues.password.value}
           onChange={handleFormChange}
+          isError={isError}
+          errorMessage={errorMessages.password}
         />
         <Button className={styles.form__button}>LOGIN</Button>
       </form>
