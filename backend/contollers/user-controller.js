@@ -8,13 +8,13 @@ const handleErrors = (err) => {
   let errors = { email: "", password: "", name: "" };
 
   // incorrect email
-  if (err.message === 'incorrect email') {
-    errors.email = 'That email is not registered';
+  if (err.message === "incorrect email") {
+    errors.email = "That email is not registered";
   }
 
   // incorrect password
-  if (err.message === 'incorrect password') {
-    errors.password = 'That password is incorrect';
+  if (err.message === "incorrect password") {
+    errors.password = "That password is incorrect";
   }
 
   // duplicate error
@@ -93,8 +93,12 @@ const users_login = async (req, res) => {
 // -------------------------------------------------------------------------------------
 // GET A SINGLE USER BY ID
 const users_getUser = async (req, res) => {
-  // const existingUser = await User.findById(req.params.id)
-  // res.json({user: existingUser.toObject({getters: true})})
+  try {
+    const existingUser = await User.findById(req.params.id, {name: 1, posts: 1, image: 1})
+    res.status(200).json({user: existingUser.toObject({getters: true})})
+  } catch (error) {
+    res.status(404).json({message: "Could not find this user"})
+  }
 };
 
 // -------------------------------------------------------------------------------------

@@ -1,9 +1,13 @@
+import { useDispatch } from "react-redux";
+import { login } from "../../store/user/userSlice";
 import Button from "../../components/button/Button";
 import FormInput from "../../components/inputs/FormInput";
 import useForm from "../../hooks/useForm";
 import styles from "./Login.module.scss";
 
 const Login = () => {
+  const dispatch = useDispatch()
+
   const { formValues, handleFormChange } = useForm({
     email: {
       value: "",
@@ -18,6 +22,14 @@ const Login = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     console.log("Form Submited");
+
+    let userData = {}
+
+    for (const key in formValues) {
+      userData[key] = formValues[key].value
+    }
+
+    dispatch(login(userData))
   };
 
   return (

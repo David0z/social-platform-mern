@@ -2,8 +2,12 @@ import Button from "../../components/button/Button";
 import FormInput from "../../components/inputs/FormInput";
 import useForm from "../../hooks/useForm";
 import styles from "./SignUp.module.scss";
+import { useDispatch } from 'react-redux'
+import { signup } from '../../store/user/userSlice'
 
 const SignUp = () => {
+  const dispatch = useDispatch()
+
   const { formValues, handleFormChange } = useForm({
     email: {
       value: "",
@@ -13,7 +17,7 @@ const SignUp = () => {
       value: "",
       isValid: true,
     },
-    nickname: {
+    name: {
       value: "",
       isValid: true,
     },
@@ -26,6 +30,16 @@ const SignUp = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault()
     console.log('Form Submited');
+
+    let userData = {}
+
+    for (const key in formValues) {
+      userData[key] = formValues[key].value
+    }
+
+    // console.log(userData);
+
+    dispatch(signup(userData))
   }
 
   return (
@@ -50,9 +64,9 @@ const SignUp = () => {
         />
         <FormInput
           required
-          name="nickname"
+          name="name"
           label="Nickname"
-          value={formValues.nickname.value}
+          value={formValues.name.value}
           onChange={handleFormChange}
         />
         <FormInput
