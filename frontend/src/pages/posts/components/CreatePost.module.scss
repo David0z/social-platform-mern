@@ -1,0 +1,46 @@
+@import '../../../variables';
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: rgba($primary, 0.5);
+  padding: 1rem 2rem 0.4rem 2rem;
+  gap: 2rem;
+
+  &__image {
+    width: 6.5rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+.textarea__wrapper {
+  position: relative;
+}
+
+.input {
+  border: none;
+  height: 7rem;
+  width: 50rem;
+  resize: none;
+  border-radius: 0 1.5rem 1.5rem 1.5rem;
+  padding: 0 1rem;
+  font-size: 1.4rem;
+
+  &:focus {
+    outline: none;
+  }
+
+  &__before {
+    $size: 2.5rem;
+    position: absolute;
+    top: 0;
+    left: -$size;
+    width: $size;
+    aspect-ratio: 1;
+    background-color: $text;
+    clip-path: polygon(0 0, 100% 100%, 100% 0);
+  }
+}

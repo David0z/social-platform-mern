@@ -10,6 +10,7 @@ const initialState = {
   isLoading: false,
   isError: false,
   errorMessages: {},
+  image: "",
 };
 
 export const signup = createAsyncThunk(
@@ -27,7 +28,7 @@ export const login = createAsyncThunk(
   "user/login",
   async (userData, thunkAPI) => {
     try {
-      return await userService.login(userData)
+      return await userService.login(userData);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.errors);
     }
@@ -42,13 +43,13 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    resetErrors (state) {
-      state.isError = null
-      state.errorMessages = {}
+    resetErrors(state) {
+      state.isError = null;
+      state.errorMessages = {};
     },
-    resetSingleError (state, action) {
-      state.errorMessages[action.payload] = ""
-    }
+    resetSingleError(state, action) {
+      state.errorMessages[action.payload] = "";
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -59,6 +60,7 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.uid = action.payload.user;
         state.token = action.payload.token;
+        state.image = action.payload.image;
       })
       .addCase(signup.rejected, (state, action) => {
         state.isLoading = false;
@@ -73,6 +75,7 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.uid = action.payload.user;
         state.token = action.payload.token;
+        state.image = action.payload.image;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;

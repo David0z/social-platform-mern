@@ -66,7 +66,7 @@ const users_signup = async (req, res) => {
     const token = createToken(user._id);
     res
       .status(201)
-      .json({ message: "Signed Up Successfully!", user: user._id, token });
+      .json({ message: "Signed Up Successfully!", user: user._id, token, image: user.image });
   } catch (error) {
     const errors = handleErrors(error);
     res.status(400).json({ errors });
@@ -83,7 +83,7 @@ const users_login = async (req, res) => {
     const token = createToken(user._id);
     res
       .status(200)
-      .json({ message: "Logged In Successfully!", user: user._id, token });
+      .json({ message: "Logged In Successfully!", user: user._id, token, image: user.image });
   } catch (error) {
     const errors = handleErrors(error);
     res.status(400).json({ errors });
