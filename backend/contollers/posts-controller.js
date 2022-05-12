@@ -1,11 +1,34 @@
+const Post = require('../models/postModel')
+const User = require('../models/userModel')
+
 // GET ALL POSTS
 const posts_getAll = (req, res) => {
   res.send('Get All Posts')
 }
 
 // CREATE A NEW POST
-const posts_postNew = (req, res) => {
-  res.send('Post a new post')
+const posts_postNew = async (req, res) => {
+  const {creator, content, image} = req.body
+
+  try {
+    const post = await Post.create({
+      creator,
+      content,
+      image: image || "",
+      votes: 0,
+      comments: []
+    })
+
+    const user = await User.findById(creator)
+
+    user.posts.push(post)
+    await user.save()
+
+    res.status(201).json({message: "Post added successfully!", post})
+  } catch (error) {
+    console.log(error);
+    res.status(401).json({message: error.message})
+  }
 }
 
 // GET A SINGLE POST BY ID
