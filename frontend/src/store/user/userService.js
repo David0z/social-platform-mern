@@ -9,6 +9,7 @@ const signup = async (userData) => {
   if (response.data) {
     localStorage.setItem("uid", JSON.stringify(response.data.user));
     localStorage.setItem("token", JSON.stringify(response.data.token));
+    localStorage.setItem("image", JSON.stringify(response.data.image));
   }
 
   return response.data;
@@ -23,6 +24,7 @@ const login = async (userData) => {
   if (response.data) {
     localStorage.setItem("uid", JSON.stringify(response.data.user));
     localStorage.setItem("token", JSON.stringify(response.data.token));
+    localStorage.setItem("image", JSON.stringify(response.data.image));
   }
 
   return response.data;

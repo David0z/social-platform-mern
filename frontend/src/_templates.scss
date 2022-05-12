@@ -17,3 +17,22 @@
     background-color: $secondary;
   }
 }
+
+%post-btn {
+  $size: 1rem;
+  font-size: $size;
+  line-height: $size;
+  font-weight: 600;
+  padding: 0.3rem .4rem;
+  background-color: transparent;
+  border: 0.13rem solid $black;
+
+  &:hover {
+    background-color: $black;
+    color: $text;
+
+    %icon {
+      color: $text;
+    }
+  }
+}

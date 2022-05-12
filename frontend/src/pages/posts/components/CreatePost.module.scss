@@ -1,11 +1,12 @@
-@import '../../../variables';
+@import "../../../variables";
+@import "../../../templates";
 
 .wrapper {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   background-color: rgba($primary, 0.5);
-  padding: 1rem 2rem 0.4rem 2rem;
+  padding: 1rem 2rem 0.7rem 2rem;
   gap: 2rem;
 
   &__image {
@@ -22,12 +23,14 @@
 
 .input {
   border: none;
-  height: 7rem;
+  min-height: 7rem;
   width: 50rem;
-  resize: none;
+  resize: vertical;
   border-radius: 0 1.5rem 1.5rem 1.5rem;
   padding: 0 1rem;
   font-size: 1.4rem;
+  display: block;
+  margin-bottom: 0.7rem;
 
   &:focus {
     outline: none;
@@ -42,5 +45,65 @@
     aspect-ratio: 1;
     background-color: $text;
     clip-path: polygon(0 0, 100% 100%, 100% 0);
+  }
+}
+
+.buttons__wrapper {
+  display: flex;
+  flex-grow: 1;
+  gap: 1rem;
+
+  input {
+    display: none;
+  }
+}
+
+.post-button {
+  @extend %post-btn;
+  display: flex;
+  gap: 0.2rem;
+  align-items: center;
+
+  &__icon {
+    font-size: 1.5rem;
+    @extend %icon;
+  }
+
+  &--cancel {
+    @extend .post-button;
+    margin-left: auto;
+  }
+}
+
+.submit {
+  @extend .post-button;
+  border: none;
+  background-color: $primary;
+
+  .icon {
+    font-size: 1.5rem;
+
+    &--one {
+      @extend .icon;
+    }
+
+    &--two {
+      @extend .icon;
+      display: none;
+    }
+  }
+
+  &:hover {
+    background-color: $yellow;
+    color: $black;
+    box-shadow: .3rem .3rem 0 -0.1rem $black;
+
+    .icon--one {
+      display: none;
+    }
+
+    .icon--two {
+      display: block;
+    }
   }
 }

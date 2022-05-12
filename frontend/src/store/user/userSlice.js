@@ -3,6 +3,7 @@ import userService from "./userService";
 
 const uid = JSON.parse(localStorage.getItem("uid"));
 const token = JSON.parse(localStorage.getItem("token"));
+const image = JSON.parse(localStorage.getItem("image"));
 
 const initialState = {
   uid,
@@ -10,7 +11,7 @@ const initialState = {
   isLoading: false,
   isError: false,
   errorMessages: {},
-  image: "",
+  image: image || "",
 };
 
 export const signup = createAsyncThunk(
