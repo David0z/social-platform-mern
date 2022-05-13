@@ -1,9 +1,28 @@
 const Post = require('../models/postModel')
 const User = require('../models/userModel')
 
+// error handler function
+const handleErrors = (err) => {
+  let errors = { content: '' };
+
+  if (err.message.toLowerCase().includes("post validation failed")) {
+    Object.values(err.errors).forEach(({ properties }) => {
+      errors[properties.path] = properties.message;
+    });
+  }
+
+  return errors;
+}
+
 // GET ALL POSTS
-const posts_getAll = (req, res) => {
-  res.send('Get All Posts')
+const posts_getAll = async (req, res) => {
+  try {
+    const posts = await Post.find().sort({createdAt: -1})
+
+    res.status(200).json({posts})
+  } catch (error) {
+    res.status(401).json({message: 'Unauthorized'})
+  }
 }
 
 // CREATE A NEW POST
@@ -26,8 +45,8 @@ const posts_postNew = async (req, res) => {
 
     res.status(201).json({message: "Post added successfully!", post})
   } catch (error) {
-    console.log(error);
-    res.status(401).json({message: error.message})
+    const errors = handleErrors(error);
+    res.status(400).json({ errors });
   }
 }
 

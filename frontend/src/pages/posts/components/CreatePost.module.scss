@@ -79,6 +79,7 @@
   @extend .post-button;
   border: none;
   background-color: $primary;
+  box-shadow: .3rem .3rem 0 -0.1rem transparent;
 
   .icon {
     font-size: 1.5rem;
@@ -110,4 +111,8 @@
   &:disabled {
     background-color: gray;
   }
+}
+
+.error-wrapper{
+  margin-bottom: 0.7rem;
 }

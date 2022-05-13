@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import Button from "../button/Button";
 import styles from "./FormInput.module.scss";
-import { Icon } from '@iconify/react';
+import { Icon } from "@iconify/react";
+import ErrorMessage from "../error-message/ErrorMessage";
 
 const FormInput = ({
   name,
@@ -67,16 +68,18 @@ const FormInput = ({
           value={value}
           name={name}
           onChange={onChange}
-          className={`${styles.input} ${isError && errorMessage !== "" && styles['input--error']}`}
+          className={`${styles.input} ${
+            isError && errorMessage !== "" && styles["input--error"]
+          }`}
           {...props}
         />
       )}
 
       {isError && errorMessage !== "" && (
-        <div className={styles['error-wrapper']}>
-          <Icon icon="ant-design:warning-filled" className={styles['error-wrapper__icon']}/>
-          <p>{errorMessage}</p>
-        </div>
+        <ErrorMessage
+          message={errorMessage}
+          className={styles["error-wrapper"]}
+        />
       )}
     </div>
   );

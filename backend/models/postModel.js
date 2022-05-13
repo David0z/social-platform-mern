@@ -9,7 +9,7 @@ const postSchema = new mongoose.Schema(
     },
     content: {
       type: String,
-      required: true,
+      required: [true, "Post content cannot be empty, please fill it in"],
     },
     image: {
       type: String,

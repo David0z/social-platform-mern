@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import styles from "./CreatePost.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import DefaultProfileImage from "../../../utils/profile-template.svg";
@@ -7,6 +7,7 @@ import { Icon } from "@iconify/react";
 import useForm from "../../../hooks/useForm";
 import { createPost } from "../../../store/post/postSlice";
 import VALIDATORS from "../../../validators/validators";
+import ErrorMessage from "../../../components/error-message/ErrorMessage";
 
 const initialState = {
   photo: {
@@ -22,10 +23,33 @@ const initialState = {
 const CreatePost = () => {
   const { image: profileImage, uid } = useSelector((state) => state.user);
   const { isError, isLoading, errorMessages, isSuccess } = useSelector(
-    (state) => state.post
+    (state) => state.post.post
   );
   const dispatch = useDispatch();
   const photoRef = useRef();
+  const [validationError, setValidationError] = useState(null);
+
+  const { formValues, handleFormChange, setFormValues } = useForm(initialState);
+
+  const cancelPost = () => {
+    setFormValues(initialState);
+    setValidationError(null)
+  };
+
+  const handlePostSend = () => {
+    if (!formValues.text.isValid) {
+      setValidationError("Post content cannot be empty, please fill it in");
+      return;
+    }
+
+    let postData = {
+      creator: uid,
+      content: formValues.text.value,
+      image: formValues.photo.value,
+    };
+
+    dispatch(createPost(postData));
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -33,21 +57,11 @@ const CreatePost = () => {
     }
   }, [isSuccess]);
 
-  const { formValues, handleFormChange, setFormValues } = useForm(initialState);
-
-  const cancelPost = () => {
-    setFormValues(initialState);
-  };
-
-  const handlePostSend = () => {
-    let postData = {
-      creator: uid || JSON.parse(localStorage.getItem("uid")),
-      content: formValues.text.value,
-      image: formValues.photo.value,
-    };
-
-    dispatch(createPost(postData));
-  };
+  useEffect(() => {
+    if (formValues.text.isValid) {
+      setValidationError(null)
+    }
+  }, [formValues.text.isValid])
 
   return (
     <div className={styles.wrapper}>
@@ -67,6 +81,12 @@ const CreatePost = () => {
             handleFormChange(e, VALIDATORS.emptyText(e.target.value))
           }
         />
+        {validationError && (
+          <ErrorMessage
+            message={validationError}
+            className={styles["error-wrapper"]}
+          />
+        )}
         <div className={styles.buttons__wrapper}>
           <input
             type="file"

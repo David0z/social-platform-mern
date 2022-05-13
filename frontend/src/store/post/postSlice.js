@@ -12,13 +12,32 @@ export const createPost = createAsyncThunk(
   }
 );
 
+export const getAllPosts = createAsyncThunk(
+  "posts.getAllPosts",
+  async (_, thunkAPI) => {
+    try {
+      return await postService.getPosts();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 const initialState = {
-  posts: [],
-  post: {},
-  isError: false,
-  isLoading: false,
-  errorMessages: {},
-  isSuccess: false
+  posts: {
+    posts: [],
+    isError: false,
+    isLoading: false,
+    errorMessages: {},
+    isSuccess: false
+  },
+  post: {
+    post: {},
+    isError: false,
+    isLoading: false,
+    errorMessages: {},
+    isSuccess: false,
+  },
 };
 
 const postSlice = createSlice({
@@ -28,19 +47,34 @@ const postSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createPost.pending, (state) => {
-        state.isLoading = true
-        state.isSuccess = false
+        state.post.isLoading = true;
+        state.post.isSuccess = false;
       })
       .addCase(createPost.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.posts.unshift(action.payload) //maybe lol
-        state.isSuccess = true
+        state.post.isLoading = false;
+        state.posts.posts.unshift(action.payload.post); //maybe lol
+        state.post.isSuccess = true;
       })
       .addCase(createPost.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.errorMessages = action.payload;
-        state.isSuccess = false
+        state.post.isLoading = false;
+        state.post.isError = true;
+        state.post.errorMessages = action.payload;
+        state.post.isSuccess = false;
+      })
+      .addCase(getAllPosts.pending, (state) => {
+        state.posts.isLoading = true;
+        state.posts.isSuccess = false;
+      })
+      .addCase(getAllPosts.fulfilled, (state, action) => {
+        state.posts.isLoading = false;
+        state.posts.posts = state.posts.posts.concat(action.payload.posts);
+        state.posts.isSuccess = true;
+      })
+      .addCase(getAllPosts.rejected, (state, action) => {
+        state.posts.isLoading = false;
+        state.posts.isError = true;
+        state.posts.errorMessages = action.payload;
+        state.posts.isSuccess = false;
       });
   },
 });

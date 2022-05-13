@@ -30,20 +30,5 @@ label {
 }
 
 .error-wrapper {
-  display: flex;
-  align-items: flex-end;
   padding-top: .2rem;
-
-  p {
-    font-size: .9rem;
-    line-height: .9rem;
-    margin: 0 0 0 .2rem;
-    color: $error;
-    text-align: end;
-  }
-
-  &__icon {
-    color: $error;
-    font-size: 1rem;
-  }
 }

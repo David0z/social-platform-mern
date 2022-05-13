@@ -6,12 +6,18 @@ const createPost = async (postData) => {
     postData
   );
 
-  console.log(response.data);
   return response.data;
 };
 
+const getPosts = async () => {
+  const response = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/posts/`)
+
+  return response.data
+}
+
 const postService = {
   createPost,
+  getPosts
 };
 
 export default postService;
