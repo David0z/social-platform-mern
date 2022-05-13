@@ -1,37 +1,52 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import styles from "./CreatePost.module.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import DefaultProfileImage from "../../../utils/profile-template.svg";
 import Button from "../../../components/button/Button";
 import { Icon } from "@iconify/react";
 import useForm from "../../../hooks/useForm";
+import { createPost } from "../../../store/post/postSlice";
+import VALIDATORS from "../../../validators/validators";
+
+const initialState = {
+  photo: {
+    value: "",
+    isValid: true,
+  },
+  text: {
+    value: "",
+    isValid: false,
+  },
+};
 
 const CreatePost = () => {
-  const { image: profileImage } = useSelector((state) => state.user);
+  const { image: profileImage, uid } = useSelector((state) => state.user);
+  const { isError, isLoading, errorMessages, isSuccess } = useSelector(
+    (state) => state.post
+  );
+  const dispatch = useDispatch();
   const photoRef = useRef();
 
-  const { formValues, handleFormChange, setFormValues } = useForm({
-    photo: {
-      value: "",
-      isValid: true,
-    },
-    text: {
-      value: "",
-      isValid: true,
-    },
-  });
+  useEffect(() => {
+    if (isSuccess) {
+      cancelPost();
+    }
+  }, [isSuccess]);
+
+  const { formValues, handleFormChange, setFormValues } = useForm(initialState);
 
   const cancelPost = () => {
-    const keys = Object.keys(formValues);
-    keys.forEach((key) => {
-      setFormValues((prevState) => ({
-        ...prevState,
-        [key]: {
-          value: "",
-          isValid: true,
-        },
-      }));
-    });
+    setFormValues(initialState);
+  };
+
+  const handlePostSend = () => {
+    let postData = {
+      creator: uid || JSON.parse(localStorage.getItem("uid")),
+      content: formValues.text.value,
+      image: formValues.photo.value,
+    };
+
+    dispatch(createPost(postData));
   };
 
   return (
@@ -48,7 +63,9 @@ const CreatePost = () => {
           placeholder="Write what's on your mind"
           name="text"
           value={formValues.text.value}
-          onChange={handleFormChange}
+          onChange={(e) =>
+            handleFormChange(e, VALIDATORS.emptyText(e.target.value))
+          }
         />
         <div className={styles.buttons__wrapper}>
           <input
@@ -74,7 +91,11 @@ const CreatePost = () => {
           >
             Chancel
           </Button>
-          <Button className={styles.submit}>
+          <Button
+            className={styles.submit}
+            onClick={handlePostSend}
+            disabled={isLoading}
+          >
             <Icon
               icon="ant-design:send-outlined"
               className={styles["icon--one"]}

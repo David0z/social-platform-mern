@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 // -------------------------------------------------------------------------------------
 // error handler function
@@ -53,12 +54,15 @@ const createToken = (id) => {
 // -------------------------------------------------------------------------------------
 // SIGNUP A NEW USER
 const users_signup = async (req, res) => {
-  const { email, password, name, image } = req.body;
+  let { email, password, name, image } = req.body;
+
+  const salt = await bcrypt.genSalt();
+  const hashedPassword = await bcrypt.hash(password, salt);
 
   try {
     const user = await User.create({
       email,
-      password,
+      password: hashedPassword,
       name,
       image: image || "",
       posts: [],

@@ -7,12 +7,13 @@ const useForm = (initialState) => {
   const { isError, errorMessages } = useSelector(state => state.user)
   const dispatch = useDispatch()
 
-  const handleFormChange = (e) => {
+  const handleFormChange = (e, validator = true) => {
     setFormValues((prevState) => ({
       ...prevState,
       [e.target.name]: {
         ...prevState[e.target.name],
         value: e.target.value,
+        isValid: validator
       },
     }));
 

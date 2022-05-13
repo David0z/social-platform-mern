@@ -106,4 +106,8 @@
       display: block;
     }
   }
+
+  &:disabled {
+    background-color: gray;
+  }
 }
