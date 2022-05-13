@@ -40,7 +40,7 @@
     $size: 2.5rem;
     position: absolute;
     top: 0;
-    left: -$size;
+    right: calc(100% - 1px);
     width: $size;
     aspect-ratio: 1;
     background-color: $text;

@@ -43,7 +43,9 @@ const initialState = {
 const postSlice = createSlice({
   name: "post",
   initialState,
-  reducers: {},
+  reducers: {
+    reset: (state) => initialState
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createPost.pending, (state) => {

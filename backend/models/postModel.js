@@ -16,17 +16,19 @@ const postSchema = new mongoose.Schema(
     },
     votes: {
       type: Number,
-      default: 0
+      default: 0,
     },
-    comments: [{
-      body: {
-        type: String
+    comments: [
+      {
+        body: {
+          type: String,
+        },
+        author: {
+          type: mongoose.Types.ObjectId,
+          ref: "User",
+        },
       },
-      author: {
-        type: mongoose.Types.ObjectId,
-        ref: "User",
-      }
-    }]
+    ],
   },
   { timestamps: true }
 );

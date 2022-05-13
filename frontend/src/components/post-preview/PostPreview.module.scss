@@ -1,0 +1,96 @@
+@import "../../variables";
+
+.wrapper {
+  background-color: $post-bg;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.head {
+  display: flex;
+  gap: 1rem;
+
+  &__image {
+    $size: 5rem;
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__name {
+    margin: 0;
+    font-weight: 500;
+    color: $black;
+  }
+
+  &__time {
+    margin: 0;
+    color: $text-secondary;
+  }
+}
+
+.content {
+  max-width: 50rem;
+  padding: 1rem 0;
+
+  &__text {
+    font-size: 1.2rem;
+    color: $black;
+    margin: 0;
+    white-space: pre-wrap;
+  }
+}
+
+.feedback {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__comments {
+    font-size: 0.83rem;
+    color: $black;
+  }
+
+  &__votes {
+    display: flex;
+    align-items: center;
+
+    p {
+      margin: 0 1rem;
+      font-size: 1.2rem;
+    }
+
+    &__button {
+      height: 3rem;
+      width: 3rem;
+      border: none;
+      background-color: transparent;
+      position: relative;
+
+      &__icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        &--clicked {
+          &--upvote {
+            @extend .feedback__votes__button__icon;
+            color: $vote-up;
+          }
+
+          &--downvote {
+            @extend .feedback__votes__button__icon;
+            color: $vote-down;
+          }
+        }
+      }
+    }
+  }
+}
