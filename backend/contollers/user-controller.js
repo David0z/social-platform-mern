@@ -70,7 +70,12 @@ const users_signup = async (req, res) => {
     const token = createToken(user._id);
     res
       .status(201)
-      .json({ message: "Signed Up Successfully!", user: user._id, token, image: user.image });
+      .json({
+        message: "Signed Up Successfully!",
+        user: user._id,
+        token,
+        image: user.image,
+      });
   } catch (error) {
     const errors = handleErrors(error);
     res.status(400).json({ errors });
@@ -87,7 +92,12 @@ const users_login = async (req, res) => {
     const token = createToken(user._id);
     res
       .status(200)
-      .json({ message: "Logged In Successfully!", user: user._id, token, image: user.image });
+      .json({
+        message: "Logged In Successfully!",
+        user: user._id,
+        token,
+        image: user.image,
+      });
   } catch (error) {
     const errors = handleErrors(error);
     res.status(400).json({ errors });
@@ -98,10 +108,14 @@ const users_login = async (req, res) => {
 // GET A SINGLE USER BY ID
 const users_getUser = async (req, res) => {
   try {
-    const existingUser = await User.findById(req.params.id, {name: 1, posts: 1, image: 1})
-    res.status(200).json({user: existingUser.toObject({getters: true})})
+    const existingUser = await User.findById(req.params.id, {
+      name: 1,
+      posts: 1,
+      image: 1,
+    }).populate({path: 'posts', options: { sort: { createdAt: -1 }}});
+    res.status(200).json({ user: existingUser.toObject({ getters: true }) });
   } catch (error) {
-    res.status(404).json({message: "Could not find this user"})
+    res.status(404).json({ message: "Could not find this user" });
   }
 };
 

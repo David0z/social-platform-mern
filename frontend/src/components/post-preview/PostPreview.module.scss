@@ -31,7 +31,7 @@
 }
 
 .content {
-  max-width: 50rem;
+  width: 50rem;
   padding: 1rem 0;
 
   &__text {
@@ -74,20 +74,31 @@
         left: 0;
         width: 100%;
         height: 100%;
+        color: $text-secondary;
 
         &:hover {
           cursor: pointer;
+          color: $black;
         }
 
         &--clicked {
+          $light: 10%;
           &--upvote {
             @extend .feedback__votes__button__icon;
             color: $vote-up;
+
+            &:hover {
+              color: darken($vote-up, $light);
+            }
           }
 
           &--downvote {
             @extend .feedback__votes__button__icon;
             color: $vote-down;
+
+            &:hover {
+              color: darken($vote-down, $light);
+            }
           }
         }
       }

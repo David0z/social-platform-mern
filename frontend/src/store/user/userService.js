@@ -35,10 +35,17 @@ const logout = () => {
   localStorage.removeItem("token");
 };
 
+const fetchUser = async (userId) => {
+  const response = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/users/${userId}`)
+
+  return response.data
+}
+
 const userService = {
   signup,
   login,
   logout,
+  fetchUser
 };
 
 export default userService;

@@ -2,12 +2,17 @@
 @import "../../../templates";
 
 .wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
   background-color: rgba($primary, 0.5);
   padding: 1rem 2rem 0.7rem 2rem;
-  gap: 2rem;
+  display: grid;
+  justify-content: center;
+
+  &__content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2rem;
+  }
 
   &__image {
     width: 6.5rem;
@@ -79,7 +84,7 @@
   @extend .post-button;
   border: none;
   background-color: $primary;
-  box-shadow: .3rem .3rem 0 -0.1rem transparent;
+  box-shadow: 0.3rem 0.3rem 0 -0.1rem transparent;
 
   .icon {
     font-size: 1.5rem;
@@ -97,7 +102,7 @@
   &:hover {
     background-color: $yellow;
     color: $black;
-    box-shadow: .3rem .3rem 0 -0.1rem $black;
+    box-shadow: 0.3rem 0.3rem 0 -0.1rem $black;
 
     .icon--one {
       display: none;
@@ -113,6 +118,6 @@
   }
 }
 
-.error-wrapper{
+.error-wrapper {
   margin-bottom: 0.7rem;
 }

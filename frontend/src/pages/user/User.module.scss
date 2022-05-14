@@ -1,0 +1,42 @@
+@import '../../variables';
+
+.userbar {
+  width: 100%;
+  background-color: rgba($primary, 0.5);
+  display: grid;
+  justify-content: center;
+  padding: 1rem 0;
+
+  &__wrapper {
+    display: flex;
+    min-width: 60rem;
+    max-width: 100%;
+  }
+
+  &__image {
+    $size: 8rem;
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__details {
+    margin-left: 2rem;
+    display: grid;
+    align-content: center;
+  }
+
+  &__name {
+    font-weight: 500;
+    font-size: 3rem;
+    margin: 0;
+    color: $black;
+  }
+
+  &__posts-count {
+    font-size: 1.2rem;
+    margin: 0;
+    color: $text-secondary;
+  }
+}

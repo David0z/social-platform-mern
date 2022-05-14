@@ -8,6 +8,7 @@ import useForm from "../../../hooks/useForm";
 import { createPost } from "../../../store/post/postSlice";
 import VALIDATORS from "../../../validators/validators";
 import ErrorMessage from "../../../components/error-message/ErrorMessage";
+import { Link } from "react-router-dom";
 
 const initialState = {
   photo: {
@@ -33,7 +34,7 @@ const CreatePost = () => {
 
   const cancelPost = () => {
     setFormValues(initialState);
-    setValidationError(null)
+    setValidationError(null);
   };
 
   const handlePostSend = () => {
@@ -59,73 +60,77 @@ const CreatePost = () => {
 
   useEffect(() => {
     if (formValues.text.isValid) {
-      setValidationError(null)
+      setValidationError(null);
     }
-  }, [formValues.text.isValid])
+  }, [formValues.text.isValid]);
 
   return (
     <div className={styles.wrapper}>
-      <img
-        src={profileImage !== "" ? profileImage : DefaultProfileImage}
-        alt="Profile Image"
-        className={styles.wrapper__image}
-      />
-      <div className={styles.textarea__wrapper}>
-        <div className={styles.input__before}></div>
-        <textarea
-          className={styles.input}
-          placeholder="Write what's on your mind"
-          name="text"
-          value={formValues.text.value}
-          onChange={(e) =>
-            handleFormChange(e, VALIDATORS.emptyText(e.target.value))
-          }
-        />
-        {validationError && (
-          <ErrorMessage
-            message={validationError}
-            className={styles["error-wrapper"]}
+      <div className={styles.wrapper__content}>
+        <Link to={`/users/${uid}`}>
+          <img
+            src={profileImage !== "" ? profileImage : DefaultProfileImage}
+            alt="Profile Image"
+            className={styles.wrapper__image}
           />
-        )}
-        <div className={styles.buttons__wrapper}>
-          <input
-            type="file"
-            name="photo"
-            ref={photoRef}
-            value={formValues.photo.value}
-            onChange={handleFormChange}
+        </Link>
+        <div className={styles.textarea__wrapper}>
+          <div className={styles.input__before}></div>
+          <textarea
+            className={styles.input}
+            placeholder="Write what's on your mind"
+            name="text"
+            value={formValues.text.value}
+            onChange={(e) =>
+              handleFormChange(e, VALIDATORS.emptyText(e.target.value))
+            }
           />
-          <Button
-            className={styles["post-button"]}
-            onClick={() => photoRef.current.click()}
-          >
-            <Icon
-              icon="icon-park-outline:picture-one"
-              className={styles["post-button__icon"]}
+          {validationError && (
+            <ErrorMessage
+              message={validationError}
+              className={styles["error-wrapper"]}
             />
-            Add picture
-          </Button>
-          <Button
-            className={styles["post-button--cancel"]}
-            onClick={cancelPost}
-          >
-            Chancel
-          </Button>
-          <Button
-            className={styles.submit}
-            onClick={handlePostSend}
-            disabled={isLoading}
-          >
-            <Icon
-              icon="ant-design:send-outlined"
-              className={styles["icon--one"]}
+          )}
+          <div className={styles.buttons__wrapper}>
+            <input
+              type="file"
+              name="photo"
+              ref={photoRef}
+              value={formValues.photo.value}
+              onChange={handleFormChange}
             />
-            <Icon
-              icon="fluent:send-24-filled"
-              className={styles["icon--two"]}
-            />
-            SENT POST
-          </Button>
+            <Button
+              className={styles["post-button"]}
+              onClick={() => photoRef.current.click()}
+            >
+              <Icon
+                icon="icon-park-outline:picture-one"
+                className={styles["post-button__icon"]}
+              />
+              Add picture
+            </Button>
+            <Button
+              className={styles["post-button--cancel"]}
+              onClick={cancelPost}
+            >
+              Chancel
+            </Button>
+            <Button
+              className={styles.submit}
+              onClick={handlePostSend}
+              disabled={isLoading}
+            >
+              <Icon
+                icon="ant-design:send-outlined"
+                className={styles["icon--one"]}
+              />
+              <Icon
+                icon="fluent:send-24-filled"
+                className={styles["icon--two"]}
+              />
+              SENT POST
+            </Button>
+          </div>
         </div>
       </div>
     </div>

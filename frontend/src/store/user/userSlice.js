@@ -12,6 +12,13 @@ const initialState = {
   isError: false,
   errorMessages: {},
   image: image || "",
+  fetchedUser: {
+    user: null,
+    isLoading: false,
+    isError: false,
+    errorMessages: {},
+    isSuccess: false
+  }
 };
 
 export const signup = createAsyncThunk(
@@ -40,6 +47,14 @@ export const logout = createAsyncThunk("user/logout", async () => {
   await userService.logout();
 });
 
+export const fetchUser = createAsyncThunk("user/fetchUser", async (userId, thunkAPI) => {
+  try {
+    return await userService.fetchUser(userId)
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data.message)
+  }
+})
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -51,6 +66,15 @@ const userSlice = createSlice({
     resetSingleError(state, action) {
       state.errorMessages[action.payload] = "";
     },
+    resetFetchedUser(state) {
+      state.fetchedUser = {
+        user: null,
+        isLoading: false,
+        isError: false,
+        errorMessages: {},
+        isSuccess: false
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -87,7 +111,20 @@ const userSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.uid = null;
         state.token = null;
-      });
+      })
+      .addCase(fetchUser.pending, (state) => {
+        state.fetchedUser.isLoading = true
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.fetchedUser.isLoading = false
+        state.fetchedUser.isSuccess = true
+        state.fetchedUser.user = action.payload.user
+      })
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.fetchedUser.isLoading = false
+        state.fetchedUser.isError = true
+        state.errorMessages = action.payload
+      })
   },
 });
 
