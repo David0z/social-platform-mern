@@ -68,14 +68,12 @@ const users_signup = async (req, res) => {
       posts: [],
     });
     const token = createToken(user._id);
-    res
-      .status(201)
-      .json({
-        message: "Signed Up Successfully!",
-        user: user._id,
-        token,
-        image: user.image,
-      });
+    res.status(201).json({
+      message: "Signed Up Successfully!",
+      user: user._id,
+      token,
+      image: user.image,
+    });
   } catch (error) {
     const errors = handleErrors(error);
     res.status(400).json({ errors });
@@ -90,14 +88,12 @@ const users_login = async (req, res) => {
   try {
     const user = await User.login(email, password);
     const token = createToken(user._id);
-    res
-      .status(200)
-      .json({
-        message: "Logged In Successfully!",
-        user: user._id,
-        token,
-        image: user.image,
-      });
+    res.status(200).json({
+      message: "Logged In Successfully!",
+      user: user._id,
+      token,
+      image: user.image,
+    });
   } catch (error) {
     const errors = handleErrors(error);
     res.status(400).json({ errors });
@@ -112,7 +108,8 @@ const users_getUser = async (req, res) => {
       name: 1,
       posts: 1,
       image: 1,
-    }).populate({path: 'posts', options: { sort: { createdAt: -1 }}});
+      createdAt: 1,
+    }).populate({ path: "posts", options: { sort: { createdAt: -1 } } });
     res.status(200).json({ user: existingUser.toObject({ getters: true }) });
   } catch (error) {
     res.status(404).json({ message: "Could not find this user" });

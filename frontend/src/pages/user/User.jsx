@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import { fetchUser, userActions } from "../../store/user/userSlice";
 import { useParams } from "react-router-dom";
 import PostsList from '../../components/posts-list/PostsList'
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import parseISO from "date-fns/parseISO";
 
 const User = () => {
   const dispatch = useDispatch();
@@ -31,6 +33,9 @@ const User = () => {
             />
             <div className={styles.userbar__details}>
               <h1 className={styles.userbar__name}>{user.name}</h1>
+              <p className={styles.userbar__joined}>{`Joined ${formatDistanceToNow(parseISO(user.createdAt), {
+                addSuffix: true,
+              })}`}</p>
               <p className={styles["userbar__posts-count"]}>
                 {user.posts.length === 1
                   ? `${user.posts.length} post`

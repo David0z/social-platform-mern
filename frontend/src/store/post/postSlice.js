@@ -13,12 +13,23 @@ export const createPost = createAsyncThunk(
 );
 
 export const getAllPosts = createAsyncThunk(
-  "posts.getAllPosts",
+  "post/getAllPosts",
   async (_, thunkAPI) => {
     try {
       return await postService.getPosts();
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const getSinglePost = createAsyncThunk(
+  "post/getSinglePost",
+  async (postId, thunkAPI) => {
+    try {
+      return await postService.getSinglePost(postId);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message)
     }
   }
 );
@@ -29,10 +40,10 @@ const initialState = {
     isError: false,
     isLoading: false,
     errorMessages: {},
-    isSuccess: false
+    isSuccess: false,
   },
   post: {
-    post: {},
+    post: null,
     isError: false,
     isLoading: false,
     errorMessages: {},
@@ -44,7 +55,16 @@ const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {
-    reset: (state) => initialState
+    reset: (state) => initialState,
+    resetPost (state) {
+      state.post = {
+        post: null,
+        isError: false,
+        isLoading: false,
+        errorMessages: {},
+        isSuccess: false,
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -77,7 +97,22 @@ const postSlice = createSlice({
         state.posts.isError = true;
         state.posts.errorMessages = action.payload;
         state.posts.isSuccess = false;
-      });
+      })
+      .addCase(getSinglePost.pending, (state) => {
+        state.post.isLoading = true;
+        state.post.isSuccess = false;
+      })
+      .addCase(getSinglePost.fulfilled, (state, action) => {
+        state.post.isLoading = false;
+        state.post.post = action.payload.post;
+        state.post.isSuccess = true;
+      })
+      .addCase(getSinglePost.rejected, (state, action) => {
+        state.post.isLoading = false;
+        state.post.isError = true;
+        state.post.errorMessages = action.payload;
+        state.post.isSuccess = false;
+      })
   },
 });
 

@@ -51,7 +51,7 @@ const posts_postNew = async (req, res) => {
         message: "Post added successfully!",
         post: {
           ...post.toObject(),
-          creator: { name: user.name, image: user.image },
+          creator: { name: user.name, image: user.image, _id: user.id },
         },
       });
   } catch (error) {
@@ -61,8 +61,15 @@ const posts_postNew = async (req, res) => {
 };
 
 // GET A SINGLE POST BY ID
-const posts_getSingle = (req, res) => {
-  res.send(`Get a single post - ID: ${req.params.id}`);
+const posts_getSingle = async (req, res) => {
+  try {
+    const postId = req.params.id
+    const post = await Post.findById(postId).populate("creator", { name: 1, image: 1 })
+
+    res.status(200).json({ post });
+  } catch (error) {
+    res.status(401).json({ message: "Unauthorized" });
+  }
 };
 
 // EDIT A SINGLE POST BY ID

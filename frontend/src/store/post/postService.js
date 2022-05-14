@@ -10,14 +10,25 @@ const createPost = async (postData) => {
 };
 
 const getPosts = async () => {
-  const response = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/posts/`)
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/`
+  );
 
-  return response.data
-}
+  return response.data;
+};
+
+const getSinglePost = async (postId) => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/${postId}`
+  );
+
+  return response.data;
+};
 
 const postService = {
   createPost,
-  getPosts
+  getPosts,
+  getSinglePost
 };
 
 export default postService;
