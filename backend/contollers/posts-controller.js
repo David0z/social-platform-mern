@@ -1,6 +1,7 @@
 const Post = require("../models/postModel");
 const User = require("../models/userModel");
 
+// -------------------------------------------------------------------------------------
 // error handler function
 const handleErrors = (err) => {
   let errors = { content: "" };
@@ -14,6 +15,7 @@ const handleErrors = (err) => {
   return errors;
 };
 
+// -------------------------------------------------------------------------------------
 // GET ALL POSTS
 const posts_getAll = async (req, res) => {
   try {
@@ -27,6 +29,7 @@ const posts_getAll = async (req, res) => {
   }
 };
 
+// -------------------------------------------------------------------------------------
 // CREATE A NEW POST
 const posts_postNew = async (req, res) => {
   const { creator, content, image } = req.body;
@@ -60,6 +63,7 @@ const posts_postNew = async (req, res) => {
   }
 };
 
+// -------------------------------------------------------------------------------------
 // GET A SINGLE POST BY ID
 const posts_getSingle = async (req, res) => {
   try {
@@ -72,11 +76,13 @@ const posts_getSingle = async (req, res) => {
   }
 };
 
+// -------------------------------------------------------------------------------------
 // EDIT A SINGLE POST BY ID
 const posts_editSingle = (req, res) => {
   res.send(`Edit a single post - ID: ${req.params.id}`);
 };
 
+// -------------------------------------------------------------------------------------
 // COMMENT A SINGLE POST BY ID
 const posts_commentSingle = (req, res) => {
   res.send(`Comment a single post - ID: ${req.params.id}`);

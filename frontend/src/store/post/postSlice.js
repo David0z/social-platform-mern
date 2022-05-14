@@ -70,7 +70,6 @@ const postSlice = createSlice({
     builder
       .addCase(createPost.pending, (state) => {
         state.post.isLoading = true;
-        state.post.isSuccess = false;
       })
       .addCase(createPost.fulfilled, (state, action) => {
         state.post.isLoading = false;
@@ -81,11 +80,9 @@ const postSlice = createSlice({
         state.post.isLoading = false;
         state.post.isError = true;
         state.post.errorMessages = action.payload;
-        state.post.isSuccess = false;
       })
       .addCase(getAllPosts.pending, (state) => {
         state.posts.isLoading = true;
-        state.posts.isSuccess = false;
       })
       .addCase(getAllPosts.fulfilled, (state, action) => {
         state.posts.isLoading = false;
@@ -96,11 +93,9 @@ const postSlice = createSlice({
         state.posts.isLoading = false;
         state.posts.isError = true;
         state.posts.errorMessages = action.payload;
-        state.posts.isSuccess = false;
       })
       .addCase(getSinglePost.pending, (state) => {
         state.post.isLoading = true;
-        state.post.isSuccess = false;
       })
       .addCase(getSinglePost.fulfilled, (state, action) => {
         state.post.isLoading = false;
@@ -111,7 +106,6 @@ const postSlice = createSlice({
         state.post.isLoading = false;
         state.post.isError = true;
         state.post.errorMessages = action.payload;
-        state.post.isSuccess = false;
       })
   },
 });

@@ -10,6 +10,7 @@ const signup = async (userData) => {
     localStorage.setItem("uid", JSON.stringify(response.data.user));
     localStorage.setItem("token", JSON.stringify(response.data.token));
     localStorage.setItem("image", JSON.stringify(response.data.image));
+    localStorage.setItem("userName", JSON.stringify(response.data.userName));
   }
 
   return response.data;
@@ -25,6 +26,7 @@ const login = async (userData) => {
     localStorage.setItem("uid", JSON.stringify(response.data.user));
     localStorage.setItem("token", JSON.stringify(response.data.token));
     localStorage.setItem("image", JSON.stringify(response.data.image));
+    localStorage.setItem("userName", JSON.stringify(response.data.userName));
   }
 
   return response.data;
@@ -33,6 +35,8 @@ const login = async (userData) => {
 const logout = () => {
   localStorage.removeItem("uid");
   localStorage.removeItem("token");
+  localStorage.removeItem("image");
+  localStorage.removeItem("userName");
 };
 
 const fetchUser = async (userId) => {

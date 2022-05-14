@@ -4,10 +4,12 @@ import userService from "./userService";
 const uid = JSON.parse(localStorage.getItem("uid"));
 const token = JSON.parse(localStorage.getItem("token"));
 const image = JSON.parse(localStorage.getItem("image"));
+const userName = JSON.parse(localStorage.getItem("userName"))
 
 const initialState = {
   uid,
   token,
+  userName,
   isLoading: false,
   isError: false,
   errorMessages: {},

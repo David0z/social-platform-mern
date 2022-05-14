@@ -73,6 +73,7 @@ const users_signup = async (req, res) => {
       user: user._id,
       token,
       image: user.image,
+      userName: user.name
     });
   } catch (error) {
     const errors = handleErrors(error);
@@ -93,6 +94,7 @@ const users_login = async (req, res) => {
       user: user._id,
       token,
       image: user.image,
+      userName: user.name
     });
   } catch (error) {
     const errors = handleErrors(error);

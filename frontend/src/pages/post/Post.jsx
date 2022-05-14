@@ -19,6 +19,8 @@ const Post = () => {
   return (
     <div className={styles.wrapper}>
       {!isLoading && !isError && post && <PostPreview post={post}/>}
+      {!isLoading && isError && <h1>Failed to fetch the post, sorry :/</h1>}
+      {isLoading && <h1>Loading...</h1>}
     </div>
   )
 }

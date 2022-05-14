@@ -45,14 +45,18 @@ const User = () => {
           </div>
         </div>
       )}
-      {!isLoading && !isError && user ? <PostsList posts={user.posts.map(post => ({
+      {!isLoading && !isError && user && <PostsList posts={user.posts.map(post => ({
         ...post,
         creator: {
           _id: user._id,
           name: user.name,
           image: user.image
         }
-      }))} /> : <h1>Loading...</h1>}
+      }))} />}
+      {!isLoading && !isError && user && user.posts.length === 0 && <h1>No posts to display</h1>}
+      {/* 62794e0b481dd79190a7ec06 */}
+      {!isLoading && isError && <h1>Couldn't find the user</h1>}
+      {isLoading && <h1>Loading...</h1>}
     </>
   );
 };
