@@ -1,0 +1,7 @@
+@import '../../variables';
+
+.wrapper {
+  display: grid;
+  gap: 1rem;
+  padding: ($post-padding * 2) $post-padding;
+}

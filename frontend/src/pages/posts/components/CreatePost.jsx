@@ -5,7 +5,7 @@ import DefaultProfileImage from "../../../utils/profile-template.svg";
 import Button from "../../../components/button/Button";
 import { Icon } from "@iconify/react";
 import useForm from "../../../hooks/useForm";
-import { createPost } from "../../../store/post/postSlice";
+import { createPost, postActions } from "../../../store/post/postSlice";
 import VALIDATORS from "../../../validators/validators";
 import ErrorMessage from "../../../components/error-message/ErrorMessage";
 import { Link } from "react-router-dom";
@@ -35,6 +35,7 @@ const CreatePost = () => {
   const cancelPost = () => {
     setFormValues(initialState);
     setValidationError(null);
+    dispatch(postActions.resetPost())
   };
 
   const handlePostSend = () => {

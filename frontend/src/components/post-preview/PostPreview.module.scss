@@ -2,8 +2,12 @@
 
 .wrapper {
   background-color: $post-bg;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
+  border-radius: $post-border-radius;
+  width: 50rem;
+}
+
+.main {
+  padding: $post-padding;
 }
 
 .head {
@@ -31,7 +35,6 @@
 }
 
 .content {
-  width: 50rem;
   padding: 1rem 0;
 
   &__text {
@@ -44,11 +47,12 @@
 
 .feedback {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
 
   &__comments {
     font-size: 0.83rem;
+    margin: 0;
     color: $black;
   }
 

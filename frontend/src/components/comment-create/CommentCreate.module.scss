@@ -1,0 +1,59 @@
+@import "../../variables";
+@import "../../templates";
+
+.wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  background-color: rgba($primary, 0.2);
+  display: flex;
+  gap: 1rem;
+  padding: $post-padding * 2;
+  border-radius: 0 0 $post-border-radius $post-border-radius;
+}
+
+.user-image {
+  $size: 4rem;
+  width: $size;
+  height: $size;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.content {
+  width: 100%;
+  display: grid;
+
+  &__title {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  &__input {
+    box-sizing: border-box;
+    padding: 0.1rem 1rem;
+    border: none;
+    width: 100%;
+    min-height: 5rem;
+    resize: vertical;
+    border-radius: 0 1.5rem 1.5rem 1.5rem;
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 1.2rem;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__button {
+    @extend %form-btn;
+    font-size: 1rem;
+    padding: 0.2rem 1rem;
+    justify-self: end;
+
+    &:disabled {
+      background-color: gray;
+    }
+  }
+}

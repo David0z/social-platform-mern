@@ -19,15 +19,18 @@ const postSchema = new mongoose.Schema(
       default: 0,
     },
     comments: [
-      {
-        body: {
-          type: String,
+      new mongoose.Schema(
+        {
+          body: {
+            type: String,
+          },
+          author: {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
+          },
         },
-        author: {
-          type: mongoose.Types.ObjectId,
-          ref: "User",
-        },
-      },
+        { timestamps: true }
+      ),
     ],
   },
   { timestamps: true }

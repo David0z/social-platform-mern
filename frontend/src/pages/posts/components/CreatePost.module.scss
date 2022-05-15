@@ -12,6 +12,8 @@
     justify-content: center;
     align-items: flex-start;
     gap: 2rem;
+    min-width: 50rem;
+    max-width: 100%;
   }
 
   &__image {
@@ -24,12 +26,14 @@
 
 .textarea__wrapper {
   position: relative;
+  width: 100%;
 }
 
 .input {
+  box-sizing: border-box;
   border: none;
   min-height: 7rem;
-  width: 50rem;
+  width: 100%;
   resize: vertical;
   border-radius: 0 1.5rem 1.5rem 1.5rem;
   padding: 0 1rem;

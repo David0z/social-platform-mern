@@ -25,10 +25,20 @@ const getSinglePost = async (postId) => {
   return response.data;
 };
 
+const commentPost = async (commentData) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/${commentData.postId}`,
+    {...commentData.body}
+  );
+
+  return response.data;
+}
+
 const postService = {
   createPost,
   getPosts,
-  getSinglePost
+  getSinglePost,
+  commentPost
 };
 
 export default postService;

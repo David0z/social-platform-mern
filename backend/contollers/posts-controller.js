@@ -48,15 +48,13 @@ const posts_postNew = async (req, res) => {
     user.posts.push(post);
     await user.save();
 
-    res
-      .status(201)
-      .json({
-        message: "Post added successfully!",
-        post: {
-          ...post.toObject(),
-          creator: { name: user.name, image: user.image, _id: user.id },
-        },
-      });
+    res.status(201).json({
+      message: "Post added successfully!",
+      post: {
+        ...post.toObject(),
+        creator: { name: user.name, image: user.image, _id: user.id },
+      },
+    });
   } catch (error) {
     const errors = handleErrors(error);
     res.status(400).json({ errors });
@@ -67,8 +65,15 @@ const posts_postNew = async (req, res) => {
 // GET A SINGLE POST BY ID
 const posts_getSingle = async (req, res) => {
   try {
-    const postId = req.params.id
-    const post = await Post.findById(postId).populate("creator", { name: 1, image: 1 })
+    const postId = req.params.id;
+    const post = await Post.findById(postId).populate([
+      { path: "creator", select: { name: 1, image: 1 } },
+      {
+        path: "comments",
+        populate: { path: "author", select: { name: 1, image: 1 } },
+        sort: { createdAt: 1 }
+      },
+    ]);
 
     res.status(200).json({ post });
   } catch (error) {
@@ -84,8 +89,24 @@ const posts_editSingle = (req, res) => {
 
 // -------------------------------------------------------------------------------------
 // COMMENT A SINGLE POST BY ID
-const posts_commentSingle = (req, res) => {
-  res.send(`Comment a single post - ID: ${req.params.id}`);
+const posts_commentSingle = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    const comment = req.body;
+
+    const post = await Post.findById(postId);
+    post.comments.push(comment);
+
+    const newComment = post.comments[post.comments.length - 1]
+
+    await post.save();
+
+    res.status(200).json({ comment: newComment });
+  } catch (error) {
+    console.log(error);
+    res.status(401).json({ message: "Unauthorized" });
+  }
 };
 
 module.exports = {

@@ -1,0 +1,40 @@
+@import "../../variables";
+
+.wrapper {
+  padding: $post-padding;
+  border-radius: $post-border-radius;
+  box-shadow: .2rem .2rem 1rem -0.5rem $text-secondary;
+}
+
+.author {
+  display: flex;
+  gap: 1rem;
+
+  &__image {
+    $size: 4rem;
+    width: $size;
+    height: $size;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__name {
+    margin: 0;
+    color: $black;
+    font-size: 1.4rem;
+    line-height: 1.4rem;
+  }
+
+  &__date {
+    margin: 0;
+    font-size: 0.9rem;
+    color: $text-secondary;
+  }
+}
+
+.content {
+  font-size: 1.2rem;
+  margin: 0;
+  white-space: pre-wrap;
+}
