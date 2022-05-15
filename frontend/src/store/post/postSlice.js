@@ -42,7 +42,8 @@ export const commentPost = createAsyncThunk(
 
       response.comment = {...response.comment, author: {
         name: thunkAPI.getState().user.userName,
-        image: thunkAPI.getState().user.image
+        image: thunkAPI.getState().user.image,
+        _id: thunkAPI.getState().user.uid
       }}
 
       return response
