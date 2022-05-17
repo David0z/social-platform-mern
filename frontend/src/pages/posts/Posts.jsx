@@ -4,6 +4,7 @@ import { getAllPosts, postActions } from "../../store/post/postSlice";
 import PostsList from "../../components/posts-list/PostsList";
 import CreatePost from "./components/CreatePost";
 import styles from "./Posts.module.scss";
+import PostSkeletonList from "../../components/skeletons/PostSkeletonList";
 
 const Posts = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ const Posts = () => {
   return (
     <>
       <CreatePost />
-      {posts && !isLoading ? <PostsList posts={posts} /> : <h1>Loading...</h1>}
+      {posts && !isLoading ? <PostsList posts={posts} /> : <PostSkeletonList number={3} />}
     </>
   );
 };

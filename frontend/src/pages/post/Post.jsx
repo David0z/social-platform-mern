@@ -6,6 +6,7 @@ import PostPreview from "../../components/post-preview/PostPreview";
 import { useParams } from "react-router-dom";
 import CommentsList from "../../components/comments-list/CommentsList";
 import CommentCreate from "../../components/comment-create/CommentCreate";
+import PostSkeletonList from '../../components/skeletons/PostSkeletonList'
 
 const Post = () => {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const Post = () => {
         </PostPreview>
       )}
       {!isLoading && isError && <h1>Failed to fetch the post, sorry :/</h1>}
-      {isLoading && <h1>Loading...</h1>}
+      {isLoading && <PostSkeletonList number={1} />}
     </div>
   );
 };

@@ -104,7 +104,6 @@ const posts_commentSingle = async (req, res) => {
 
     res.status(200).json({ comment: newComment });
   } catch (error) {
-    console.log(error);
     res.status(401).json({ message: "Unauthorized" });
   }
 };
