@@ -1,0 +1,36 @@
+@import "../../variables";
+
+.loading {
+  position: relative;
+  width: 100%;
+  height: 0.4rem;
+  overflow: hidden;
+
+  &__bar {
+    @keyframes bar-animation {
+      0% {
+        width: 100%;
+        left: -100%;
+      }
+
+      50% {
+        $width: 20%;
+        width: $width;
+        left: calc(50% - $width / 2);
+      }
+
+      100% {
+        width: 100%;
+        left: 100%;
+      }
+    }
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $primary;
+    animation: bar-animation 1s infinite;
+  }
+}

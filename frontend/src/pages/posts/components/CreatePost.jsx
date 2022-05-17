@@ -9,6 +9,7 @@ import { createPost, postActions } from "../../../store/post/postSlice";
 import VALIDATORS from "../../../validators/validators";
 import ErrorMessage from "../../../components/error-message/ErrorMessage";
 import { Link } from "react-router-dom";
+import LoadingBar from '../../../components/loading-bar/LoadingBar'
 
 const initialState = {
   photo: {
@@ -35,7 +36,7 @@ const CreatePost = () => {
   const cancelPost = () => {
     setFormValues(initialState);
     setValidationError(null);
-    dispatch(postActions.resetPost())
+    dispatch(postActions.resetPost());
   };
 
   const handlePostSend = () => {
@@ -121,19 +122,28 @@ const CreatePost = () => {
               onClick={handlePostSend}
               disabled={isLoading}
             >
-              <Icon
-                icon="ant-design:send-outlined"
-                className={styles["icon--one"]}
-              />
-              <Icon
-                icon="fluent:send-24-filled"
-                className={styles["icon--two"]}
-              />
+              {!isLoading ? (
+                <>
+                  <Icon
+                    icon="ant-design:send-outlined"
+                    className={styles["icon--one"]}
+                  />
+                  <Icon
+                    icon="fluent:send-24-filled"
+                    className={styles["icon--two"]}
+                  />
+                </>
+              ) : (
+                <Icon icon="eos-icons:loading" className={styles.icon} />
+              )}
               SENT POST
             </Button>
           </div>
         </div>
       </div>
+      {isLoading && (
+        <LoadingBar />
+      )}
     </div>
   );
 };

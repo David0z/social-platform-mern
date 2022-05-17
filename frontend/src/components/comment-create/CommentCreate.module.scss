@@ -5,10 +5,14 @@
   box-sizing: border-box;
   width: 100%;
   background-color: rgba($primary, 0.2);
+  border-radius: 0 0 $post-border-radius $post-border-radius;
+  overflow: hidden;
+}
+
+.main {
   display: flex;
   gap: 1rem;
   padding: $post-padding * 2;
-  border-radius: 0 0 $post-border-radius $post-border-radius;
 }
 
 .user-image {
@@ -51,6 +55,9 @@
     font-size: 1rem;
     padding: 0.2rem 1rem;
     justify-self: end;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &:disabled {
       background-color: gray;

@@ -3,14 +3,14 @@
 
 .wrapper {
   background-color: rgba($primary, 0.5);
-  padding: 1rem 2rem 0.7rem 2rem;
   display: grid;
-  justify-content: center;
 
   &__content {
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    justify-self: center;
+    padding: 1rem 2rem 0.7rem 2rem;
     gap: 2rem;
     min-width: 50rem;
     max-width: 100%;
