@@ -15,8 +15,16 @@ const postSchema = new mongoose.Schema(
       type: String,
     },
     votes: {
-      type: Number,
-      default: 0,
+      upvotes: [{
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        unique: true
+      }],
+      downvotes: [{
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        unique: true
+      }]
     },
     comments: [
       new mongoose.Schema(

@@ -41,7 +41,10 @@ const posts_postNew = async (req, res) => {
       creator,
       content,
       image: image || "",
-      votes: 0,
+      votes: {
+        upvotes: [],
+        downvotes: [],
+      },
       comments: [],
     });
 
@@ -71,7 +74,7 @@ const posts_getSingle = async (req, res) => {
       {
         path: "comments",
         populate: { path: "author", select: { name: 1, image: 1 } },
-        sort: { createdAt: 1 }
+        sort: { createdAt: 1 },
       },
     ]);
 
@@ -98,7 +101,7 @@ const posts_commentSingle = async (req, res) => {
     const post = await Post.findById(postId);
     post.comments.push(comment);
 
-    const newComment = post.comments[post.comments.length - 1]
+    const newComment = post.comments[post.comments.length - 1];
 
     await post.save();
 
@@ -108,10 +111,66 @@ const posts_commentSingle = async (req, res) => {
   }
 };
 
+// -------------------------------------------------------------------------------------
+// VOTE FOR A SINGLE POST
+
+const posts_voteForSingle = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const { userId, action } = req.body;
+
+    const post = await Post.findById(postId);
+
+    switch (action) {
+      case "upvote":
+        if (
+          post.votes.downvotes !== [] &&
+          post.votes.downvotes.find((uid) => uid.toString() === userId)
+        ) {
+          post.votes.downvotes.pull(userId);
+          post.votes.upvotes.push(userId);
+        } else if (
+          post.votes.upvotes !== [] &&
+          post.votes.upvotes.find((uid) => uid.toString() === userId)
+        ) {
+          post.votes.upvotes.pull(userId);
+        } else {
+          post.votes.upvotes.push(userId);
+        }
+        break;
+      case "downvote":
+        if (
+          post.votes.upvotes !== [] &&
+          post.votes.upvotes.find((uid) => uid.toString() === userId)
+        ) {
+          post.votes.upvotes.pull(userId);
+          post.votes.downvotes.push(userId);
+        } else if (
+          post.votes.downvotes !== [] &&
+          post.votes.downvotes.find((uid) => uid.toString() === userId)
+        ) {
+          post.votes.downvotes.pull(userId);
+        } else {
+          post.votes.downvotes.push(userId);
+        }
+        break;
+      default:
+        throw new Error("Invalid vote action");
+    }
+
+    await post.save();
+
+    res.status(200).json({ message: "Vote submited successfully!" });
+  } catch (error) {
+    res.status(404).json({ message: error.message || "Something went wrong" });
+  }
+};
+
 module.exports = {
   posts_getAll,
   posts_postNew,
   posts_getSingle,
   posts_editSingle,
   posts_commentSingle,
+  posts_voteForSingle,
 };

@@ -52,7 +52,7 @@ const PostPreview = ({ post, children }) => {
 
           <div className={styles.feedback__votes}>
             <Upvote />
-            <p>{post.votes}</p>
+            <p>{post.votes.upvotes.length - post.votes.downvotes.length}</p>
             <Downvote />
           </div>
         </div>

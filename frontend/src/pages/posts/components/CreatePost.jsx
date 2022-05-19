@@ -104,6 +104,7 @@ const CreatePost = () => {
             <Button
               className={styles["post-button"]}
               onClick={() => photoRef.current.click()}
+              disabled={isLoading}
             >
               <Icon
                 icon="icon-park-outline:picture-one"
@@ -114,6 +115,7 @@ const CreatePost = () => {
             <Button
               className={styles["post-button--cancel"]}
               onClick={cancelPost}
+              disabled={isLoading}
             >
               Chancel
             </Button>
