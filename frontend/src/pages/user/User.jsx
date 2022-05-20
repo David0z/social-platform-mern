@@ -3,6 +3,7 @@ import DefaultProfileImage from "../../utils/profile-template.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchUser, userActions } from "../../store/user/userSlice";
+import { postActions } from "../../store/post/postSlice"
 import { useParams } from "react-router-dom";
 import PostsList from "../../components/posts-list/PostsList";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
@@ -16,11 +17,17 @@ const User = () => {
   const { user, isLoading, isSuccess, isError } = useSelector(
     (state) => state.user.fetchedUser
   );
+  const { posts } = useSelector(state => state.post.posts)
 
   useEffect(() => {
     dispatch(fetchUser(userId));
 
-    return () => dispatch(userActions.resetFetchedUser());
+    const reset = () => {
+      dispatch(userActions.resetFetchedUser())
+      dispatch(postActions.reset())
+    }
+
+    return () => reset();
   }, [dispatch]);
 
   return (
@@ -41,9 +48,9 @@ const User = () => {
                 addSuffix: true,
               })}`}</p>
               <p className={styles["userbar__posts-count"]}>
-                {user.posts.length === 1
-                  ? `${user.posts.length} post`
-                  : `${user.posts.length} posts`}
+                {posts.length === 1
+                  ? `${posts.length} post`
+                  : `${posts.length} posts`}
               </p>
             </div>
           </div>
@@ -51,7 +58,7 @@ const User = () => {
       )}
       {!isLoading && !isError && user && (
         <PostsList
-          posts={user.posts.map((post) => ({
+          posts={posts.map((post) => ({
             ...post,
             creator: {
               _id: user._id,
@@ -61,7 +68,7 @@ const User = () => {
           }))}
         />
       )}
-      {!isLoading && !isError && user && user.posts.length === 0 && (
+      {!isLoading && !isError && user && posts.length === 0 && (
         <h1>No posts to display</h1>
       )}
       {/* 62794e0b481dd79190a7ec06 */}

@@ -11,14 +11,15 @@ import PostSkeletonList from '../../components/skeletons/PostSkeletonList'
 const Post = () => {
   const dispatch = useDispatch();
   const { id: postId } = useParams();
-  const { post, isLoading, isError, isSuccess } = useSelector(
-    (state) => state.post.post
+  const { posts, isLoading, isError, isSuccess } = useSelector(
+    (state) => state.post.posts
   );
+  const post = posts[0]
 
   useEffect(() => {
     dispatch(getSinglePost(postId));
 
-    return () => dispatch(postActions.resetPost());
+    return () => dispatch(postActions.reset());
   }, [dispatch]);
 
   return (

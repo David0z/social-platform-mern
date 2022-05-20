@@ -34,11 +34,21 @@ const commentPost = async (commentData) => {
   return response.data;
 }
 
+const voteForPost = async (voteData) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/vote/${voteData.postId}`,
+    {...voteData.body}
+  );
+
+  return response.data;
+}
+
 const postService = {
   createPost,
   getPosts,
   getSinglePost,
-  commentPost
+  commentPost,
+  voteForPost
 };
 
 export default postService;

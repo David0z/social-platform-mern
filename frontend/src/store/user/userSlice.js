@@ -4,7 +4,7 @@ import userService from "./userService";
 const uid = JSON.parse(localStorage.getItem("uid"));
 const token = JSON.parse(localStorage.getItem("token"));
 const image = JSON.parse(localStorage.getItem("image"));
-const userName = JSON.parse(localStorage.getItem("userName"))
+const userName = JSON.parse(localStorage.getItem("userName"));
 
 const initialState = {
   uid,
@@ -19,8 +19,8 @@ const initialState = {
     isLoading: false,
     isError: false,
     errorMessages: {},
-    isSuccess: false
-  }
+    isSuccess: false,
+  },
 };
 
 export const signup = createAsyncThunk(
@@ -49,13 +49,16 @@ export const logout = createAsyncThunk("user/logout", async () => {
   await userService.logout();
 });
 
-export const fetchUser = createAsyncThunk("user/fetchUser", async (userId, thunkAPI) => {
-  try {
-    return await userService.fetchUser(userId)
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data.message)
+export const fetchUser = createAsyncThunk(
+  "user/fetchUser",
+  async (userId, thunkAPI) => {
+    try {
+      return await userService.fetchUser(userId);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
   }
-})
+);
 
 const userSlice = createSlice({
   name: "user",
@@ -74,9 +77,9 @@ const userSlice = createSlice({
         isLoading: false,
         isError: false,
         errorMessages: {},
-        isSuccess: false
-      }
-    }
+        isSuccess: false,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -115,18 +118,23 @@ const userSlice = createSlice({
         state.token = null;
       })
       .addCase(fetchUser.pending, (state) => {
-        state.fetchedUser.isLoading = true
+        state.fetchedUser.isLoading = true;
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
-        state.fetchedUser.isLoading = false
-        state.fetchedUser.isSuccess = true
-        state.fetchedUser.user = action.payload.user
+        state.fetchedUser.isLoading = false;
+        state.fetchedUser.isSuccess = true;
+        state.fetchedUser.user = Object.keys(action.payload.user)
+          .filter((key) => key !== "posts")
+          .reduce((obj, key) => {
+            obj[key] = action.payload.user[key];
+            return obj;
+          }, {});
       })
       .addCase(fetchUser.rejected, (state, action) => {
-        state.fetchedUser.isLoading = false
-        state.fetchedUser.isError = true
-        state.errorMessages = action.payload
-      })
+        state.fetchedUser.isLoading = false;
+        state.fetchedUser.isError = true;
+        state.errorMessages = action.payload;
+      });
   },
 });
 

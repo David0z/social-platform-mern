@@ -5,8 +5,11 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import parseISO from "date-fns/parseISO";
 import Downvote from "./components/Downvote";
 import Upvote from "./components/Upvote";
+import { useSelector } from "react-redux";
 
 const PostPreview = ({ post, children }) => {
+  const { uid } = useSelector((state) => state.user);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.main}>
@@ -51,9 +54,28 @@ const PostPreview = ({ post, children }) => {
           </Link>
 
           <div className={styles.feedback__votes}>
-            <Upvote />
-            <p>{post.votes.upvotes.length - post.votes.downvotes.length}</p>
-            <Downvote />
+            <Upvote votes={post.votes.upvotes} uid={uid} postId={post._id} />
+            <p
+              className={`${
+                post.votes.upvotes.length - post.votes.downvotes.length > 0
+                  ? styles.positive
+                  : post.votes.upvotes.length - post.votes.downvotes.length < 0
+                  ? styles.negative
+                  : ""
+              } ${
+                post.votes.upvotes.find((id) => id === uid) ||
+                post.votes.downvotes.find((id) => id === uid)
+                  ? styles.voted
+                  : ""
+              }`}
+            >
+              {post.votes.upvotes.length - post.votes.downvotes.length}
+            </p>
+            <Downvote
+              votes={post.votes.downvotes}
+              uid={uid}
+              postId={post._id}
+            />
           </div>
         </div>
       </div>

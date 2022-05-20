@@ -105,7 +105,7 @@ const posts_commentSingle = async (req, res) => {
 
     await post.save();
 
-    res.status(200).json({ comment: newComment });
+    res.status(200).json({ comment: newComment }); //return postid to know which post to comment
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
   }
@@ -160,7 +160,11 @@ const posts_voteForSingle = async (req, res) => {
 
     await post.save();
 
-    res.status(200).json({ message: "Vote submited successfully!" });
+    res.status(200).json({ message: "Vote submited successfully!", vote: {
+      action,
+      userId,
+      postId
+    } });
   } catch (error) {
     res.status(404).json({ message: error.message || "Something went wrong" });
   }

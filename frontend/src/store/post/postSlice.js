@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import postService from "./postService";
+import { fetchUser } from '../user/userSlice'
 
 export const createPost = createAsyncThunk(
   "post/createPost",
@@ -38,15 +39,29 @@ export const commentPost = createAsyncThunk(
   "post/commentPost",
   async (commentData, thunkAPI) => {
     try {
-      let response = await postService.commentPost(commentData)
+      let response = await postService.commentPost(commentData);
 
-      response.comment = {...response.comment, author: {
-        name: thunkAPI.getState().user.userName,
-        image: thunkAPI.getState().user.image,
-        _id: thunkAPI.getState().user.uid
-      }}
+      response.comment = {
+        ...response.comment,
+        author: {
+          name: thunkAPI.getState().user.userName,
+          image: thunkAPI.getState().user.image,
+          _id: thunkAPI.getState().user.uid,
+        },
+      };
 
-      return response
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const voteForPost = createAsyncThunk(
+  "post/voteForPost",
+  async (voteData, thunkAPI) => {
+    try {
+      return await postService.voteForPost(voteData);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -74,7 +89,7 @@ const initialState = {
     isLoading: false,
     errorMessages: {},
     isSuccess: false,
-  }
+  },
 };
 
 const postSlice = createSlice({
@@ -98,8 +113,8 @@ const postSlice = createSlice({
         isLoading: false,
         errorMessages: {},
         isSuccess: false,
-      }
-    }
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -130,17 +145,17 @@ const postSlice = createSlice({
         state.posts.errorMessages = action.payload;
       })
       .addCase(getSinglePost.pending, (state) => {
-        state.post.isLoading = true;
+        state.posts.isLoading = true;
       })
       .addCase(getSinglePost.fulfilled, (state, action) => {
-        state.post.isLoading = false;
-        state.post.post = action.payload.post;
-        state.post.isSuccess = true;
+        state.posts.isLoading = false;
+        state.posts.posts.push(action.payload.post);
+        state.posts.isSuccess = true;
       })
       .addCase(getSinglePost.rejected, (state, action) => {
-        state.post.isLoading = false;
-        state.post.isError = true;
-        state.post.errorMessages = action.payload;
+        state.posts.isLoading = false;
+        state.posts.isError = true;
+        state.posts.errorMessages = action.payload;
       })
 
       .addCase(commentPost.pending, (state) => {
@@ -148,13 +163,26 @@ const postSlice = createSlice({
       })
       .addCase(commentPost.fulfilled, (state, action) => {
         state.createdComment.isLoading = false;
-        state.post.post.comments.push(action.payload.comment)
+        state.posts.posts[0].comments.push(action.payload.comment);
         state.createdComment.isSuccess = true;
       })
       .addCase(commentPost.rejected, (state, action) => {
         state.createdComment.isLoading = false;
         state.createdComment.isError = true;
         state.createdComment.errorMessages = action.payload;
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.posts.posts = action.payload.user.posts
+      })
+
+      .addCase(voteForPost.pending, (state) => {
+
+      })
+      .addCase(voteForPost.fulfilled, (state, action) => {
+
+      })
+      .addCase(voteForPost.rejected, (state, action) => {
+
       })
   },
 });

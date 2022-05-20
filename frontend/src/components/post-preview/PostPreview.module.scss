@@ -109,3 +109,15 @@
     }
   }
 }
+
+.positive {
+  color: $vote-up;
+}
+
+.negative {
+  color: $vote-down;
+}
+
+.voted {
+  font-weight: bold;
+}
