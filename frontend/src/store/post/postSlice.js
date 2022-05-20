@@ -174,12 +174,50 @@ const postSlice = createSlice({
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.posts.posts = action.payload.user.posts
       })
-
+      // COMPLETE THE CASES
       .addCase(voteForPost.pending, (state) => {
 
       })
       .addCase(voteForPost.fulfilled, (state, action) => {
+        const { action: voteAction, userId, postId } = action.payload.vote
+        const post = state.posts.posts.find(post => post._id === postId)
+        const postIndex = state.posts.posts.indexOf(post)
 
+        switch (voteAction) {
+          case "upvote":
+            if (
+              post.votes.downvotes !== [] &&
+              post.votes.downvotes.find((uid) => uid === userId)
+            ) {
+              state.posts.posts[postIndex].votes.downvotes = state.posts.posts[postIndex].votes.downvotes.filter(id => id !== userId)
+              state.posts.posts[postIndex].votes.upvotes.push(userId);
+            } else if (
+              post.votes.upvotes !== [] &&
+              post.votes.upvotes.find((uid) => uid === userId)
+            ) {
+              state.posts.posts[postIndex].votes.upvotes = state.posts.posts[postIndex].votes.upvotes.filter(id => id !== userId)
+
+            } else {
+              state.posts.posts[postIndex].votes.upvotes.push(userId);
+            }
+            break;
+          case "downvote":
+            if (
+              post.votes.upvotes !== [] &&
+              post.votes.upvotes.find((uid) => uid === userId)
+            ) {
+              state.posts.posts[postIndex].votes.upvotes = state.posts.posts[postIndex].votes.upvotes.filter(id => id !== userId)
+              state.posts.posts[postIndex].votes.downvotes.push(userId);
+            } else if (
+              post.votes.downvotes !== [] &&
+              post.votes.downvotes.find((uid) => uid === userId)
+            ) {
+              state.posts.posts[postIndex].votes.downvotes = state.posts.posts[postIndex].votes.downvotes.filter(id => id !== userId)
+            } else {
+              state.posts.posts[postIndex].votes.downvotes.push(userId);
+            }
+            break;
+        }
       })
       .addCase(voteForPost.rejected, (state, action) => {
 
