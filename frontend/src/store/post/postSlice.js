@@ -90,6 +90,9 @@ const initialState = {
     errorMessages: {},
     isSuccess: false,
   },
+  vote: {
+    isLoading: false
+  }
 };
 
 const postSlice = createSlice({
@@ -176,9 +179,10 @@ const postSlice = createSlice({
       })
       // COMPLETE THE CASES
       .addCase(voteForPost.pending, (state) => {
-
+        state.vote.isLoading = true
       })
       .addCase(voteForPost.fulfilled, (state, action) => {
+        state.vote.isLoading = false
         const { action: voteAction, userId, postId } = action.payload.vote
         const post = state.posts.posts.find(post => post._id === postId)
         const postIndex = state.posts.posts.indexOf(post)
@@ -220,7 +224,7 @@ const postSlice = createSlice({
         }
       })
       .addCase(voteForPost.rejected, (state, action) => {
-
+        state.vote.isLoading = false
       })
   },
 });

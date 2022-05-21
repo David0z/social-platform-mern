@@ -6,9 +6,14 @@ import parseISO from "date-fns/parseISO";
 import Downvote from "./components/Downvote";
 import Upvote from "./components/Upvote";
 import { useSelector } from "react-redux";
+import Modal from "../modal/Modal";
+import useModal from "../../hooks/useModal";
+import VotesList from "../votes-list/VotesList";
 
 const PostPreview = ({ post, children }) => {
   const { uid } = useSelector((state) => state.user);
+  const { isLoading } = useSelector((state) => state.post.vote);
+  const { closeModal, openModal, isModalOpened } = useModal()
 
   return (
     <div className={styles.wrapper}>
@@ -54,7 +59,12 @@ const PostPreview = ({ post, children }) => {
           </Link>
 
           <div className={styles.feedback__votes}>
-            <Upvote votes={post.votes.upvotes} uid={uid} postId={post._id} />
+            <Upvote
+              votes={post.votes.upvotes}
+              uid={uid}
+              postId={post._id}
+              isLoading={isLoading}
+            />
             <p
               className={`${
                 post.votes.upvotes.length - post.votes.downvotes.length > 0
@@ -68,13 +78,16 @@ const PostPreview = ({ post, children }) => {
                   ? styles.voted
                   : ""
               }`}
+              onClick={openModal}
             >
               {post.votes.upvotes.length - post.votes.downvotes.length}
             </p>
+            {isModalOpened && <Modal onClose={closeModal}><VotesList postId={post._id}/></Modal>}
             <Downvote
               votes={post.votes.downvotes}
               uid={uid}
               postId={post._id}
+              isLoading={isLoading}
             />
           </div>
         </div>
