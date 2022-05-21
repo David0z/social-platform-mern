@@ -1,5 +1,43 @@
-@import '../../variables';
+@import "../../variables";
 
 .wrapper {
-  
+  width: clamp(50%, 40rem, 90%);
+  height: clamp(50%, 35rem, 90%);
+  background-color: $post-bg;
+  border-radius: $post-border-radius;
+  overflow: hidden;
+}
+
+.button {
+  border: none;
+  background-color: transparent;
+  width: 50%;
+  font-size: 1.2rem;
+  padding: 0.6rem 0;
+  color: $primary;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.buttons__wrapper {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.indicator {
+  width: 50%;
+  height: 0.25rem;
+  background-color: $primary;
+  transition: all 0.3s;
+
+  &__upvote {
+    margin-left: 0;
+  }
+
+  &__downvote {
+    margin-left: 50%;
+  }
 }
