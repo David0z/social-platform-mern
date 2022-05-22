@@ -68,6 +68,14 @@ export const voteForPost = createAsyncThunk(
   }
 );
 
+export const getVotes = createAsyncThunk("post/getVotes", async (postId, thunkAPI) => {
+  try {
+    return await postService.getVotes(postId);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data.message);
+  }
+})
+
 const initialState = {
   posts: {
     posts: [],
@@ -92,6 +100,13 @@ const initialState = {
   },
   vote: {
     isLoading: false
+  },
+  votes: {
+    votes: null,
+    isError: false,
+    isLoading: false,
+    errorMessages: {},
+    isSuccess: false,
   }
 };
 
@@ -118,6 +133,15 @@ const postSlice = createSlice({
         isSuccess: false,
       };
     },
+    resetVotes(state) {
+      state.votes = {
+        votes: null,
+        isError: false,
+        isLoading: false,
+        errorMessages: {},
+        isSuccess: false,
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -225,6 +249,18 @@ const postSlice = createSlice({
       })
       .addCase(voteForPost.rejected, (state, action) => {
         state.vote.isLoading = false
+      })
+      .addCase(getVotes.pending, (state) => {
+        state.votes.isLoading = true
+      })
+      .addCase(getVotes.fulfilled, (state, action) => {
+        state.votes.isLoading = false
+        state.votes.isSuccess = true
+        state.votes.votes = action.payload.votes
+      })
+      .addCase(getVotes.rejected, (state, action) => {
+        state.votes.isLoading = false
+        state.votes.isError = true
       })
   },
 });

@@ -1,0 +1,29 @@
+@import '../../variables';
+
+$size: 4rem;
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.image {
+  width: $size;
+  height: $size;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.name {
+  color: $black;
+  font-size: 1.3rem;
+  line-height: 1.3rem;
+}
+
+.link {
+  width: $size;
+  height: $size;
+  aspect-ratio: 1;
+}

@@ -160,13 +160,38 @@ const posts_voteForSingle = async (req, res) => {
 
     await post.save();
 
-    res.status(200).json({ message: "Vote submited successfully!", vote: {
-      action,
-      userId,
-      postId
-    } });
+    res.status(200).json({
+      message: "Vote submited successfully!",
+      vote: {
+        action,
+        userId,
+        postId,
+      },
+    });
   } catch (error) {
     res.status(404).json({ message: error.message || "Something went wrong" });
+  }
+};
+
+// -------------------------------------------------------------------------------------
+// GET VOTES OF A SINGLE POST
+
+const posts_getVotes = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    const votes = await Post.findById(postId, "votes").populate({
+      path: "votes",
+      populate: [
+        { path: "upvotes", select: { name: 1, id: 1, image: 1 } },
+        { path: "downvotes", select: { name: 1, id: 1, image: 1 } },
+      ],
+    });
+
+    res.status(200).json({ votes: votes.votes, postId });
+  } catch (error) {
+    console.log(error);
+    res.status(401).json({ message: "Unauthorized" });
   }
 };
 
@@ -177,4 +202,5 @@ module.exports = {
   posts_editSingle,
   posts_commentSingle,
   posts_voteForSingle,
+  posts_getVotes,
 };

@@ -1,8 +1,20 @@
 import styles from "./VotesList.module.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getVotes, postActions } from "../../store/post/postSlice";
+import UserVote from "./UserVote";
 
 const VotesList = ({ postId }) => {
+  const dispatch = useDispatch();
   const [activeType, setActiveType] = useState("upvotes");
+
+  useEffect(() => {
+    dispatch(getVotes(postId));
+
+    return () => dispatch(postActions.resetVotes());
+  }, [dispatch]);
+
+  const { votes, isLoading } = useSelector((state) => state.post.votes);
 
   return (
     <div className={styles.wrapper} onClick={(e) => e.stopPropagation()}>
@@ -29,6 +41,19 @@ const VotesList = ({ postId }) => {
           }`}
         />
       </div>
+      {isLoading && <h1>Loading...</h1>}
+      {votes && (
+        <div className={styles["users-list"]}>
+          {activeType === "upvotes"
+            ? votes.upvotes.map((vote) => (
+                <UserVote vote={vote} key={vote._id} />
+              ))
+            : activeType === "downvotes" &&
+              votes.downvotes.map((vote) => (
+                <UserVote vote={vote} key={vote._id} />
+              ))}
+        </div>
+      )}
     </div>
   );
 };

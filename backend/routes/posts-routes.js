@@ -9,5 +9,6 @@ router.get('/:id', postsControllers.posts_getSingle)
 router.patch('/:id', postsControllers.posts_editSingle)
 router.post('/:id', postsControllers.posts_commentSingle)
 router.post('/vote/:id', postsControllers.posts_voteForSingle)
+router.get('/votes/:id', postsControllers.posts_getVotes)
 
 module.exports = router

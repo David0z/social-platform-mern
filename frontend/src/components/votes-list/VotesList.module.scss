@@ -6,6 +6,8 @@
   background-color: $post-bg;
   border-radius: $post-border-radius;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .button {
@@ -39,5 +41,32 @@
 
   &__downvote {
     margin-left: 50%;
+  }
+}
+
+.users-list {
+  display: grid;
+  overflow-y: auto;
+  row-gap: .8rem;
+  padding: 1rem;
+  margin-right: .3rem;
+  $scrollbar-width: 0.6rem;
+
+  &::-webkit-scrollbar {
+    width: $scrollbar-width;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $primary;
+    border-radius: $scrollbar-width / 2;
+  }
+
+  &::-webkit-scrollbar-button {
+    height: .5rem;
+    visibility: hidden;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
   }
 }
