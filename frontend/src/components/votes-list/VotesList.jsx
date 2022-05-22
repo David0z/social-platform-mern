@@ -3,8 +3,9 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getVotes, postActions } from "../../store/post/postSlice";
 import UserVote from "./UserVote";
+import VoteSkeletonList from "../skeletons/VoteSkeleton";
 
-const VotesList = ({ postId }) => {
+const VotesList = ({ postId, upvoteCount, downvoteCount }) => {
   const dispatch = useDispatch();
   const [activeType, setActiveType] = useState("upvotes");
 
@@ -24,13 +25,13 @@ const VotesList = ({ postId }) => {
             className={styles.button}
             onClick={() => setActiveType("upvotes")}
           >
-            Upvotes
+            Upvotes <span className={styles.button__counter}>{upvoteCount}</span>
           </button>
           <button
             className={styles.button}
             onClick={() => setActiveType("downvotes")}
           >
-            Downvotes
+            Downvotes <span className={styles.button__counter}>{downvoteCount}</span>
           </button>
         </div>
         <div
@@ -41,7 +42,7 @@ const VotesList = ({ postId }) => {
           }`}
         />
       </div>
-      {isLoading && <h1>Loading...</h1>}
+      {isLoading && <VoteSkeletonList number={5}/>}
       {votes && (
         <div className={styles["users-list"]}>
           {activeType === "upvotes"

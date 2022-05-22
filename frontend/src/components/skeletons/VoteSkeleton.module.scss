@@ -1,0 +1,39 @@
+@import '../../variables';
+@import '../../templates';
+
+.list__wrapper {
+  display: grid;
+  overflow-y: auto;
+  row-gap: .8rem;
+  padding: 1rem;
+  margin-right: .3rem;
+  overflow: hidden;
+}
+
+$size: 4rem;
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  position: relative;
+  width: min-content;
+}
+
+.image {
+  width: $size;
+  height: $size;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: $skeleton-color;
+}
+
+.name {
+  height: 1.3rem;
+  width: 12rem;
+  @extend %skeleton-content;
+}
+
+.shine {
+  @include shine(rgba($post-bg, 0.4));
+}

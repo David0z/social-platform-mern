@@ -9,7 +9,7 @@
   padding: 1rem 0;
 
   .shine {
-    @extend %shine;
+    @include shine();
   }
 
   &__wrapper {

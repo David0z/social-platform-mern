@@ -21,6 +21,10 @@
   &:hover {
     cursor: pointer;
   }
+
+  &__counter {
+    font-weight: 600;
+  }
 }
 
 .buttons__wrapper {

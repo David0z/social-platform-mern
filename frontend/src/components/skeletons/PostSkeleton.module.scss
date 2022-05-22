@@ -10,7 +10,7 @@
 }
 
 .shine {
-  @extend %shine;
+  @include shine();
 }
 
 .main {

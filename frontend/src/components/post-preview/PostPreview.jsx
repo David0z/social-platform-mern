@@ -13,7 +13,7 @@ import VotesList from "../votes-list/VotesList";
 const PostPreview = ({ post, children }) => {
   const { uid } = useSelector((state) => state.user);
   const { isLoading } = useSelector((state) => state.post.vote);
-  const { closeModal, openModal, isModalOpened } = useModal()
+  const { closeModal, openModal, isModalOpened } = useModal();
 
   return (
     <div className={styles.wrapper}>
@@ -82,7 +82,15 @@ const PostPreview = ({ post, children }) => {
             >
               {post.votes.upvotes.length - post.votes.downvotes.length}
             </p>
-            {isModalOpened && <Modal onClose={closeModal}><VotesList postId={post._id}/></Modal>}
+            {isModalOpened && (
+              <Modal onClose={closeModal}>
+                <VotesList
+                  postId={post._id}
+                  upvoteCount={post.votes.upvotes.length}
+                  downvoteCount={post.votes.downvotes.length}
+                />
+              </Modal>
+            )}
             <Downvote
               votes={post.votes.downvotes}
               uid={uid}
