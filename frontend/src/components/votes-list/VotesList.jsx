@@ -10,7 +10,9 @@ const VotesList = ({ postId, upvoteCount, downvoteCount }) => {
   const [activeType, setActiveType] = useState("upvotes");
 
   useEffect(() => {
-    dispatch(getVotes(postId));
+    if (upvoteCount > 0 || downvoteCount > 0) {
+      dispatch(getVotes(postId));
+    }
 
     return () => dispatch(postActions.resetVotes());
   }, [dispatch]);
@@ -25,13 +27,15 @@ const VotesList = ({ postId, upvoteCount, downvoteCount }) => {
             className={styles.button}
             onClick={() => setActiveType("upvotes")}
           >
-            Upvotes <span className={styles.button__counter}>{upvoteCount}</span>
+            Upvotes{" "}
+            <span className={styles.button__counter}>{upvoteCount}</span>
           </button>
           <button
             className={styles.button}
             onClick={() => setActiveType("downvotes")}
           >
-            Downvotes <span className={styles.button__counter}>{downvoteCount}</span>
+            Downvotes{" "}
+            <span className={styles.button__counter}>{downvoteCount}</span>
           </button>
         </div>
         <div
@@ -42,17 +46,25 @@ const VotesList = ({ postId, upvoteCount, downvoteCount }) => {
           }`}
         />
       </div>
-      {isLoading && <VoteSkeletonList number={5}/>}
-      {votes && (
-        <div className={styles["users-list"]}>
-          {activeType === "upvotes"
-            ? votes.upvotes.map((vote) => (
-                <UserVote vote={vote} key={vote._id} />
-              ))
-            : activeType === "downvotes" &&
-              votes.downvotes.map((vote) => (
-                <UserVote vote={vote} key={vote._id} />
-              ))}
+      {upvoteCount > 0 || downvoteCount > 0 ? (
+        <>
+          {isLoading && <VoteSkeletonList number={5} />}
+          {votes && (
+            <div className={styles["users-list"]}>
+              {activeType === "upvotes"
+                ? votes.upvotes.map((vote) => (
+                    <UserVote vote={vote} key={vote._id} />
+                  ))
+                : activeType === "downvotes" &&
+                  votes.downvotes.map((vote) => (
+                    <UserVote vote={vote} key={vote._id} />
+                  ))}
+            </div>
+          )}
+        </>
+      ) : (
+        <div className={styles['no-votes']}>
+          <p>No votes yet</p>
         </div>
       )}
     </div>
