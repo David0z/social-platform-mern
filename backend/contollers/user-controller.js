@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
 
 // -------------------------------------------------------------------------------------
 // error handler function
@@ -73,7 +74,7 @@ const users_signup = async (req, res) => {
       user: user._id,
       token,
       image: user.image,
-      userName: user.name
+      userName: user.name,
     });
   } catch (error) {
     const errors = handleErrors(error);
@@ -94,7 +95,7 @@ const users_login = async (req, res) => {
       user: user._id,
       token,
       image: user.image,
-      userName: user.name
+      userName: user.name,
     });
   } catch (error) {
     const errors = handleErrors(error);
@@ -106,14 +107,28 @@ const users_login = async (req, res) => {
 // GET A SINGLE USER BY ID
 const users_getUser = async (req, res) => {
   try {
-    const existingUser = await User.findById(req.params.id, {
-      name: 1,
-      posts: 1,
-      image: 1,
-      createdAt: 1,
-    }).populate({ path: "posts", options: { sort: { createdAt: -1 } } });
-    res.status(200).json({ user: existingUser.toObject({ getters: true }) });
+    const existingUser = await User.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(req.params.id) } },
+      { $project: { name: 1, posts: 1, image: 1, createdAt: 1 } },
+      {
+        $lookup: {
+          from: "posts",
+          let: {
+            userId: "$_id",
+          },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$creator", "$$userId"] } } },
+            { $sort: { createdAt: -1 } },
+            { $set: {comments: { $size: "$comments" }}}
+          ],
+          as: "posts",
+        },
+      },
+    ]);
+
+    res.status(200).json({ user: existingUser[0] });
   } catch (error) {
+    console.log(error);
     res.status(404).json({ message: "Could not find this user" });
   }
 };

@@ -52,9 +52,9 @@ const PostPreview = ({ post, children }) => {
         <div className={styles.feedback}>
           <Link to={`/posts/${post._id}`}>
             <p className={styles.feedback__comments}>
-              {post.comments.length === 0
+              {post.comments === 0
                 ? "No comments yet"
-                : `${post.comments.length} comments`}
+                : `${post.comments} comments`}
             </p>
           </Link>
 

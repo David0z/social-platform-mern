@@ -4,6 +4,15 @@
   padding: $post-padding;
   border-radius: $post-border-radius;
   box-shadow: .2rem .2rem 1rem -0.5rem $text-secondary;
+  box-sizing: border-box;
+
+  &__op {
+    border-left: 0.25rem solid $vote-up;
+  }
+
+  &__user {
+    border-left: 0.25rem solid $secondary;
+  }
 }
 
 .author {

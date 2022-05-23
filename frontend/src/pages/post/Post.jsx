@@ -6,7 +6,7 @@ import PostPreview from "../../components/post-preview/PostPreview";
 import { useParams } from "react-router-dom";
 import CommentsList from "../../components/comments-list/CommentsList";
 import CommentCreate from "../../components/comment-create/CommentCreate";
-import PostSkeletonList from '../../components/skeletons/PostSkeletonList'
+import PostSkeletonList from "../../components/skeletons/PostSkeletonList";
 
 const Post = () => {
   const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const Post = () => {
   const { posts, isLoading, isError, isSuccess } = useSelector(
     (state) => state.post.posts
   );
-  const post = posts[0]
+  const post = posts[0];
 
   useEffect(() => {
     dispatch(getSinglePost(postId));
@@ -25,9 +25,14 @@ const Post = () => {
   return (
     <div className={styles.wrapper}>
       {!isLoading && !isError && post && (
-        <PostPreview post={post}>
-          <hr className={styles.line}/>
-          {post.comments.length > 0 && <CommentsList comments={post.comments} />}
+        <PostPreview post={{...post, comments: post.comments.length}}>
+          <hr className={styles.line} />
+          {post.comments.length > 0 && (
+            <CommentsList
+              comments={post.comments}
+              postAuthorId={post.creator._id}
+            />
+          )}
           <CommentCreate postId={postId} />
         </PostPreview>
       )}

@@ -3,10 +3,21 @@ import DefaultProfileImage from "../../utils/profile-template.svg";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import parseISO from "date-fns/parseISO";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment, postAuthorId }) => {
+  const { uid } = useSelector((state) => state.user);
+
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={`${styles.wrapper} ${
+        comment.author._id === uid
+          ? styles.wrapper__user
+          : comment.author._id === postAuthorId
+          ? styles.wrapper__op
+          : ""
+      }`}
+    >
       <div className={styles.author}>
         <Link to={`/users/${comment.author._id}`}>
           <img

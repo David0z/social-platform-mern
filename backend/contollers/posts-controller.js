@@ -19,12 +19,36 @@ const handleErrors = (err) => {
 // GET ALL POSTS
 const posts_getAll = async (req, res) => {
   try {
-    const posts = await Post.find()
-      .sort({ createdAt: -1 })
-      .populate("creator", { name: 1, image: 1 });
+    const posts = await Post.aggregate([
+      { $sort: { createdAt: -1 } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "creator",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      {$unwind: "$creator"},
+      {
+        $project: {
+          "creator.password": 0,
+          "creator.email": 0,
+          "creator.posts": 0,
+          "creator.createdAt": 0,
+          "creator.updatedAt": 0,
+          "creator.__v": 0,
+        },
+      },
+      { $set: { comments: { $size: "$comments" } } },
+    ]);
+    // .find()
+    // .sort({ createdAt: -1 })
+    // .populate("creator", { name: 1, image: 1 });
 
     res.status(200).json({ posts });
   } catch (error) {
+    console.log(error);
     res.status(401).json({ message: "Unauthorized" });
   }
 };

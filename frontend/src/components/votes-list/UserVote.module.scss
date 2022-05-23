@@ -6,6 +6,7 @@ $size: 4rem;
   display: flex;
   align-items: center;
   gap: .5rem;
+  user-select: none;
 }
 
 .image {
