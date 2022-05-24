@@ -191,6 +191,7 @@ const postSlice = createSlice({
       .addCase(commentPost.fulfilled, (state, action) => {
         state.createdComment.isLoading = false;
         state.posts.posts[0].comments.push(action.payload.comment);
+        state.posts.posts[0].commentCounter++;
         state.createdComment.isSuccess = true;
       })
       .addCase(commentPost.rejected, (state, action) => {

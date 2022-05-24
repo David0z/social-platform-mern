@@ -23,7 +23,6 @@ const Login = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Submited");
 
     let userData = {};
 

@@ -10,7 +10,7 @@ import Modal from "../modal/Modal";
 import useModal from "../../hooks/useModal";
 import VotesList from "../votes-list/VotesList";
 
-const PostPreview = ({ post, children }) => {
+const PostPreview = ({ post, children, allowCommentFetch = true }) => {
   const { uid } = useSelector((state) => state.user);
   const { isLoading } = useSelector((state) => state.post.vote);
   const { closeModal, openModal, isModalOpened } = useModal();
@@ -50,13 +50,21 @@ const PostPreview = ({ post, children }) => {
         </div>
 
         <div className={styles.feedback}>
-          <Link to={`/posts/${post._id}`}>
+          {allowCommentFetch ? (
+            <Link to={`/posts/${post._id}`}>
+              <p className={styles.feedback__comments}>
+                {post.commentCounter === 0
+                  ? "No comments yet"
+                  : `${post.commentCounter} comments`}
+              </p>
+            </Link>
+          ) : (
             <p className={styles.feedback__comments}>
-              {post.comments === 0
+              {post.commentCounter === 0
                 ? "No comments yet"
-                : `${post.comments} comments`}
+                : `${post.commentCounter} comments`}
             </p>
-          </Link>
+          )}
 
           <div className={styles.feedback__votes}>
             <Upvote

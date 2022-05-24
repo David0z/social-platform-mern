@@ -25,7 +25,10 @@ const Post = () => {
   return (
     <div className={styles.wrapper}>
       {!isLoading && !isError && post && (
-        <PostPreview post={{...post, comments: post.comments.length}}>
+        <PostPreview
+          post={{ ...post, comments: post.comments.length }}
+          allowCommentFetch={false}
+        >
           <hr className={styles.line} />
           {post.comments.length > 0 && (
             <CommentsList

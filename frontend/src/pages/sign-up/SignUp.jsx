@@ -31,15 +31,12 @@ const SignUp = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Submited");
 
     let userData = {};
 
     for (const key in formValues) {
       userData[key] = formValues[key].value;
     }
-
-    // console.log(userData);
 
     dispatch(signup(userData));
   };

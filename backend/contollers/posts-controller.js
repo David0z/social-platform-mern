@@ -24,31 +24,22 @@ const posts_getAll = async (req, res) => {
       {
         $lookup: {
           from: "users",
-          localField: "creator",
-          foreignField: "_id",
+          let: {
+            userId: "$creator",
+          },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$_id", "$$userId"] } } },
+            { $project: { _id: 1, name: 1, image: 1 } },
+          ],
           as: "creator",
         },
       },
-      {$unwind: "$creator"},
-      {
-        $project: {
-          "creator.password": 0,
-          "creator.email": 0,
-          "creator.posts": 0,
-          "creator.createdAt": 0,
-          "creator.updatedAt": 0,
-          "creator.__v": 0,
-        },
-      },
-      { $set: { comments: { $size: "$comments" } } },
+      { $unwind: "$creator" },
+      { $set: { comments: [], commentCounter: { $size: "$comments" }} },
     ]);
-    // .find()
-    // .sort({ createdAt: -1 })
-    // .populate("creator", { name: 1, image: 1 });
 
     res.status(200).json({ posts });
   } catch (error) {
-    console.log(error);
     res.status(401).json({ message: "Unauthorized" });
   }
 };
@@ -102,7 +93,7 @@ const posts_getSingle = async (req, res) => {
       },
     ]);
 
-    res.status(200).json({ post });
+    res.status(200).json({ post: {...post.toObject(), commentCounter: post.comments.length} });
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
   }
@@ -214,7 +205,27 @@ const posts_getVotes = async (req, res) => {
 
     res.status(200).json({ votes: votes.votes, postId });
   } catch (error) {
-    console.log(error);
+    res.status(401).json({ message: "Unauthorized" });
+  }
+};
+
+// -------------------------------------------------------------------------------------
+// GET ALL COMMENTS OF A SINGLE POST
+
+const posts_getComments = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    const comments = await Post.findById(postId, "comments").populate({
+      path: "comments",
+      populate: {
+        path: "author",
+        select: { _id: 1, name: 1, image: 1 },
+      },
+    });
+
+    res.status(200).json({ comments: comments.comments, postId });
+  } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
   }
 };
@@ -227,4 +238,5 @@ module.exports = {
   posts_commentSingle,
   posts_voteForSingle,
   posts_getVotes,
+  posts_getComments,
 };

@@ -119,7 +119,7 @@ const users_getUser = async (req, res) => {
           pipeline: [
             { $match: { $expr: { $eq: ["$creator", "$$userId"] } } },
             { $sort: { createdAt: -1 } },
-            { $set: {comments: { $size: "$comments" }}}
+            { $set: {comments: [], commentCounter: { $size: "$comments" }}}
           ],
           as: "posts",
         },
@@ -128,7 +128,6 @@ const users_getUser = async (req, res) => {
 
     res.status(200).json({ user: existingUser[0] });
   } catch (error) {
-    console.log(error);
     res.status(404).json({ message: "Could not find this user" });
   }
 };
