@@ -28,7 +28,7 @@ const User = () => {
     }
 
     return () => reset();
-  }, [dispatch]);
+  }, [dispatch, userId]);
 
   return (
     <>

@@ -120,7 +120,7 @@ const posts_commentSingle = async (req, res) => {
 
     await post.save();
 
-    res.status(200).json({ comment: newComment }); //return postid to know which post to comment
+    res.status(200).json({ comment: newComment, postId }); //return postid to know which post to comment
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
   }

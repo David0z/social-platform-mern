@@ -51,6 +51,14 @@ const getVotes = async (postId) => {
   return response.data;
 };
 
+const getComments = async (postId) => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/comments/${postId}`
+  );
+
+  return response.data;
+};
+
 const postService = {
   createPost,
   getPosts,
@@ -58,6 +66,7 @@ const postService = {
   commentPost,
   voteForPost,
   getVotes,
+  getComments
 };
 
 export default postService;

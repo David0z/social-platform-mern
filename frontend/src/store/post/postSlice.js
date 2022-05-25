@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import postService from "./postService";
-import { fetchUser } from '../user/userSlice'
+import { fetchUser } from "../user/userSlice";
 
 export const createPost = createAsyncThunk(
   "post/createPost",
@@ -68,13 +68,27 @@ export const voteForPost = createAsyncThunk(
   }
 );
 
-export const getVotes = createAsyncThunk("post/getVotes", async (postId, thunkAPI) => {
-  try {
-    return await postService.getVotes(postId);
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data.message);
+export const getVotes = createAsyncThunk(
+  "post/getVotes",
+  async (postId, thunkAPI) => {
+    try {
+      return await postService.getVotes(postId);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
   }
-})
+);
+
+export const getComments = createAsyncThunk(
+  "post/getComments",
+  async (postId, thunkAPI) => {
+    try {
+      return await postService.getComments(postId);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
 
 const initialState = {
   posts: {
@@ -99,7 +113,7 @@ const initialState = {
     isSuccess: false,
   },
   vote: {
-    isLoading: false
+    isLoading: false,
   },
   votes: {
     votes: null,
@@ -107,7 +121,13 @@ const initialState = {
     isLoading: false,
     errorMessages: {},
     isSuccess: false,
-  }
+  },
+  comments: {
+    isError: false,
+    isLoading: false,
+    errorMessages: {},
+    isSuccess: false,
+  },
 };
 
 const postSlice = createSlice({
@@ -140,8 +160,8 @@ const postSlice = createSlice({
         isLoading: false,
         errorMessages: {},
         isSuccess: false,
-      }
-    }
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -150,7 +170,7 @@ const postSlice = createSlice({
       })
       .addCase(createPost.fulfilled, (state, action) => {
         state.post.isLoading = false;
-        state.posts.posts.unshift(action.payload.post); //maybe lol
+        state.posts.posts.unshift(action.payload.post);
         state.post.isSuccess = true;
       })
       .addCase(createPost.rejected, (state, action) => {
@@ -190,8 +210,11 @@ const postSlice = createSlice({
       })
       .addCase(commentPost.fulfilled, (state, action) => {
         state.createdComment.isLoading = false;
-        state.posts.posts[0].comments.push(action.payload.comment);
-        state.posts.posts[0].commentCounter++;
+        const postIndex = state.posts.posts.indexOf(
+          state.posts.posts.find((post) => post._id === action.payload.postId)
+        );
+        state.posts.posts[postIndex].comments.push(action.payload.comment);
+        state.posts.posts[postIndex].commentCounter++;
         state.createdComment.isSuccess = true;
       })
       .addCase(commentPost.rejected, (state, action) => {
@@ -200,17 +223,17 @@ const postSlice = createSlice({
         state.createdComment.errorMessages = action.payload;
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
-        state.posts.posts = action.payload.user.posts
+        state.posts.posts = action.payload.user.posts;
       })
       // COMPLETE THE CASES
       .addCase(voteForPost.pending, (state) => {
-        state.vote.isLoading = true
+        state.vote.isLoading = true;
       })
       .addCase(voteForPost.fulfilled, (state, action) => {
-        state.vote.isLoading = false
-        const { action: voteAction, userId, postId } = action.payload.vote
-        const post = state.posts.posts.find(post => post._id === postId)
-        const postIndex = state.posts.posts.indexOf(post)
+        state.vote.isLoading = false;
+        const { action: voteAction, userId, postId } = action.payload.vote;
+        const post = state.posts.posts.find((post) => post._id === postId);
+        const postIndex = state.posts.posts.indexOf(post);
 
         switch (voteAction) {
           case "upvote":
@@ -218,14 +241,17 @@ const postSlice = createSlice({
               post.votes.downvotes !== [] &&
               post.votes.downvotes.find((uid) => uid === userId)
             ) {
-              state.posts.posts[postIndex].votes.downvotes = state.posts.posts[postIndex].votes.downvotes.filter(id => id !== userId)
+              state.posts.posts[postIndex].votes.downvotes = state.posts.posts[
+                postIndex
+              ].votes.downvotes.filter((id) => id !== userId);
               state.posts.posts[postIndex].votes.upvotes.push(userId);
             } else if (
               post.votes.upvotes !== [] &&
               post.votes.upvotes.find((uid) => uid === userId)
             ) {
-              state.posts.posts[postIndex].votes.upvotes = state.posts.posts[postIndex].votes.upvotes.filter(id => id !== userId)
-
+              state.posts.posts[postIndex].votes.upvotes = state.posts.posts[
+                postIndex
+              ].votes.upvotes.filter((id) => id !== userId);
             } else {
               state.posts.posts[postIndex].votes.upvotes.push(userId);
             }
@@ -235,13 +261,17 @@ const postSlice = createSlice({
               post.votes.upvotes !== [] &&
               post.votes.upvotes.find((uid) => uid === userId)
             ) {
-              state.posts.posts[postIndex].votes.upvotes = state.posts.posts[postIndex].votes.upvotes.filter(id => id !== userId)
+              state.posts.posts[postIndex].votes.upvotes = state.posts.posts[
+                postIndex
+              ].votes.upvotes.filter((id) => id !== userId);
               state.posts.posts[postIndex].votes.downvotes.push(userId);
             } else if (
               post.votes.downvotes !== [] &&
               post.votes.downvotes.find((uid) => uid === userId)
             ) {
-              state.posts.posts[postIndex].votes.downvotes = state.posts.posts[postIndex].votes.downvotes.filter(id => id !== userId)
+              state.posts.posts[postIndex].votes.downvotes = state.posts.posts[
+                postIndex
+              ].votes.downvotes.filter((id) => id !== userId);
             } else {
               state.posts.posts[postIndex].votes.downvotes.push(userId);
             }
@@ -249,20 +279,35 @@ const postSlice = createSlice({
         }
       })
       .addCase(voteForPost.rejected, (state, action) => {
-        state.vote.isLoading = false
+        state.vote.isLoading = false;
       })
       .addCase(getVotes.pending, (state) => {
-        state.votes.isLoading = true
+        state.votes.isLoading = true;
       })
       .addCase(getVotes.fulfilled, (state, action) => {
-        state.votes.isLoading = false
-        state.votes.isSuccess = true
-        state.votes.votes = action.payload.votes
+        state.votes.isLoading = false;
+        state.votes.isSuccess = true;
+        state.votes.votes = action.payload.votes;
       })
       .addCase(getVotes.rejected, (state, action) => {
-        state.votes.isLoading = false
-        state.votes.isError = true
+        state.votes.isLoading = false;
+        state.votes.isError = true;
       })
+      .addCase(getComments.pending, (state) => {
+        state.comments.isLoading = true;
+      })
+      .addCase(getComments.fulfilled, (state, action) => {
+        state.comments.isLoading = false;
+        state.comments.isSuccess = true;
+        const postIndex = state.posts.posts.indexOf(
+          state.posts.posts.find((post) => post._id === action.payload.postId)
+        );
+        state.posts.posts[postIndex].comments = action.payload.comments;
+      })
+      .addCase(getComments.rejected, (state, action) => {
+        state.comments.isLoading = false;
+        state.comments.isError = true;
+      });
   },
 });
 

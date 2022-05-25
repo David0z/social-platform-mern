@@ -4,8 +4,6 @@ import { postActions, getSinglePost } from "../../store/post/postSlice";
 import styles from "./Post.module.scss";
 import PostPreview from "../../components/post-preview/PostPreview";
 import { useParams } from "react-router-dom";
-import CommentsList from "../../components/comments-list/CommentsList";
-import CommentCreate from "../../components/comment-create/CommentCreate";
 import PostSkeletonList from "../../components/skeletons/PostSkeletonList";
 
 const Post = () => {
@@ -26,18 +24,10 @@ const Post = () => {
     <div className={styles.wrapper}>
       {!isLoading && !isError && post && (
         <PostPreview
-          post={{ ...post, comments: post.comments.length }}
+          post={post}
           allowCommentFetch={false}
-        >
-          <hr className={styles.line} />
-          {post.comments.length > 0 && (
-            <CommentsList
-              comments={post.comments}
-              postAuthorId={post.creator._id}
-            />
-          )}
-          <CommentCreate postId={postId} />
-        </PostPreview>
+          instantComments={true}
+        />
       )}
       {!isLoading && isError && <h1>Failed to fetch the post, sorry :/</h1>}
       {isLoading && <PostSkeletonList number={1} />}

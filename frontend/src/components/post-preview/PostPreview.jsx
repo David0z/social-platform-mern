@@ -5,15 +5,28 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import parseISO from "date-fns/parseISO";
 import Downvote from "./components/Downvote";
 import Upvote from "./components/Upvote";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Modal from "../modal/Modal";
 import useModal from "../../hooks/useModal";
 import VotesList from "../votes-list/VotesList";
+import CommentsList from "../../components/comments-list/CommentsList";
+import CommentCreate from "../../components/comment-create/CommentCreate";
+import { getComments } from "../../store/post/postSlice";
+import { useState } from "react";
 
-const PostPreview = ({ post, children, allowCommentFetch = true }) => {
+const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
   const { uid } = useSelector((state) => state.user);
   const { isLoading } = useSelector((state) => state.post.vote);
   const { closeModal, openModal, isModalOpened } = useModal();
+  const dispatch = useDispatch()
+  const [commentsFetched, setCommentsFetched] = useState(false);
+
+  const handleCommentsFetch = () => {
+    if (commentsFetched === false) {
+      setCommentsFetched(true)
+      dispatch(getComments(post._id))
+    }
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -51,13 +64,14 @@ const PostPreview = ({ post, children, allowCommentFetch = true }) => {
 
         <div className={styles.feedback}>
           {allowCommentFetch ? (
-            <Link to={`/posts/${post._id}`}>
-              <p className={styles.feedback__comments}>
-                {post.commentCounter === 0
-                  ? "No comments yet"
-                  : `${post.commentCounter} comments`}
-              </p>
-            </Link>
+            <p
+              className={styles["feedback__comments--clickable"]}
+              onClick={handleCommentsFetch}
+            >
+              {post.commentCounter === 0
+                ? "No comments yet"
+                : `${post.commentCounter} comments`}
+            </p>
           ) : (
             <p className={styles.feedback__comments}>
               {post.commentCounter === 0
@@ -108,7 +122,19 @@ const PostPreview = ({ post, children, allowCommentFetch = true }) => {
           </div>
         </div>
       </div>
-      {children}
+      {(instantComments || commentsFetched) && (
+        <>
+          <hr className={styles.line} />
+          {post.comments.length === 0 && post.commentCounter > 0 && <h1>Loading...</h1>}
+          {post.comments.length > 0 && (
+            <CommentsList
+              comments={post.comments}
+              postAuthorId={post.creator._id}
+            />
+          )}
+          <CommentCreate postId={post._id} />
+        </>
+      )}
     </div>
   );
 };
