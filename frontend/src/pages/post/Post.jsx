@@ -26,7 +26,7 @@ const Post = () => {
         <PostPreview
           post={post}
           allowCommentFetch={false}
-          instantComments={true}
+          instantComments
         />
       )}
       {!isLoading && isError && <h1>Failed to fetch the post, sorry :/</h1>}

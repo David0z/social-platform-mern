@@ -6,9 +6,9 @@ import Button from "../button/Button";
 import ErrorMessage from "../../components/error-message/ErrorMessage";
 import VALIDATORS from "../../validators/validators";
 import { commentPost, postActions } from "../../store/post/postSlice";
-import DefaultProfileImage from "../../utils/profile-template.svg";
-import LoadingBar from '../loading-bar/LoadingBar'
+import LoadingBar from "../loading-bar/LoadingBar";
 import { Icon } from "@iconify/react";
+import ProfileImage from "../profile-image/ProfileImage";
 
 const initialState = {
   text: {
@@ -66,8 +66,8 @@ const CommentCreate = ({ postId }) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.main}>
-        <img
-          src={image !== "" ? image : DefaultProfileImage}
+        <ProfileImage
+          profileImage={image}
           alt="User Image"
           className={styles["user-image"]}
         />

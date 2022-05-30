@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import styles from "./CreatePost.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import DefaultProfileImage from "../../../utils/profile-template.svg";
 import Button from "../../../components/button/Button";
 import { Icon } from "@iconify/react";
 import useForm from "../../../hooks/useForm";
@@ -10,6 +9,7 @@ import VALIDATORS from "../../../validators/validators";
 import ErrorMessage from "../../../components/error-message/ErrorMessage";
 import { Link } from "react-router-dom";
 import LoadingBar from '../../../components/loading-bar/LoadingBar'
+import ProfileImage from "../../../components/profile-image/ProfileImage";
 
 const initialState = {
   photo: {
@@ -45,11 +45,16 @@ const CreatePost = () => {
       return;
     }
 
-    let postData = {
-      creator: uid,
-      content: formValues.text.value,
-      image: formValues.photo.value,
-    };
+    // let postData = {
+    //   creator: uid,
+    //   content: formValues.text.value,
+    //   image: formValues.photo.value,
+    // };
+
+    const postData = new FormData();
+    postData.append('creator', uid)
+    postData.append('content', formValues.text.value)
+    postData.append('image', formValues.photo.value)
 
     dispatch(createPost(postData));
   };
@@ -70,11 +75,7 @@ const CreatePost = () => {
     <div className={styles.wrapper}>
       <div className={styles.wrapper__content}>
         <Link to={`/users/${uid}`}>
-          <img
-            src={profileImage !== "" ? profileImage : DefaultProfileImage}
-            alt="Profile Image"
-            className={styles.wrapper__image}
-          />
+          <ProfileImage profileImage={profileImage} className={styles.wrapper__image} alt="Profile Image"/>
         </Link>
         <div className={styles.textarea__wrapper}>
           <div className={styles.input__before}></div>

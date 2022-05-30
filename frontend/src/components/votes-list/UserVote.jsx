@@ -1,13 +1,13 @@
 import styles from "./UserVote.module.scss";
-import DefaultProfileImage from "../../utils/profile-template.svg";
 import { Link } from "react-router-dom";
+import ProfileImage from "../profile-image/ProfileImage";
 
 const UserVote = ({ vote }) => {
   return (
     <div className={styles.wrapper}>
       <Link to={`/users/${vote._id}`} className={styles.link}>
-        <img
-          src={vote.image !== "" ? vote.image : DefaultProfileImage}
+        <ProfileImage
+          profileImage={vote.image}
           alt="Author Avatar"
           className={styles.image}
         />

@@ -51,11 +51,12 @@ const posts_postNew = async (req, res) => {
 
   try {
     const user = await User.findById(creator);
+    const image = req.file ? req.file.path : ""
 
     const post = await Post.create({
       creator,
       content,
-      image: image || "",
+      image,
       votes: {
         upvotes: [],
         downvotes: [],
@@ -71,6 +72,7 @@ const posts_postNew = async (req, res) => {
       post: {
         ...post.toObject(),
         creator: { name: user.name, image: user.image, _id: user.id },
+        commentCounter: 0
       },
     });
   } catch (error) {

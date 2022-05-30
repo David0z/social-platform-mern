@@ -61,11 +61,12 @@ const users_signup = async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   try {
+    const image = req.file ? req.file.path : ""
     const user = await User.create({
       email,
       password: hashedPassword,
       name,
-      image: image || "",
+      image,
       posts: [],
     });
     const token = createToken(user._id);

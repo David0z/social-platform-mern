@@ -1,15 +1,15 @@
 import styles from "./User.module.scss";
-import DefaultProfileImage from "../../utils/profile-template.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchUser, userActions } from "../../store/user/userSlice";
-import { postActions } from "../../store/post/postSlice"
+import { postActions } from "../../store/post/postSlice";
 import { useParams } from "react-router-dom";
 import PostsList from "../../components/posts-list/PostsList";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import parseISO from "date-fns/parseISO";
 import UserSkeleton from "../../components/skeletons/UserSkeleton";
 import PostSkeletonList from "../../components/skeletons/PostSkeletonList";
+import ProfileImage from "../../components/profile-image/ProfileImage";
 
 const User = () => {
   const dispatch = useDispatch();
@@ -17,15 +17,15 @@ const User = () => {
   const { user, isLoading, isSuccess, isError } = useSelector(
     (state) => state.user.fetchedUser
   );
-  const { posts } = useSelector(state => state.post.posts)
+  const { posts } = useSelector((state) => state.post.posts);
 
   useEffect(() => {
     dispatch(fetchUser(userId));
 
     const reset = () => {
-      dispatch(userActions.resetFetchedUser())
-      dispatch(postActions.reset())
-    }
+      dispatch(userActions.resetFetchedUser());
+      dispatch(postActions.reset());
+    };
 
     return () => reset();
   }, [dispatch, userId]);
@@ -35,8 +35,8 @@ const User = () => {
       {!isLoading && !isError && user && (
         <div className={styles.userbar}>
           <div className={styles.userbar__wrapper}>
-            <img
-              src={user.image !== "" ? user.image : DefaultProfileImage}
+            <ProfileImage
+              profileImage={user.image}
               alt="Profile Image"
               className={styles.userbar__image}
             />

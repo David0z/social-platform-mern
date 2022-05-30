@@ -10,7 +10,7 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const { isError, errorMessages } = useSelector((state) => state.user);
 
-  const { formValues, handleFormChange } = useForm({
+  const { formValues, handleFormChange, setFormValues } = useForm({
     email: {
       value: "",
       isValid: true,
@@ -23,7 +23,7 @@ const SignUp = () => {
       value: "",
       isValid: true,
     },
-    photo: {
+    image: {
       value: "",
       isValid: true,
     },
@@ -32,12 +32,13 @@ const SignUp = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    let userData = {};
+    let userData = new FormData();
 
     for (const key in formValues) {
-      userData[key] = formValues[key].value;
+      userData.append(key, formValues[key].value);
     }
 
+    // console.log(formValues);
     dispatch(signup(userData));
   };
 
@@ -46,6 +47,17 @@ const SignUp = () => {
       dispatch(userActions.resetErrors());
     };
   }, []);
+
+  const handleImageChange = (e) => {
+
+    setFormValues((prevState) => ({
+      ...prevState,
+      [e.target.name]: {
+        ...prevState[e.target.name],
+        value: e.target.files[0]
+      },
+    }));
+  }
 
   return (
     <div className={styles.signup}>
@@ -82,11 +94,11 @@ const SignUp = () => {
         />
         <FormInput
           type="file"
-          name="photo"
-          label="Profile photo (optional)"
-          value={formValues.photo.value}
-          onChange={handleFormChange}
-          customButton={true}
+          name="image"
+          label="Profile image (optional)"
+          // value={formValues.photo.value}
+          onChange={handleImageChange}
+          customButton
           customButtonStyle={styles["form__file-btn"]}
         />
         <Button className={styles.form__button}>SIGN UP</Button>

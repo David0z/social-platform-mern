@@ -1,9 +1,9 @@
 import styles from "./Comment.module.scss";
-import DefaultProfileImage from "../../utils/profile-template.svg";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import parseISO from "date-fns/parseISO";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import ProfileImage from "../profile-image/ProfileImage";
 
 const Comment = ({ comment, postAuthorId }) => {
   const { uid } = useSelector((state) => state.user);
@@ -20,12 +20,8 @@ const Comment = ({ comment, postAuthorId }) => {
     >
       <div className={styles.author}>
         <Link to={`/users/${comment.author._id}`}>
-          <img
-            src={
-              comment.author.image !== ""
-                ? comment.author.image
-                : DefaultProfileImage
-            }
+          <ProfileImage
+            profileImage={comment.author.image}
             alt="Author Image"
             className={styles.author__image}
           />

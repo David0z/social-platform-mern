@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const fs = require('fs');
+const path = require('path');
 
 const usersRoutes = require("./routes/user-routes");
 const postsRoutes = require("./routes/posts-routes");
@@ -8,6 +10,8 @@ const postsRoutes = require("./routes/posts-routes");
 const app = express();
 
 app.use(bodyParser.json());
+
+app.use('/uploads/images', express.static(path.join('uploads', 'images')));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -22,6 +26,19 @@ app.use((req, res, next) => {
 
 app.use("/api/users", usersRoutes);
 app.use("/api/posts", postsRoutes);
+
+app.use((error, req, res, next) => {
+  if (req.file) {
+    fs.unlink(req.file.path, err => {
+      console.log(err);
+    });
+  }
+  if (res.headerSent) {
+    return next(error);
+  }
+  res.status(error.code || 500);
+  res.json({ message: error.message || 'An unknown error occurred!' });
+});
 
 mongoose
   .connect(

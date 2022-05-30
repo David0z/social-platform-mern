@@ -1,6 +1,6 @@
 import styles from "./PostPreview.module.scss";
 import { Link } from "react-router-dom";
-import DefaultProfileImage from "../../utils/profile-template.svg";
+import ProfileImage from '../profile-image/ProfileImage'
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import parseISO from "date-fns/parseISO";
 import Downvote from "./components/Downvote";
@@ -18,13 +18,13 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
   const { uid } = useSelector((state) => state.user);
   const { isLoading } = useSelector((state) => state.post.vote);
   const { closeModal, openModal, isModalOpened } = useModal();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [commentsFetched, setCommentsFetched] = useState(false);
 
   const handleCommentsFetch = () => {
     if (commentsFetched === false) {
-      setCommentsFetched(true)
-      dispatch(getComments(post._id))
+      setCommentsFetched(true);
+      dispatch(getComments(post._id));
     }
   };
 
@@ -33,14 +33,10 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
       <div className={styles.main}>
         <div className={styles.head}>
           <Link to={`/users/${post.creator._id}`}>
-            <img
-              src={
-                post.creator.image !== ""
-                  ? post.creator.image
-                  : DefaultProfileImage
-              }
-              alt="Author Avatar"
+            <ProfileImage
+              profileImage={post.creator.image}
               className={styles.head__image}
+              alt="Author Avatar"
             />
           </Link>
           <div>
@@ -125,7 +121,9 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
       {(instantComments || commentsFetched) && (
         <>
           <hr className={styles.line} />
-          {post.comments.length === 0 && post.commentCounter > 0 && <h1>Loading...</h1>}
+          {post.comments.length === 0 && post.commentCounter > 0 && (
+            <h1>Loading comments...</h1> //change it later for something cool
+          )}
           {post.comments.length > 0 && (
             <CommentsList
               comments={post.comments}
