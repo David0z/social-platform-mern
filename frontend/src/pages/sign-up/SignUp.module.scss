@@ -13,6 +13,7 @@
 
   .form {
     @extend %form;
+    width: min-content;
 
     &__button {
       @extend %form-btn;

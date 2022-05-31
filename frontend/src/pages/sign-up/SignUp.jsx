@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import Button from "../../components/button/Button";
 import FormInput from "../../components/inputs/FormInput";
 import useForm from "../../hooks/useForm";
@@ -9,6 +9,8 @@ import { signup, userActions } from "../../store/user/userSlice";
 const SignUp = () => {
   const dispatch = useDispatch();
   const { isError, errorMessages } = useSelector((state) => state.user);
+  const [validationError, setValidationError] = useState(null);
+  const [fileName, setFileName] = useState(null);
 
   const { formValues, handleFormChange, setFormValues } = useForm({
     email: {
@@ -38,7 +40,6 @@ const SignUp = () => {
       userData.append(key, formValues[key].value);
     }
 
-    // console.log(formValues);
     dispatch(signup(userData));
   };
 
@@ -50,14 +51,53 @@ const SignUp = () => {
 
   const handleImageChange = (e) => {
 
+    setValidationError(null);
+    setFileName(null);
+
+    if (e.target.files.length === 0) {
+      setFormValues((prevState) => ({
+        ...prevState,
+        image: {
+          ...prevState.image,
+          value: null,
+        },
+      }));
+      return;
+    }
+
+    const pickedFile = e.target.files[0];
+
+    if (e.target.files.length > 1) {
+      setValidationError("You can choose only one image at the time");
+      return;
+    }
+
+    if (
+      pickedFile.type !== "image/jpg" &&
+      pickedFile.type !== "image/jpeg" &&
+      pickedFile.type !== "image/png"
+    ) {
+      setValidationError(
+        "Invalid file format, please select an image with .jpg, .jpeg or .png extention"
+      );
+      return;
+    }
+
+    if (pickedFile.size > 500000) {
+      setValidationError("File cannot be larger than 500 Kb");
+      return;
+    }
+
+    setFileName(pickedFile.name);
+
     setFormValues((prevState) => ({
       ...prevState,
-      [e.target.name]: {
-        ...prevState[e.target.name],
-        value: e.target.files[0]
+      image: {
+        ...prevState.image,
+        value: e.target.files[0],
       },
     }));
-  }
+  };
 
   return (
     <div className={styles.signup}>
@@ -96,10 +136,12 @@ const SignUp = () => {
           type="file"
           name="image"
           label="Profile image (optional)"
-          // value={formValues.photo.value}
           onChange={handleImageChange}
           customButton
           customButtonStyle={styles["form__file-btn"]}
+          isError={validationError}
+          errorMessage={validationError}
+          fileName={fileName}
         />
         <Button className={styles.form__button}>SIGN UP</Button>
       </form>

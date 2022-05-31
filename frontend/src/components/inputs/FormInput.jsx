@@ -14,19 +14,10 @@ const FormInput = ({
   customButtonStyle,
   isError,
   errorMessage,
+  fileName,
   ...props
 }) => {
   const inputRef = useRef();
-  const [fileName, setFileName] = useState(null);
-
-  const handleFileChange = (e) => {
-    onChange(e);
-    if (e.target.files[0]?.name) {
-      setFileName(e.target.files[0].name);
-    } else {
-      setFileName(null);
-    }
-  };
 
   return (
     <div>
@@ -43,7 +34,7 @@ const FormInput = ({
             type={type || "text"}
             value={value}
             name={name}
-            onChange={handleFileChange}
+            onChange={onChange}
             style={{ display: "none" }}
             {...props}
           />

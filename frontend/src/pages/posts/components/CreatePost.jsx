@@ -37,6 +37,7 @@ const CreatePost = () => {
   const cancelPost = () => {
     setFormValues(initialState);
     setValidationError(null);
+    setFileName(null)
     dispatch(postActions.resetPost());
   };
 
@@ -53,19 +54,6 @@ const CreatePost = () => {
 
     dispatch(createPost(postData));
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      cancelPost();
-      setFileName(null);
-    }
-  }, [isSuccess]);
-
-  useEffect(() => {
-    if (formValues.text.isValid) {
-      setValidationError(null);
-    }
-  }, [formValues.text.isValid]);
 
   const handleImageChange = (e) => {
     setValidationError(null);
@@ -115,6 +103,19 @@ const CreatePost = () => {
       },
     }));
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      cancelPost();
+      setFileName(null);
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (formValues.text.isValid) {
+      setValidationError(null);
+    }
+  }, [formValues.text.isValid]);
 
   return (
     <div className={styles.wrapper}>

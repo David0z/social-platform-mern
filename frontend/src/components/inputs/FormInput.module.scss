@@ -31,4 +31,11 @@ label {
 
 .error-wrapper {
   padding-top: .2rem;
+  word-break: break-word;
+  white-space: pre-wrap;
+  align-items: flex-start !important;
+  
+  p {
+    text-align: start !important;
+  }
 }

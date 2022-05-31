@@ -15,5 +15,6 @@
   &__icon {
     color: $error;
     font-size: 1rem;
+    flex-shrink: 0;
   }
 }
