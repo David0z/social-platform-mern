@@ -1,6 +1,6 @@
 import styles from "./PostPreview.module.scss";
 import { Link } from "react-router-dom";
-import ProfileImage from '../profile-image/ProfileImage'
+import ProfileImage from "../profile-image/ProfileImage";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import parseISO from "date-fns/parseISO";
 import Downvote from "./components/Downvote";
@@ -55,7 +55,13 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
 
         <div className={styles.content}>
           <p className={styles.content__text}>{post.content}</p>
-          {post.image !== "" && <img src={post.image} alt="Post Image" />}
+          {post.image !== "" && (
+            <img
+              src={`http://localhost:5000/${post.image}`}
+              alt="Post Image"
+              className={styles.content__image}
+            />
+          )}
         </div>
 
         <div className={styles.feedback}>

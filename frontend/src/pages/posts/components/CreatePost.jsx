@@ -8,11 +8,11 @@ import { createPost, postActions } from "../../../store/post/postSlice";
 import VALIDATORS from "../../../validators/validators";
 import ErrorMessage from "../../../components/error-message/ErrorMessage";
 import { Link } from "react-router-dom";
-import LoadingBar from '../../../components/loading-bar/LoadingBar'
+import LoadingBar from "../../../components/loading-bar/LoadingBar";
 import ProfileImage from "../../../components/profile-image/ProfileImage";
 
 const initialState = {
-  photo: {
+  image: {
     value: "",
     isValid: true,
   },
@@ -28,8 +28,9 @@ const CreatePost = () => {
     (state) => state.post.post
   );
   const dispatch = useDispatch();
-  const photoRef = useRef();
+  const imageRef = useRef();
   const [validationError, setValidationError] = useState(null);
+  const [fileName, setFileName] = useState(null);
 
   const { formValues, handleFormChange, setFormValues } = useForm(initialState);
 
@@ -45,16 +46,10 @@ const CreatePost = () => {
       return;
     }
 
-    // let postData = {
-    //   creator: uid,
-    //   content: formValues.text.value,
-    //   image: formValues.photo.value,
-    // };
-
     const postData = new FormData();
-    postData.append('creator', uid)
-    postData.append('content', formValues.text.value)
-    postData.append('image', formValues.photo.value)
+    postData.append("creator", uid);
+    postData.append("content", formValues.text.value);
+    postData.append("image", formValues.image.value);
 
     dispatch(createPost(postData));
   };
@@ -62,6 +57,7 @@ const CreatePost = () => {
   useEffect(() => {
     if (isSuccess) {
       cancelPost();
+      setFileName(null);
     }
   }, [isSuccess]);
 
@@ -71,11 +67,64 @@ const CreatePost = () => {
     }
   }, [formValues.text.isValid]);
 
+  const handleImageChange = (e) => {
+    setValidationError(null);
+    setFileName(null);
+
+    if (e.target.files.length === 0) {
+      setFormValues((prevState) => ({
+        ...prevState,
+        image: {
+          ...prevState.image,
+          value: null,
+        },
+      }));
+      return;
+    }
+
+    const pickedFile = e.target.files[0];
+
+    if (e.target.files.length > 1) {
+      setValidationError("You can choose only one image at the time");
+      return;
+    }
+
+    if (
+      pickedFile.type !== "image/jpg" &&
+      pickedFile.type !== "image/jpeg" &&
+      pickedFile.type !== "image/png"
+    ) {
+      setValidationError(
+        "Invalid file format, please select an image with .jpg, .jpeg or .png extention"
+      );
+      return;
+    }
+
+    if (pickedFile.size > 500000) {
+      setValidationError("File cannot be larger than 500 Kb");
+      return;
+    }
+
+    setFileName(pickedFile.name);
+
+    setFormValues((prevState) => ({
+      ...prevState,
+      image: {
+        ...prevState.image,
+        value: e.target.files[0],
+      },
+    }));
+  };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.wrapper__content}>
         <Link to={`/users/${uid}`}>
-          <ProfileImage profileImage={profileImage} className={styles.wrapper__image} alt="Profile Image"/>
+          <ProfileImage
+            profileImage={profileImage}
+            className={styles.wrapper__image}
+            alt="Profile Image"
+          />
         </Link>
         <div className={styles.textarea__wrapper}>
           <div className={styles.input__before}></div>
@@ -97,14 +146,14 @@ const CreatePost = () => {
           <div className={styles.buttons__wrapper}>
             <input
               type="file"
-              name="photo"
-              ref={photoRef}
-              value={formValues.photo.value}
-              onChange={handleFormChange}
+              name="image"
+              ref={imageRef}
+              accept=".png, .jpeg, .jpg"
+              onChange={handleImageChange}
             />
             <Button
               className={styles["post-button"]}
-              onClick={() => photoRef.current.click()}
+              onClick={() => imageRef.current.click()}
               disabled={isLoading}
             >
               <Icon
@@ -113,6 +162,11 @@ const CreatePost = () => {
               />
               Add picture
             </Button>
+            <p title={fileName} className={styles["file-name"]}>
+              {fileName && fileName.length > 20
+                ? `${fileName.slice(0, 20)}...`
+                : fileName}
+            </p>
             <Button
               className={styles["post-button--cancel"]}
               onClick={cancelPost}
@@ -144,9 +198,7 @@ const CreatePost = () => {
           </div>
         </div>
       </div>
-      {isLoading && (
-        <LoadingBar />
-      )}
+      {isLoading && <LoadingBar />}
     </div>
   );
 };
