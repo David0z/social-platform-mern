@@ -9,6 +9,7 @@ import PostSkeletonList from "../../components/skeletons/PostSkeletonList";
 const Posts = () => {
   const dispatch = useDispatch();
   const { posts, isLoading } = useSelector((state) => state.post.posts);
+  const { token } = useSelector(state => state.user)
 
   useEffect(() => {
     dispatch(getAllPosts());
@@ -18,7 +19,7 @@ const Posts = () => {
 
   return (
     <>
-      <CreatePost />
+      {token && <CreatePost />}
       {posts && !isLoading ? <PostsList posts={posts} /> : <PostSkeletonList number={3} />}
     </>
   );

@@ -17,7 +17,7 @@ export const getAllPosts = createAsyncThunk(
   "post/getAllPosts",
   async (_, thunkAPI) => {
     try {
-      return await postService.getPosts(thunkAPI.getState().user.token);
+      return await postService.getPosts();
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -28,7 +28,7 @@ export const getSinglePost = createAsyncThunk(
   "post/getSinglePost",
   async (postId, thunkAPI) => {
     try {
-      return await postService.getSinglePost(postId, thunkAPI.getState().user.token);
+      return await postService.getSinglePost(postId);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -72,7 +72,7 @@ export const getVotes = createAsyncThunk(
   "post/getVotes",
   async (postId, thunkAPI) => {
     try {
-      return await postService.getVotes(postId, thunkAPI.getState().user.token);
+      return await postService.getVotes(postId);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -83,7 +83,7 @@ export const getComments = createAsyncThunk(
   "post/getComments",
   async (postId, thunkAPI) => {
     try {
-      return await postService.getComments(postId, thunkAPI.getState().user.token);
+      return await postService.getComments(postId);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }

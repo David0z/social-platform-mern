@@ -15,7 +15,7 @@ import { getComments } from "../../store/post/postSlice";
 import { useState } from "react";
 
 const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
-  const { uid } = useSelector((state) => state.user);
+  const { uid, token } = useSelector((state) => state.user);
   const { isLoading } = useSelector((state) => state.post.vote);
   const { closeModal, openModal, isModalOpened } = useModal();
   const dispatch = useDispatch();
@@ -136,7 +136,7 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
               postAuthorId={post.creator._id}
             />
           )}
-          <CommentCreate postId={post._id} />
+          {token && <CommentCreate postId={post._id} />}
         </>
       )}
     </div>

@@ -109,13 +109,6 @@ const users_login = async (req, res) => {
 // protected
 const users_getUser = async (req, res) => {
   try {
-    const authUser = await User.findById(req.user.userId)
-
-    if (!authUser) {
-      res.status(401)
-      throw new Error('User not authorized')
-    }
-
     const existingUser = await User.aggregate([
       { $match: { _id: mongoose.Types.ObjectId(req.params.id) } },
       { $project: { name: 1, posts: 1, image: 1, createdAt: 1 } },

@@ -53,7 +53,7 @@ export const fetchUser = createAsyncThunk(
   "user/fetchUser",
   async (userId, thunkAPI) => {
     try {
-      return await userService.fetchUser(userId, thunkAPI.getState().user.token);
+      return await userService.fetchUser(userId);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }

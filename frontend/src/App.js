@@ -13,6 +13,7 @@ import Posts from "./pages/posts/Posts";
 import SignUp from "./pages/sign-up/SignUp";
 import User from "./pages/user/User";
 import WelcomePage from "./pages/welcome-page/WelcomePage";
+import ScrollToTop from "./components/scroll-to-top/scrollToTop";
 
 function App() {
   const { token } = useSelector((state) => state.user);
@@ -21,6 +22,7 @@ function App() {
     <Router>
       <Navbar />
       <div className="routes-wrapper">
+        <ScrollToTop />
         <Routes>
           <Route
             path="/"
@@ -34,17 +36,13 @@ function App() {
             path="/sign-up"
             element={!token ? <SignUp /> : <Navigate to="/posts" />}
           />
+          <Route path="/posts" element={<Posts />} />
+          <Route path="/posts/:id" element={<Post />} />
+          <Route path="/users/:id" element={<User />} />
+          <Route path="/hashtags" element={<h1>Hashtags</h1>} />
           <Route
-            path="/posts"
-            element={token ? <Posts /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/posts/:id"
-            element={token ? <Post /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/users/:id"
-            element={token ? <User /> : <Navigate to="/login" />}
+            path="/messages"
+            element={token ? <h1>Messages</h1> : <Navigate to="/login" />}
           />
           <Route path="*" element={<NotFound />} />
         </Routes>

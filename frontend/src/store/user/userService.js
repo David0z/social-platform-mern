@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const authConfig = (token) => {
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-};
+// const authConfig = (token) => {
+//   return {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
+// };
 
 const signup = async (userData) => {
   const response = await axios.post(
@@ -49,8 +49,7 @@ const logout = () => {
 
 const fetchUser = async (userId, token) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/users/${userId}`,
-    authConfig(token)
+    `${process.env.REACT_APP_API_ENDPOINT}/users/${userId}`
   );
 
   return response.data;

@@ -1,21 +1,24 @@
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import { voteForPost } from "../../../store/post/postSlice";
 
-
 const useVote = (action, userId, postId) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.user);
 
   const handleVote = () => {
-    dispatch(voteForPost({
-      postId,
-      body: {
-        userId,
-        action
-      }
-    }))
-  }
+    if (!token) return;
+    dispatch(
+      voteForPost({
+        postId,
+        body: {
+          userId,
+          action,
+        },
+      })
+    );
+  };
 
-  return { handleVote }
-}
+  return { handleVote };
+};
 
-export default useVote
+export default useVote;

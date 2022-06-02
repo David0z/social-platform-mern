@@ -19,13 +19,6 @@ const handleErrors = (err) => {
 // GET ALL POSTS
 const posts_getAll = async (req, res) => {
   try {
-    const authUser = await User.findById(req.user.userId)
-
-    if (!authUser) {
-      res.status(401)
-      throw new Error('User not authorized')
-    }
-
     const posts = await Post.aggregate([
       { $sort: { createdAt: -1 } },
       {
@@ -99,13 +92,6 @@ const posts_postNew = async (req, res) => {
 // GET A SINGLE POST BY ID
 const posts_getSingle = async (req, res) => {
   try {
-    const authUser = await User.findById(req.user.userId)
-
-    if (!authUser) {
-      res.status(401)
-      throw new Error('User not authorized')
-    }
-
     const postId = req.params.id;
     const post = await Post.findById(postId).populate([
       { path: "creator", select: { name: 1, image: 1 } },
@@ -230,13 +216,6 @@ const posts_voteForSingle = async (req, res) => {
 
 const posts_getVotes = async (req, res) => {
   try {
-    const authUser = await User.findById(req.user.userId)
-
-    if (!authUser) {
-      res.status(401)
-      throw new Error('User not authorized')
-    }
-    
     const postId = req.params.id;
 
     const votes = await Post.findById(postId, "votes").populate({
@@ -258,13 +237,6 @@ const posts_getVotes = async (req, res) => {
 
 const posts_getComments = async (req, res) => {
   try {
-    const authUser = await User.findById(req.user.userId)
-
-    if (!authUser) {
-      res.status(401)
-      throw new Error('User not authorized')
-    }
-    
     const postId = req.params.id;
 
     const comments = await Post.findById(postId, "comments").populate({

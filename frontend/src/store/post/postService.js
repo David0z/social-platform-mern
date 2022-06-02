@@ -18,19 +18,17 @@ const createPost = async (postData, token) => {
   return response.data;
 };
 
-const getPosts = async (token) => {
+const getPosts = async () => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/posts/`,
-    authConfig(token)
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/`
   );
 
   return response.data;
 };
 
-const getSinglePost = async (postId, token) => {
+const getSinglePost = async (postId) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/posts/${postId}`,
-    authConfig(token)
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/${postId}`
   );
 
   return response.data;
@@ -56,10 +54,9 @@ const voteForPost = async (voteData, token) => {
   return response.data;
 };
 
-const getVotes = async (postId, token) => {
+const getVotes = async (postId) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/posts/votes/${postId}`,
-    authConfig(token)
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/votes/${postId}`
   );
 
   return response.data;
@@ -67,8 +64,7 @@ const getVotes = async (postId, token) => {
 
 const getComments = async (postId, token) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/posts/comments/${postId}`,
-    authConfig(token)
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/comments/${postId}`
   );
 
   return response.data;
