@@ -1,4 +1,4 @@
-@import '../../variables';
+@import "../../variables";
 
 .navbar {
   box-sizing: border-box;
@@ -8,9 +8,10 @@
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-between;
   background-color: $primary;
   padding: 0 2rem;
+  gap: 2rem;
 
   &__logo {
     width: 11rem;
@@ -27,14 +28,21 @@
     gap: 1rem;
     margin: 0;
     padding: 0;
+    width: 100%;
+
+    li, .button__nav {
+      height: 100%;
+      display: grid;
+      place-items: center;
+    }
 
     &--button {
       color: $text;
       font-size: 1.1rem;
       background-color: transparent;
-      border: .18rem solid $text;
+      border: 0.18rem solid $text;
       border-radius: 1.5rem;
-      padding: .1rem 1rem;
+      padding: 0.1rem 1rem;
 
       &:hover {
         background-color: $text;
@@ -43,5 +51,27 @@
       }
     }
   }
+}
 
+.button {
+  &__logout,
+  &__signup {
+    margin-left: auto;
+  }
+
+  &__nav {
+    box-sizing: border-box;
+    color: $text;
+    font-size: 2rem;
+    width: 4rem;
+
+    &:hover {
+      background-color: rgba($secondary, 0.3)
+    }
+
+    &--active {
+      @extend .button__nav;
+      border-bottom: 0.3rem solid $text;
+    }
+  }
 }
