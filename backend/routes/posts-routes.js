@@ -1,8 +1,11 @@
 const { Router } = require('express')
 const postsControllers = require('../contollers/posts-controller')
 const fileUpload = require('../middleware/file-upload')
+const { authMiddleware } = require('../middleware/auth')
 
 const router = Router()
+
+router.use(authMiddleware)
 
 router.get('/', postsControllers.posts_getAll)
 router.post('/', fileUpload.single('image'), postsControllers.posts_postNew)

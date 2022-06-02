@@ -1,59 +1,74 @@
 import axios from "axios";
 
-const createPost = async (postData) => {
+const authConfig = (token) => {
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+}
+
+const createPost = async (postData, token) => {
   const response = await axios.post(
     `${process.env.REACT_APP_API_ENDPOINT}/posts/`,
-    postData
+    postData,
+    authConfig(token)
   );
 
   return response.data;
 };
 
-const getPosts = async () => {
+const getPosts = async (token) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/posts/`
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/`,
+    authConfig(token)
   );
 
   return response.data;
 };
 
-const getSinglePost = async (postId) => {
+const getSinglePost = async (postId, token) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/posts/${postId}`
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/${postId}`,
+    authConfig(token)
   );
 
   return response.data;
 };
 
-const commentPost = async (commentData) => {
+const commentPost = async (commentData, token) => {
   const response = await axios.post(
     `${process.env.REACT_APP_API_ENDPOINT}/posts/${commentData.postId}`,
-    { ...commentData.body }
+    { ...commentData.body },
+    authConfig(token)
   );
 
   return response.data;
 };
 
-const voteForPost = async (voteData) => {
+const voteForPost = async (voteData, token) => {
   const response = await axios.post(
     `${process.env.REACT_APP_API_ENDPOINT}/posts/vote/${voteData.postId}`,
-    { ...voteData.body }
+    { ...voteData.body },
+    authConfig(token)
   );
 
   return response.data;
 };
 
-const getVotes = async (postId) => {
+const getVotes = async (postId, token) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/posts/votes/${postId}`
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/votes/${postId}`,
+    authConfig(token)
   );
 
   return response.data;
 };
 
-const getComments = async (postId) => {
+const getComments = async (postId, token) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/posts/comments/${postId}`
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/comments/${postId}`,
+    authConfig(token)
   );
 
   return response.data;
@@ -66,7 +81,7 @@ const postService = {
   commentPost,
   voteForPost,
   getVotes,
-  getComments
+  getComments,
 };
 
 export default postService;

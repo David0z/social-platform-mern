@@ -1,5 +1,13 @@
 import axios from "axios";
 
+const authConfig = (token) => {
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
+
 const signup = async (userData) => {
   const response = await axios.post(
     `${process.env.REACT_APP_API_ENDPOINT}/users/signup`,
@@ -39,17 +47,20 @@ const logout = () => {
   localStorage.removeItem("userName");
 };
 
-const fetchUser = async (userId) => {
-  const response = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/users/${userId}`)
+const fetchUser = async (userId, token) => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/users/${userId}`,
+    authConfig(token)
+  );
 
-  return response.data
-}
+  return response.data;
+};
 
 const userService = {
   signup,
   login,
   logout,
-  fetchUser
+  fetchUser,
 };
 
 export default userService;
