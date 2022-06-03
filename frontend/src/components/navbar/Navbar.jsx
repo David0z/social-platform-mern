@@ -61,6 +61,16 @@ const Navbar = () => {
           <>
             <li>
               <NavLink
+                to="/followed"
+                className={({ isActive }) =>
+                  isActive ? styles["button__nav--active"] : styles.button__nav
+                }
+              >
+                <Icon icon="bxs:user" />
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
                 to="/messages"
                 className={({ isActive }) =>
                   isActive ? styles["button__nav--active"] : styles.button__nav
