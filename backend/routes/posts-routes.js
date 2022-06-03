@@ -13,5 +13,6 @@ router.post('/:id', authMiddleware, postsControllers.posts_commentSingle)
 router.post('/vote/:id', authMiddleware, postsControllers.posts_voteForSingle)
 router.get('/votes/:id', postsControllers.posts_getVotes)
 router.get('/comments/:id', postsControllers.posts_getComments)
+router.get('/hot/:hotNumber', postsControllers.posts_getHotPosts)
 
 module.exports = router

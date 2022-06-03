@@ -35,7 +35,7 @@ const posts_getAll = async (req, res) => {
         },
       },
       { $unwind: "$creator" },
-      { $set: { comments: [], commentCounter: { $size: "$comments" }} },
+      { $set: { comments: [], commentCounter: { $size: "$comments" } } },
     ]);
 
     res.status(200).json({ posts });
@@ -50,15 +50,15 @@ const posts_postNew = async (req, res) => {
   const { creator, content, image } = req.body;
 
   try {
-    const authUser = await User.findById(req.user.userId)
+    const authUser = await User.findById(req.user.userId);
 
     if (!authUser) {
-      res.status(401)
-      throw new Error('User not authorized')
+      res.status(401);
+      throw new Error("User not authorized");
     }
 
     const user = await User.findById(creator);
-    const image = req.file ? req.file.path : ""
+    const image = req.file ? req.file.path : "";
 
     const post = await Post.create({
       creator,
@@ -79,7 +79,7 @@ const posts_postNew = async (req, res) => {
       post: {
         ...post.toObject(),
         creator: { name: user.name, image: user.image, _id: user.id },
-        commentCounter: 0
+        commentCounter: 0,
       },
     });
   } catch (error) {
@@ -102,7 +102,9 @@ const posts_getSingle = async (req, res) => {
       },
     ]);
 
-    res.status(200).json({ post: {...post.toObject(), commentCounter: post.comments.length} });
+    res.status(200).json({
+      post: { ...post.toObject(), commentCounter: post.comments.length },
+    });
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
   }
@@ -118,13 +120,13 @@ const posts_editSingle = (req, res) => {
 // COMMENT A SINGLE POST BY ID
 const posts_commentSingle = async (req, res) => {
   try {
-    const authUser = await User.findById(req.user.userId)
+    const authUser = await User.findById(req.user.userId);
 
     if (!authUser) {
-      res.status(401)
-      throw new Error('User not authorized')
+      res.status(401);
+      throw new Error("User not authorized");
     }
-    
+
     const postId = req.params.id;
 
     const comment = req.body;
@@ -147,13 +149,13 @@ const posts_commentSingle = async (req, res) => {
 
 const posts_voteForSingle = async (req, res) => {
   try {
-    const authUser = await User.findById(req.user.userId)
+    const authUser = await User.findById(req.user.userId);
 
     if (!authUser) {
-      res.status(401)
-      throw new Error('User not authorized')
+      res.status(401);
+      throw new Error("User not authorized");
     }
-    
+
     const postId = req.params.id;
     const { userId, action } = req.body;
 
@@ -253,6 +255,46 @@ const posts_getComments = async (req, res) => {
   }
 };
 
+// -------------------------------------------------------------------------------------
+// GET ALL HOT POSTS
+
+const posts_getHotPosts = async (req, res) => {
+  const { hotNumber } = req.params;
+
+  try {
+    const posts = await Post.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(new Date() - hotNumber * 60 * 60 * 1000),
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          let: {
+            userId: "$creator",
+          },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$_id", "$$userId"] } } },
+            { $project: { _id: 1, name: 1, image: 1 } },
+          ],
+          as: "creator",
+        },
+      },
+      { $unwind: "$creator" },
+      { $set: { comments: [], commentCounter: { $size: "$comments" }, votesCounter: {$add: [{$size: "$votes.upvotes"}, {$size: "$votes.downvotes"}]} } },
+      { $sort: {votesCounter: -1}},
+      { $project: {votesCounter: 0}}
+    ]);
+
+    res.status(200).json({ posts });
+  } catch (error) {
+    res.status(401).json({ message: "Unauthorized" });
+  }
+};
+
 module.exports = {
   posts_getAll,
   posts_postNew,
@@ -262,4 +304,5 @@ module.exports = {
   posts_voteForSingle,
   posts_getVotes,
   posts_getComments,
+  posts_getHotPosts,
 };

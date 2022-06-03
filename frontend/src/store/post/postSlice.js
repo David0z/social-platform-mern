@@ -6,7 +6,10 @@ export const createPost = createAsyncThunk(
   "post/createPost",
   async (postData, thunkAPI) => {
     try {
-      return await postService.createPost(postData, thunkAPI.getState().user.token);
+      return await postService.createPost(
+        postData,
+        thunkAPI.getState().user.token
+      );
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.errors);
     }
@@ -39,7 +42,10 @@ export const commentPost = createAsyncThunk(
   "post/commentPost",
   async (commentData, thunkAPI) => {
     try {
-      let response = await postService.commentPost(commentData, thunkAPI.getState().user.token);
+      let response = await postService.commentPost(
+        commentData,
+        thunkAPI.getState().user.token
+      );
 
       response.comment = {
         ...response.comment,
@@ -61,7 +67,10 @@ export const voteForPost = createAsyncThunk(
   "post/voteForPost",
   async (voteData, thunkAPI) => {
     try {
-      return await postService.voteForPost(voteData, thunkAPI.getState().user.token);
+      return await postService.voteForPost(
+        voteData,
+        thunkAPI.getState().user.token
+      );
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -84,6 +93,17 @@ export const getComments = createAsyncThunk(
   async (postId, thunkAPI) => {
     try {
       return await postService.getComments(postId);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const getHotPosts = createAsyncThunk(
+  "post/getHotPosts",
+  async (hotNumber, thunkAPI) => {
+    try {
+      return await postService.getHotPosts(hotNumber);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -307,6 +327,19 @@ const postSlice = createSlice({
       .addCase(getComments.rejected, (state, action) => {
         state.comments.isLoading = false;
         state.comments.isError = true;
+      })
+      .addCase(getHotPosts.pending, (state) => {
+        state.posts.isLoading = true;
+      })
+      .addCase(getHotPosts.fulfilled, (state, action) => {
+        state.posts.isLoading = false;
+        state.posts.posts = state.posts.posts.concat(action.payload.posts);
+        state.posts.isSuccess = true;
+      })
+      .addCase(getHotPosts.rejected, (state, action) => {
+        state.posts.isLoading = false;
+        state.posts.isError = true;
+        state.posts.errorMessages = action.payload;
       });
   },
 });

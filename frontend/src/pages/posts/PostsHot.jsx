@@ -1,25 +1,27 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllPosts, postActions } from "../../store/post/postSlice";
+import { getHotPosts, postActions } from "../../store/post/postSlice";
 import PostsList from "../../components/posts-list/PostsList";
-import CreatePost from "./components/CreatePost";
-import PostsMenu from "./components/PostsMenu";
 import PostSkeletonList from "../../components/skeletons/PostSkeletonList";
+import styles from "./Posts.module.scss";
 
 const PostsHot = ({ hotNumber }) => {
   const dispatch = useDispatch();
   const { posts, isLoading } = useSelector((state) => state.post.posts);
-  const { token } = useSelector((state) => state.user);
 
-  // useEffect(() => {
-  //   dispatch(getAllPosts());
+  useEffect(() => {
+    dispatch(getHotPosts(hotNumber));
 
-  //   return () => dispatch(postActions.reset());
-  // }, [dispatch]);
+    return () => dispatch(postActions.reset());
+  }, [dispatch, hotNumber]);
 
   return (
     <>
-      {`HOT POSTS FROM LAST ${hotNumber} HOURS`}
+      {!isLoading && posts.length === 0 && (
+        <h1
+          className={styles["no-posts"]}
+        >{`No hot posts to display from last ${hotNumber} hours`}</h1>
+      )}
       {posts && !isLoading ? (
         <PostsList posts={posts} />
       ) : (

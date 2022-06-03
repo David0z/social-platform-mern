@@ -1,10 +1,13 @@
 import styles from "./PostsMenu.module.scss";
 import { NavLink } from "react-router-dom";
 import { Icon } from "@iconify/react";
+import { useSelector } from "react-redux";
 
 const PostsMenu = () => {
+  const { token } = useSelector(state => state.user)
+  
   return (
-    <div className={styles.wrapper}>
+    <div className={`${styles.wrapper} ${!token && styles['no-token']}`}>
       <menu className={styles.menu}>
         <li>
           <NavLink

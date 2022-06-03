@@ -1,1 +1,9 @@
 @import '../../variables';
+
+.no-posts {
+  width: 100%;
+  text-align: center;
+  margin-top: 6rem;
+  color: $text-secondary;
+  opacity: 0.4;
+}

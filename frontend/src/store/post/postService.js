@@ -70,6 +70,14 @@ const getComments = async (postId, token) => {
   return response.data;
 };
 
+const getHotPosts = async (hotNumber) => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/hot/${hotNumber}`
+  );
+
+  return response.data;
+};
+
 const postService = {
   createPost,
   getPosts,
@@ -78,6 +86,7 @@ const postService = {
   voteForPost,
   getVotes,
   getComments,
+  getHotPosts
 };
 
 export default postService;

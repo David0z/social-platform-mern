@@ -1,5 +1,10 @@
 @import "../../../variables";
 
+.no-token {
+  background: linear-gradient(to bottom, rgb(0, 0, 0, 0.2), transparent 50% 100%);
+  background-color: desaturate($primary, 60%) !important;
+}
+
 .wrapper {
   background-color: $primary;
 }
@@ -27,7 +32,7 @@
   height: 100%;
   padding: 0.5rem 0;
 
-  &:hover {
+  &:hover:not(.link__active) {
     cursor: pointer;
     background-color: $secondary;
     color: $text;
