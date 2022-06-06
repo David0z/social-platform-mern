@@ -106,7 +106,6 @@ const users_login = async (req, res) => {
 
 // -------------------------------------------------------------------------------------
 // GET A SINGLE USER BY ID
-// protected
 const users_getUser = async (req, res) => {
   try {
     const existingUser = await User.aggregate([
@@ -121,7 +120,18 @@ const users_getUser = async (req, res) => {
           pipeline: [
             { $match: { $expr: { $eq: ["$creator", "$$userId"] } } },
             { $sort: { createdAt: -1 } },
-            { $set: {comments: [], commentCounter: { $size: "$comments" }}}
+            { $set: {comments: [], commentCounter: { $size: "$comments" }}},
+            {
+              $lookup: {
+                from: "hashtags",
+                localField: "hashtags",
+                foreignField: "_id",
+                pipeline: [
+                  {$project: { _id: 1, name: 1}}
+                ],
+                as: "hashtags",
+              },
+            },
           ],
           as: "posts",
         },

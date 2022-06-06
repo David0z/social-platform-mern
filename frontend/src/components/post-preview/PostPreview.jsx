@@ -13,6 +13,7 @@ import CommentsList from "../../components/comments-list/CommentsList";
 import CommentCreate from "../../components/comment-create/CommentCreate";
 import { getComments } from "../../store/post/postSlice";
 import { useState } from "react";
+import ModifiedContent from "./ModifiedContent";
 
 const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
   const { uid, token } = useSelector((state) => state.user);
@@ -55,7 +56,14 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
 
         <div className={styles.content}>
           <p className={styles.content__text}>
-            {post.content}
+            {post.hashtags.length === 0 ? (
+              post.content
+            ) : (
+              <ModifiedContent
+                content={post.content}
+                hashtags={post.hashtags}
+              />
+            )}
           </p>
           {post.image !== "" && (
             <img

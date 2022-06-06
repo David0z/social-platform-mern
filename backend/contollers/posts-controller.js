@@ -132,6 +132,7 @@ const posts_getSingle = async (req, res) => {
     const postId = req.params.id;
     const post = await Post.findById(postId).populate([
       { path: "creator", select: { name: 1, image: 1 } },
+      { path: "hashtags", select: { _id: 1, name: 1}},
       {
         path: "comments",
         populate: { path: "author", select: { name: 1, image: 1 } },
@@ -321,6 +322,17 @@ const posts_getHotPosts = async (req, res) => {
         },
       },
       { $unwind: "$creator" },
+      {
+        $lookup: {
+          from: "hashtags",
+          localField: "hashtags",
+          foreignField: "_id",
+          pipeline: [
+            {$project: { _id: 1, name: 1}}
+          ],
+          as: "hashtags",
+        },
+      },
       {
         $set: {
           comments: [],
