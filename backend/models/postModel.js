@@ -40,6 +40,10 @@ const postSchema = new mongoose.Schema(
         { timestamps: true }
       ),
     ],
+    hashtags: [{
+      type: mongoose.Types.ObjectId,
+      ref: "Hashtag"
+    }]
   },
   { timestamps: true }
 );

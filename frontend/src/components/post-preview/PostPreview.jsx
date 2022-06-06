@@ -54,7 +54,9 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
         </div>
 
         <div className={styles.content}>
-          <p className={styles.content__text}>{post.content}</p>
+          <p className={styles.content__text}>
+            {post.content}
+          </p>
           {post.image !== "" && (
             <img
               src={`http://localhost:5000/${post.image}`}

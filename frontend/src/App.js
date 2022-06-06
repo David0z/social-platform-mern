@@ -47,6 +47,7 @@ function App() {
           <Route path="/posts/:id" element={<Post />} />
           <Route path="/users/:id" element={<User />} />
           <Route path="/hashtags" element={<h1>Hashtags</h1>} />
+          <Route path="/hashtags/:id" element={<h1>Hashtag</h1>} />
           <Route
             path="/followed"
             element={token ? <h1>Followed</h1> : <Navigate to="/login" />}

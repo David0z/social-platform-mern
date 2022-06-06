@@ -1,5 +1,6 @@
 const Post = require("../models/postModel");
 const User = require("../models/userModel");
+const Hashtag = require("../models/hashtagModel");
 
 // -------------------------------------------------------------------------------------
 // error handler function
@@ -35,6 +36,17 @@ const posts_getAll = async (req, res) => {
         },
       },
       { $unwind: "$creator" },
+      {
+        $lookup: {
+          from: "hashtags",
+          localField: "hashtags",
+          foreignField: "_id",
+          pipeline: [
+            {$project: { _id: 1, name: 1}}
+          ],
+          as: "hashtags",
+        },
+      },
       { $set: { comments: [], commentCounter: { $size: "$comments" } } },
     ]);
 
@@ -59,8 +71,10 @@ const posts_postNew = async (req, res) => {
 
     const user = await User.findById(creator);
     const image = req.file ? req.file.path : "";
+    const listOfHashtags = Array.from(new Set(content.match(/(#\w+)/gim)));
+    let hashtags = [];
 
-    const post = await Post.create({
+    const post = new Post({
       creator,
       content,
       image,
@@ -69,7 +83,29 @@ const posts_postNew = async (req, res) => {
         downvotes: [],
       },
       comments: [],
+      hashtags,
     });
+
+    if (listOfHashtags.length > 0) {
+      await Hashtag.bulkWrite(
+        listOfHashtags.map((hashtag) => ({
+          updateOne: {
+            filter: { name: hashtag },
+            update: { $push: { posts: post.id } },
+            upsert: true,
+          },
+        }))
+      );
+
+      hashtags = await Hashtag.find(
+        { name: { $in: listOfHashtags } },
+        { name: 1, _id: 1 }
+      );
+
+      hashtags.forEach((hash) => post.hashtags.push(hash._id));
+    }
+
+    await post.save();
 
     user.posts.push(post);
     await user.save();
@@ -79,6 +115,7 @@ const posts_postNew = async (req, res) => {
       post: {
         ...post.toObject(),
         creator: { name: user.name, image: user.image, _id: user.id },
+        hashtags,
         commentCounter: 0,
       },
     });
@@ -284,9 +321,17 @@ const posts_getHotPosts = async (req, res) => {
         },
       },
       { $unwind: "$creator" },
-      { $set: { comments: [], commentCounter: { $size: "$comments" }, votesCounter: {$add: [{$size: "$votes.upvotes"}, {$size: "$votes.downvotes"}]} } },
-      { $sort: {votesCounter: -1}},
-      { $project: {votesCounter: 0}}
+      {
+        $set: {
+          comments: [],
+          commentCounter: { $size: "$comments" },
+          votesCounter: {
+            $add: [{ $size: "$votes.upvotes" }, { $size: "$votes.downvotes" }],
+          },
+        },
+      },
+      { $sort: { votesCounter: -1 } },
+      { $project: { votesCounter: 0 } },
     ]);
 
     res.status(200).json({ posts });

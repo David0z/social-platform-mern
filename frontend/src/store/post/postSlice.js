@@ -245,7 +245,6 @@ const postSlice = createSlice({
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.posts.posts = action.payload.user.posts;
       })
-      // COMPLETE THE CASES
       .addCase(voteForPost.pending, (state) => {
         state.vote.isLoading = true;
       })
