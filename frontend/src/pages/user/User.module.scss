@@ -23,7 +23,9 @@
   }
 
   &__details {
+    flex-grow: 1;
     display: grid;
+    grid-template-columns: repeat(2, 1fr);
     align-content: center;
   }
 
@@ -33,17 +35,20 @@
     line-height: 3rem;
     margin: 0;
     color: $black;
+    grid-column: 1;
   }
 
   &__joined {
     margin: 0;
     font-size: 1rem;
     color: $text-secondary;
+    grid-column: 1;
   }
 
   &__posts-count {
     font-size: 1.2rem;
     margin: 0;
     color: $text-secondary;
+    grid-column: 1;
   }
 }

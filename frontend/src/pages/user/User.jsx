@@ -10,6 +10,7 @@ import parseISO from "date-fns/parseISO";
 import UserSkeleton from "../../components/skeletons/UserSkeleton";
 import PostSkeletonList from "../../components/skeletons/PostSkeletonList";
 import ProfileImage from "../../components/profile-image/ProfileImage";
+import FollowButton from "../../components/follow-button/FollowButton";
 
 const User = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const User = () => {
     (state) => state.user.fetchedUser
   );
   const { posts } = useSelector((state) => state.post.posts);
+  const { token } = useSelector(state => state.user)
 
   useEffect(() => {
     dispatch(fetchUser(userId));
@@ -43,6 +45,7 @@ const User = () => {
               />
               <div className={styles.userbar__details}>
                 <h1 className={styles.userbar__name}>{user.name}</h1>
+                <FollowButton token={token}/>
                 <p
                   className={styles.userbar__joined}
                 >{`Joined ${formatDistanceToNow(parseISO(user.createdAt), {

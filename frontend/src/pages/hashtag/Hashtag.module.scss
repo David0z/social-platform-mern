@@ -24,38 +24,5 @@
       line-height: 2.6rem;
       margin: 0;
     }
-
-    &__follow-btn {
-      grid-column: 2;
-      justify-self: end;
-      height: min-content;
-      font-size: 1.2rem;
-      color: $text;
-      padding: 0 2rem;
-      border: 0.15rem solid $text;
-      border-radius: $border-reg;
-      background-color: $primary;
-      user-select: none;
-
-      &:hover {
-        background-color: $secondary;
-        cursor: pointer;
-      }
-
-      &--followed {
-        @extend .content__follow-btn;
-        color: $secondary;
-        border: 0.15rem solid $secondary;
-        background-color: $text;
-        display: flex;
-        align-items: center;
-        gap: 0.2rem;
-        padding: 0 0.5rem;
-
-        &:hover {
-          background-color: $post-bg;
-        }
-      }
-    }
   }
 }

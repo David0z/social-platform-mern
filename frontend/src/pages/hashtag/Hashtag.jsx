@@ -10,7 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import styles from "./Hashtag.module.scss";
-import { Icon } from "@iconify/react";
+import FollowButton from "../../components/follow-button/FollowButton";
 
 const Hashtag = () => {
   const dispatch = useDispatch();
@@ -44,24 +44,11 @@ const Hashtag = () => {
           <div className={styles.wrapper}>
             <div className={styles.content}>
               <h1 className={styles.content__name}>{hashtag.name}</h1>
-              <button
-                className={
-                  hashtag.followers.includes(uid)
-                    ? styles["content__follow-btn--followed"]
-                    : styles["content__follow-btn"]
-                }
+              <FollowButton
+                followCondition={hashtag.followers.includes(uid)}
                 onClick={handleHashtagFollow}
-                style={{ visibility: token ? "visible" : "hidden" }}
-              >
-                {hashtag.followers.includes(uid) ? (
-                  <>
-                    <Icon icon="akar-icons:circle-check-fill" />
-                    Following
-                  </>
-                ) : (
-                  "Follow"
-                )}
-              </button>
+                token={token}
+              />
               <p className={styles.content__paragraph}>
                 {hashtag.followers.length === 1
                   ? `${hashtag.followers.length} follower`
