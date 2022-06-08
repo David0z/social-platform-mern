@@ -33,40 +33,40 @@ const User = () => {
   return (
     <>
       {!isLoading && !isError && user && (
-        <div className={styles.userbar}>
-          <div className={styles.userbar__wrapper}>
-            <ProfileImage
-              profileImage={user.image}
-              alt="Profile Image"
-              className={styles.userbar__image}
-            />
-            <div className={styles.userbar__details}>
-              <h1 className={styles.userbar__name}>{user.name}</h1>
-              <p
-                className={styles.userbar__joined}
-              >{`Joined ${formatDistanceToNow(parseISO(user.createdAt), {
-                addSuffix: true,
-              })}`}</p>
-              <p className={styles["userbar__posts-count"]}>
-                {posts.length === 1
-                  ? `${posts.length} post`
-                  : `${posts.length} posts`}
-              </p>
+        <>
+          <div className={styles.userbar}>
+            <div className={styles.userbar__wrapper}>
+              <ProfileImage
+                profileImage={user.image}
+                alt="Profile Image"
+                className={styles.userbar__image}
+              />
+              <div className={styles.userbar__details}>
+                <h1 className={styles.userbar__name}>{user.name}</h1>
+                <p
+                  className={styles.userbar__joined}
+                >{`Joined ${formatDistanceToNow(parseISO(user.createdAt), {
+                  addSuffix: true,
+                })}`}</p>
+                <p className={styles["userbar__posts-count"]}>
+                  {posts.length === 1
+                    ? `${posts.length} post`
+                    : `${posts.length} posts`}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-      {!isLoading && !isError && user && (
-        <PostsList
-          posts={posts.map((post) => ({
-            ...post,
-            creator: {
-              _id: user._id,
-              name: user.name,
-              image: user.image,
-            },
-          }))}
-        />
+          <PostsList
+            posts={posts.map((post) => ({
+              ...post,
+              creator: {
+                _id: user._id,
+                name: user.name,
+                image: user.image,
+              },
+            }))}
+          />
+        </>
       )}
       {!isLoading && !isError && user && posts.length === 0 && (
         <h1>No posts to display</h1>

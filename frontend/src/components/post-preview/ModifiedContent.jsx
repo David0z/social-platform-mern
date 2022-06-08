@@ -9,7 +9,8 @@ const ModifiedContent = ({ content, hashtags }) => {
       return (
         <Link
           className={styles.hashlink}
-          to={`/hashtags/${hashtags.find((hash) => hash.name === text)._id}`}
+          to={`/hashtags/${text.slice(1, text.length)}`}
+          key={text}
         >
           {text}
         </Link>
