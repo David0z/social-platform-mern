@@ -4,11 +4,13 @@ import PostsList from "../../components/posts-list/PostsList";
 import { postActions } from "../../store/post/postSlice";
 import {
   getSingleHashtag,
+  followHashtag,
   hashtagActions,
 } from "../../store/hashtag/hashtagSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import styles from "./Hashtag.module.scss";
+import { Icon } from "@iconify/react";
 
 const Hashtag = () => {
   const dispatch = useDispatch();
@@ -17,6 +19,7 @@ const Hashtag = () => {
     (state) => state.hashtag.hashtag
   );
   const { posts } = useSelector((state) => state.post.posts);
+  const { uid, token } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(getSingleHashtag(tagName));
@@ -29,6 +32,11 @@ const Hashtag = () => {
     return () => reset();
   }, [dispatch, tagName]);
 
+  const handleHashtagFollow = () => {
+    if (!token) return;
+    dispatch(followHashtag(hashtag._id));
+  };
+
   return (
     <>
       {!isLoading && !isError && hashtag && (
@@ -36,11 +44,32 @@ const Hashtag = () => {
           <div className={styles.wrapper}>
             <div className={styles.content}>
               <h1 className={styles.content__name}>{hashtag.name}</h1>
-              <button className={styles['content__follow-btn']}>Follow</button>
-              <p className={styles.content__paragraph}>followers</p>
+              <button
+                className={
+                  hashtag.followers.includes(uid)
+                    ? styles["content__follow-btn--followed"]
+                    : styles["content__follow-btn"]
+                }
+                onClick={handleHashtagFollow}
+                style={{ visibility: token ? "visible" : "hidden" }}
+              >
+                {hashtag.followers.includes(uid) ? (
+                  <>
+                    <Icon icon="akar-icons:circle-check-fill" />
+                    Following
+                  </>
+                ) : (
+                  "Follow"
+                )}
+              </button>
+              <p className={styles.content__paragraph}>
+                {hashtag.followers.length === 1
+                  ? `${hashtag.followers.length} follower`
+                  : `${hashtag.followers.length} followers`}
+              </p>
             </div>
           </div>
-          <PostsList posts={posts}/>
+          <PostsList posts={posts} />
         </>
       )}
       {!isLoading && !isError && hashtag && posts.length === 0 && (

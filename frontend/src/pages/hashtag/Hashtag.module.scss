@@ -41,6 +41,21 @@
         background-color: $secondary;
         cursor: pointer;
       }
+
+      &--followed {
+        @extend .content__follow-btn;
+        color: $secondary;
+        border: 0.15rem solid $secondary;
+        background-color: $text;
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+        padding: 0 0.5rem;
+
+        &:hover {
+          background-color: $post-bg;
+        }
+      }
     }
   }
 }

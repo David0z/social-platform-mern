@@ -5,8 +5,8 @@ const authConfig = (token) => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  }
-}
+  };
+};
 
 const getSinglePost = async (tagName) => {
   const response = await axios.get(
@@ -14,10 +14,21 @@ const getSinglePost = async (tagName) => {
   );
 
   return response.data;
-}
+};
+
+const followHashtag = async (hashtagId, token) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_API_ENDPOINT}/hashtags/follow/${hashtagId}`,
+    null,
+    authConfig(token)
+  );
+
+  return response.data;
+};
 
 const hashtagService = {
-  getSinglePost
+  getSinglePost,
+  followHashtag,
 };
 
 export default hashtagService;

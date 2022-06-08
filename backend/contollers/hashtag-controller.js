@@ -45,12 +45,58 @@ const hashtag_getSingle = async (req, res) => {
       throw new Error("Could not find the hashtag")
     }
 
-    res.status(200).json({ hashtag: hashtag[0] });
+    const userId = req.body.userId
+    let followedHashtags;
+  
+    if (userId) {
+      console.log(userId);
+      const user = await User.findById(userId, 'followedHashtags')
+      followedHashtags = user.followedHashtags
+    }
+
+    res.status(200).json({ hashtag: hashtag[0], followedHashtags });
   } catch (error) {
     res.status(401).json({ message: error.message || "Unauthorized" });
   }
 };
 
+const hashtag_followSingle = async (req, res) => {
+  try {
+    const authUser = await User.findById(req.user.userId);
+
+    if (!authUser) {
+      res.status(401);
+      throw new Error("User not authorized");
+    }
+
+    const hashtagId = req.params.id
+    const userId = req.user.userId
+
+    const hashtag = await Hashtag.findById(mongoose.Types.ObjectId(hashtagId))
+
+    let result;
+    
+    if (!hashtag.followers.includes(userId)) {
+      hashtag.followers.push(userId)
+      authUser.followedHashtags.push(hashtagId)
+      result = "followed"
+    } else {
+      hashtag.followers.pull(userId)
+      authUser.followedHashtags.pull(hashtagId)
+      result = "unfollowed"
+    }
+    
+    await authUser.save()
+    await hashtag.save()
+
+    res.status(200).json({ hashtagId, result });
+    
+  } catch (error) {
+    res.status(401).json({ message: "Unauthorized" });
+  }
+}
+
 module.exports = {
   hashtag_getSingle,
+  hashtag_followSingle
 };

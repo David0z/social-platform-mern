@@ -29,6 +29,20 @@ const userSchema = new mongoose.Schema(
         ref: "Post",
       },
     ],
+    followedHashtags: [
+      {
+        type: mongoose.Types.ObjectId,
+        required: true,
+        ref: "Hashtag",
+      },
+    ],
+    followedUsers: [
+      {
+        type: mongoose.Types.ObjectId,
+        required: true,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true }
 );

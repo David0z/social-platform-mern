@@ -12,9 +12,30 @@ export const getSingleHashtag = createAsyncThunk(
   }
 );
 
+export const followHashtag = createAsyncThunk(
+  "hashtag/followHashtag",
+  async (hashtagId, thunkAPI) => {
+    try {
+      const result = await hashtagService.followHashtag(
+        hashtagId,
+        thunkAPI.getState().user.token
+      );
+      return { ...result, uid: thunkAPI.getState().user.uid };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 const initialState = {
   hashtag: {
     hashtag: null,
+    isError: false,
+    isLoading: false,
+    errorMessages: {},
+    isSuccess: false,
+  },
+  follow: {
     isError: false,
     isLoading: false,
     errorMessages: {},
@@ -33,9 +54,8 @@ const hashtagSlice = createSlice({
         isError: false,
         isLoading: false,
         errorMessages: {},
-        isSuccess: false,
-      }
-    }
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -56,6 +76,31 @@ const hashtagSlice = createSlice({
         state.hashtag.isLoading = false;
         state.hashtag.isError = true;
         state.hashtag.errorMessages = action.payload;
+      })
+
+      .addCase(followHashtag.pending, (state) => {
+        state.follow.isLoading = true;
+      })
+      .addCase(followHashtag.fulfilled, (state, action) => {
+        state.follow.isLoading = false;
+        switch (action.payload.result) {
+          case "followed":
+            state.hashtag.hashtag.followers.push(action.payload.uid);
+            break;
+          case "unfollowed":
+            state.hashtag.hashtag.followers =
+              state.hashtag.hashtag.followers.filter(
+                (userId) => userId !== action.payload.uid
+              );
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(followHashtag.rejected, (state, action) => {
+        state.follow.isLoading = false;
+        state.follow.isError = true;
+        state.follow.errorMessages = action.payload;
       });
   },
 });
