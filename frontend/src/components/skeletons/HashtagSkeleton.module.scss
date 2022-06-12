@@ -1,0 +1,45 @@
+@import "../../variables";
+@import "../../templates";
+
+.wrapper {
+  width: 100%;
+  background-color: $post-bg;
+  display: grid;
+  justify-content: center;
+  padding: 1rem 0;
+  position: relative;
+  overflow: hidden;
+
+  .shine {
+    @include shine();
+  }
+
+  .content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    min-width: $max-content;
+    max-width: 100%;
+
+    .follow {
+      height: 2rem;
+      width: 8.5rem;
+      justify-self: end;
+      @extend %skeleton-content;
+    }
+
+    &__paragraph {
+      margin: 0;
+      height: 1rem;
+      width: 15rem;
+      @extend %skeleton-content;
+    }
+
+    &__name {
+      height: 2.6rem;
+      width: 10rem;
+      @extend %skeleton-content;
+      margin: 0;
+    }
+  }
+}

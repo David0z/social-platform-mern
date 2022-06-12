@@ -26,9 +26,19 @@ const followHashtag = async (hashtagId, token) => {
   return response.data;
 };
 
+const getPopularAndFollowed = async (userId) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_API_ENDPOINT}/hashtags/popular`,
+    { userId }
+  );
+
+  return response.data;
+};
+
 const hashtagService = {
   getSinglePost,
   followHashtag,
+  getPopularAndFollowed
 };
 
 export default hashtagService;

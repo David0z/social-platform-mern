@@ -27,9 +27,28 @@ export const followHashtag = createAsyncThunk(
   }
 );
 
+export const getPopularAndFollowed = createAsyncThunk(
+  "hashtag/getPopularAndFollowed",
+  async (_, thunkAPI) => {
+    try {
+      return await hashtagService.getPopularAndFollowed(thunkAPI.getState().user.uid);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 const initialState = {
   hashtag: {
     hashtag: null,
+    isError: false,
+    isLoading: false,
+    errorMessages: {},
+    isSuccess: false,
+  },
+  hashtags: {
+    followed: [],
+    popular: [],
     isError: false,
     isLoading: false,
     errorMessages: {},
@@ -101,7 +120,22 @@ const hashtagSlice = createSlice({
         state.follow.isLoading = false;
         state.follow.isError = true;
         state.follow.errorMessages = action.payload;
-      });
+      })
+
+      .addCase(getPopularAndFollowed.pending, (state) => {
+        state.hashtags.isLoading = true;
+      })
+      .addCase(getPopularAndFollowed.fulfilled, (state, action) => {
+        state.hashtags.isLoading = false;
+        state.hashtags.isSuccess = true;
+        state.hashtags.followed = action.payload.followedHashtags
+        state.hashtags.popular = action.payload.popularHashtags
+      })
+      .addCase(getPopularAndFollowed.rejected, (state, action) => {
+        state.hashtags.isLoading = false;
+        state.hashtags.isError = true;
+        state.hashtags.errorMessages = action.payload;
+      })
   },
 });
 

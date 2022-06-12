@@ -1,0 +1,19 @@
+@import '../../../variables';
+
+.wrapper {
+  padding: 0 1rem;
+}
+
+.title {
+  margin: 0;
+  color: $text-secondary;
+  width: max-content;
+}
+
+.seperator {
+  border-left: 0.1rem solid $text-secondary;
+}
+
+.clickable:hover {
+  cursor: pointer;
+}

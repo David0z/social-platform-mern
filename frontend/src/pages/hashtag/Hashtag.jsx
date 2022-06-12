@@ -11,10 +11,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import styles from "./Hashtag.module.scss";
 import FollowButton from "../../components/follow-button/FollowButton";
+import HashtagSkeleton from "../../components/skeletons/HashtagSkeleton";
 
-const Hashtag = () => {
+const Hashtag = ({tag}) => {
   const dispatch = useDispatch();
-  const { tagName } = useParams();
+  const tagName = useParams().tagName || tag;
   const { hashtag, isLoading, isSuccess, isError } = useSelector(
     (state) => state.hashtag.hashtag
   );
@@ -60,12 +61,12 @@ const Hashtag = () => {
         </>
       )}
       {!isLoading && !isError && hashtag && posts.length === 0 && (
-        <h1>No posts to display</h1>
+        <h1 className={styles["no-posts"]}>No posts to display</h1>
       )}
-      {!isLoading && isError && <h1>Couldn't find the hashtag</h1>}
+      {!isLoading && isError && <h1 className={styles["not-found"]}>Couldn't find the hashtag</h1>}
       {isLoading && (
         <>
-          {/* HASHTAG SKELETON HERE */}
+          <HashtagSkeleton />
           <PostSkeletonList number={3} />
         </>
       )}

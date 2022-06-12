@@ -96,7 +96,55 @@ const hashtag_followSingle = async (req, res) => {
   }
 }
 
+const hashtag_getPopular = async (req, res) => {
+  try {
+    const { userId } = req.body
+
+    let followedHashtags = [];
+
+    if (userId) {
+      const user = await User.findById(userId, "followedHashtags").populate([
+        {path: "followedHashtags", select: {name: 1}}
+      ])
+
+      followedHashtags = user.followedHashtags
+    }
+
+    const popularHashtags = await Post.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+          },
+          hashtags: {$not: {$size: 0}}
+        },
+      },
+      {
+        $unwind: "$hashtags"
+      },
+      {$group : { _id : '$hashtags', count : {$sum : 1}}},
+      {$lookup: {
+        from: "hashtags",
+        localField: "_id",
+        foreignField: "_id",
+        pipeline: [{ $project: { name: 1 } }],
+        as: "name",
+      }},
+      {
+        $unwind: "$name"
+      },
+      { $set: {name: "$name.name"}},
+      {$sort: {count: -1}}
+    ])
+
+    res.status(200).json({ followedHashtags, popularHashtags })
+  } catch (error) {
+    res.status(401).json({ message: "Unauthorized" });
+  }
+}
+
 module.exports = {
   hashtag_getSingle,
-  hashtag_followSingle
+  hashtag_followSingle,
+  hashtag_getPopular
 };
