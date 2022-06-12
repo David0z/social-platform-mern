@@ -1,7 +1,7 @@
 @import '../../../variables';
 
 .wrapper {
-  padding: 0 1rem;
+  padding: 0;
 }
 
 .title {
@@ -10,10 +10,32 @@
   width: max-content;
 }
 
-.seperator {
-  border-left: 0.1rem solid $text-secondary;
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0.4rem;
+  display: flex;
+  flex-wrap: wrap;
+
+  &__element {
+
+    &--active {
+      background-color: $primary;
+      padding: 0 0.2rem;
+      border-radius: $border-reg;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 .clickable:hover {
   cursor: pointer;
+}
+
+.no-content {
+  color: $text-secondary;
 }

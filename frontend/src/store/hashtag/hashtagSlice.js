@@ -31,7 +31,22 @@ export const getPopularAndFollowed = createAsyncThunk(
   "hashtag/getPopularAndFollowed",
   async (_, thunkAPI) => {
     try {
-      return await hashtagService.getPopularAndFollowed(thunkAPI.getState().user.uid);
+      return await hashtagService.getPopularAndFollowed(
+        thunkAPI.getState().user.uid
+      );
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const getFollowedHashtags = createAsyncThunk(
+  "hashtag/getFollowedHashtags",
+  async (_, thunkAPI) => {
+    try {
+      return await hashtagService.getFollowedHashtags(
+        thunkAPI.getState().user.uid
+      );
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -60,6 +75,12 @@ const initialState = {
     errorMessages: {},
     isSuccess: false,
   },
+  followed: {
+    isError: false,
+    isLoading: false,
+    errorMessages: {},
+    isSuccess: false,
+  },
 };
 
 const hashtagSlice = createSlice({
@@ -75,6 +96,14 @@ const hashtagSlice = createSlice({
         errorMessages: {},
       };
     },
+    resetFollowed: (state) => {
+      state.followed = {
+        isError: false,
+        isLoading: false,
+        errorMessages: {},
+        isSuccess: false,
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -128,13 +157,26 @@ const hashtagSlice = createSlice({
       .addCase(getPopularAndFollowed.fulfilled, (state, action) => {
         state.hashtags.isLoading = false;
         state.hashtags.isSuccess = true;
-        state.hashtags.followed = action.payload.followedHashtags
-        state.hashtags.popular = action.payload.popularHashtags
+        state.hashtags.followed = action.payload.followedHashtags;
+        state.hashtags.popular = action.payload.popularHashtags;
       })
       .addCase(getPopularAndFollowed.rejected, (state, action) => {
         state.hashtags.isLoading = false;
         state.hashtags.isError = true;
         state.hashtags.errorMessages = action.payload;
+      })
+      
+      .addCase(getFollowedHashtags.pending, (state) => {
+        state.followed.isLoading = true;
+      })
+      .addCase(getFollowedHashtags.fulfilled, (state, action) => {
+        state.followed.isLoading = false;
+        state.followed.isSuccess = true;
+      })
+      .addCase(getFollowedHashtags.rejected, (state, action) => {
+        state.followed.isLoading = false;
+        state.followed.isError = true;
+        state.followed.errorMessages = action.payload;
       })
   },
 });

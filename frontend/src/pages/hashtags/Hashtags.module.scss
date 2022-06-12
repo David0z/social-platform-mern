@@ -1,10 +1,16 @@
 @import '../../variables';
 
 .navbar {
+  width: 100%;
+  box-sizing: border-box;
   background-color: rgba($primary, 25%);
-  padding: 1rem;
+  padding: 1rem 2rem;
   display: grid;
   grid-auto-flow: column;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 1rem;
+  // grid-auto-flow: row;
+  // grid-template-rows: 1fr 1px 1fr;
 }
 
 .followed-header {
@@ -15,4 +21,8 @@
   color: $text-secondary;
   background-color: $post-bg;
   text-align: center;
+}
+
+.seperator {
+  background-color: $text-secondary;
 }
