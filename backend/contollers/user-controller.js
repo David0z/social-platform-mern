@@ -123,11 +123,9 @@ const users_getUser = async (req, res) => {
       {
         $lookup: {
           from: "posts",
-          let: {
-            userId: "$_id",
-          },
+          localField: "posts",
+          foreignField: "_id",
           pipeline: [
-            { $match: { $expr: { $eq: ["$creator", "$$userId"] } } },
             { $sort: { createdAt: -1 } },
             { $set: { comments: [], commentCounter: { $size: "$comments" } } },
             {
