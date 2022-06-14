@@ -8,9 +8,10 @@ const authConfig = (token) => {
   };
 };
 
-const getSinglePost = async (tagName) => {
-  const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/hashtags/${tagName}`
+const getSingleHashtag = async (tagName, userId) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_API_ENDPOINT}/hashtags/${tagName}`,
+    { userId }
   );
 
   return response.data;
@@ -44,7 +45,7 @@ const getFollowedHashtags = async (userId) => {
 };
 
 const hashtagService = {
-  getSinglePost,
+  getSingleHashtag,
   followHashtag,
   getPopularAndFollowed,
   getFollowedHashtags

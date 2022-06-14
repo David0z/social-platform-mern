@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const hashtag_getSingle = async (req, res) => {
   try {
     const { tagName } = req.params;
+    const userId = req.body.userId;
     const hashtag = await Hashtag.aggregate([
       { $match: { name: `#${tagName}` } },
       {
@@ -39,22 +40,14 @@ const hashtag_getSingle = async (req, res) => {
           ],
         },
       },
+      { $set: {isUserFollowing: {$in: [mongoose.Types.ObjectId(userId), "$followers"]}, followers: {$size: "$followers"}}},
     ]);
 
     if (hashtag.length === 0) {
       throw new Error("Could not find the hashtag");
     }
 
-    const userId = req.body.userId;
-    let followedHashtags;
-
-    if (userId) {
-      console.log(userId);
-      const user = await User.findById(userId, "followedHashtags");
-      followedHashtags = user.followedHashtags;
-    }
-
-    res.status(200).json({ hashtag: hashtag[0], followedHashtags });
+    res.status(200).json({ hashtag: hashtag[0] });
   } catch (error) {
     res.status(401).json({ message: error.message || "Unauthorized" });
   }

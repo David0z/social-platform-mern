@@ -46,14 +46,14 @@ const Hashtag = ({tag}) => {
             <div className={styles.content}>
               <h1 className={styles.content__name}>{hashtag.name}</h1>
               <FollowButton
-                followCondition={hashtag.followers.includes(uid)}
+                followCondition={hashtag.isUserFollowing}
                 onClick={handleHashtagFollow}
                 token={token}
               />
               <p className={styles.content__paragraph}>
-                {hashtag.followers.length === 1
-                  ? `${hashtag.followers.length} follower`
-                  : `${hashtag.followers.length} followers`}
+                {hashtag.followers === 1
+                  ? `${hashtag.followers} follower`
+                  : `${hashtag.followers} followers`}
               </p>
             </div>
           </div>

@@ -6,7 +6,7 @@ const router = Router()
 
 router.post('/popular', hashtagControllers.hashtag_getPopular)
 router.get('/followed/:userId', hashtagControllers.hashtag_getFollowed)
-router.get('/:tagName', hashtagControllers.hashtag_getSingle)
+router.post('/:tagName', hashtagControllers.hashtag_getSingle)
 router.post('/follow/:id', authMiddleware, hashtagControllers.hashtag_followSingle)
 
 module.exports = router

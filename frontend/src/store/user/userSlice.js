@@ -21,6 +21,13 @@ const initialState = {
     errorMessages: {},
     isSuccess: false,
   },
+  followedUsers: {
+    users: [],
+    isLoading: false,
+    isError: false,
+    errorMessages: {},
+    isSuccess: false,
+  }
 };
 
 export const signup = createAsyncThunk(

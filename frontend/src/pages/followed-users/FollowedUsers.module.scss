@@ -1,0 +1,11 @@
+@import '../../variables';
+
+.followed-header {
+  margin: 0;
+  width: 100%;
+  font-weight: lighter;
+  font-size: 1.7rem;
+  color: $text-secondary;
+  background-color: $post-bg;
+  text-align: center;
+}

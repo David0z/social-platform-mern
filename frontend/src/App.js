@@ -18,6 +18,7 @@ import WelcomePage from "./pages/welcome-page/WelcomePage";
 import ScrollToTop from "./components/scroll-to-top/scrollToTop";
 import Hashtag from "./pages/hashtag/Hashtag";
 import Hashtags from "./pages/hashtags/Hashtags";
+import FollowedUsers from "./pages/followed-users/FollowedUsers";
 
 function App() {
   const { token } = useSelector((state) => state.user);
@@ -52,7 +53,7 @@ function App() {
           <Route path="/hashtags/:tagName" element={<Hashtag />} />
           <Route
             path="/followed"
-            element={token ? <h1>Followed Users</h1> : <Navigate to="/login" />}
+            element={token ? <FollowedUsers /> : <Navigate to="/login" />}
           />
           <Route
             path="/messages"

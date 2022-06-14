@@ -5,7 +5,10 @@ export const getSingleHashtag = createAsyncThunk(
   "hashtag/getSingleHashtag",
   async (tagName, thunkAPI) => {
     try {
-      return await hashtagService.getSinglePost(tagName);
+      return await hashtagService.getSingleHashtag(
+        tagName,
+        thunkAPI.getState().user.uid
+      );
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -102,8 +105,8 @@ const hashtagSlice = createSlice({
         isLoading: false,
         errorMessages: {},
         isSuccess: false,
-      }
-    }
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -133,13 +136,12 @@ const hashtagSlice = createSlice({
         state.follow.isLoading = false;
         switch (action.payload.result) {
           case "followed":
-            state.hashtag.hashtag.followers.push(action.payload.uid);
+            state.hashtag.hashtag.isUserFollowing = true;
+            state.hashtag.hashtag.followers++;
             break;
           case "unfollowed":
-            state.hashtag.hashtag.followers =
-              state.hashtag.hashtag.followers.filter(
-                (userId) => userId !== action.payload.uid
-              );
+            state.hashtag.hashtag.isUserFollowing = false;
+            state.hashtag.hashtag.followers--;
             break;
           default:
             break;
@@ -165,7 +167,7 @@ const hashtagSlice = createSlice({
         state.hashtags.isError = true;
         state.hashtags.errorMessages = action.payload;
       })
-      
+
       .addCase(getFollowedHashtags.pending, (state) => {
         state.followed.isLoading = true;
       })
@@ -177,7 +179,7 @@ const hashtagSlice = createSlice({
         state.followed.isLoading = false;
         state.followed.isError = true;
         state.followed.errorMessages = action.payload;
-      })
+      });
   },
 });
 
