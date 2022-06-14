@@ -51,4 +51,10 @@
     color: $text-secondary;
     grid-column: 1;
   }
+
+  &__followers-count {
+    margin: 0;
+    color: $text-secondary;
+    grid-column: 1;
+  }
 }

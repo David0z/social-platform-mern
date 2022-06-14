@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import postService from "./postService";
-import { fetchUser } from "../user/userSlice";
+import { fetchUser, getFollowedUsers } from "../user/userSlice";
 import { getSingleHashtag, getFollowedHashtags } from "../hashtag/hashtagSlice";
 
 export const createPost = createAsyncThunk(
@@ -250,6 +250,10 @@ const postSlice = createSlice({
         state.posts.posts = action.payload.hashtag.posts;
       })
       .addCase(getFollowedHashtags.fulfilled, (state, action) => {
+        state.posts.posts = action.payload.posts;
+      })
+      // getFollowedUsers
+      .addCase(getFollowedUsers.fulfilled, (state, action) => {
         state.posts.posts = action.payload.posts;
       })
       .addCase(voteForPost.pending, (state) => {

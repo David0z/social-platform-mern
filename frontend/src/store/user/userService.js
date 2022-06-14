@@ -1,12 +1,12 @@
 import axios from "axios";
 
-// const authConfig = (token) => {
-//   return {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   };
-// };
+const authConfig = (token) => {
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
 
 const signup = async (userData) => {
   const response = await axios.post(
@@ -47,19 +47,41 @@ const logout = () => {
   localStorage.removeItem("userName");
 };
 
-const fetchUser = async (userId, token) => {
-  const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/users/${userId}`
+const fetchUser = async (userId, followerId) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_API_ENDPOINT}/users/${userId}`,
+    { followerId }
   );
 
   return response.data;
 };
+
+const followUser = async (userId, token) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_API_ENDPOINT}/users/follow/${userId}`,
+    null,
+    authConfig(token)
+  );
+
+  return response.data;
+}
+
+const getFollowedUsers = async (token) => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/users/followed`,
+    authConfig(token)
+  );
+
+  return response.data;
+}
 
 const userService = {
   signup,
   login,
   logout,
   fetchUser,
+  followUser,
+  getFollowedUsers
 };
 
 export default userService;

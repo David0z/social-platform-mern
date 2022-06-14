@@ -21,13 +21,18 @@ const initialState = {
     errorMessages: {},
     isSuccess: false,
   },
-  followedUsers: {
-    users: [],
-    isLoading: false,
+  follow: {
     isError: false,
+    isLoading: false,
     errorMessages: {},
     isSuccess: false,
-  }
+  },
+  followed: {
+    isError: false,
+    isLoading: false,
+    errorMessages: {},
+    isSuccess: false,
+  },
 };
 
 export const signup = createAsyncThunk(
@@ -60,12 +65,28 @@ export const fetchUser = createAsyncThunk(
   "user/fetchUser",
   async (userId, thunkAPI) => {
     try {
-      return await userService.fetchUser(userId);
+      return await userService.fetchUser(userId, thunkAPI.getState().user.uid);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
   }
 );
+
+export const followUser = createAsyncThunk("user/followUser", async (userId, thunkAPI) => {
+  try {
+    return await userService.followUser(userId, thunkAPI.getState().user.token);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data.message);
+  }
+})
+
+export const getFollowedUsers = createAsyncThunk("user/getFollowedUsers", async (_, thunkAPI) => {
+  try {
+    return await userService.getFollowedUsers(thunkAPI.getState().user.token);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data.message);
+  }
+})
 
 const userSlice = createSlice({
   name: "user",
@@ -87,6 +108,14 @@ const userSlice = createSlice({
         isSuccess: false,
       };
     },
+    resetFollowed(state) {
+      state.followed = {
+        isError: false,
+        isLoading: false,
+        errorMessages: {},
+        isSuccess: false,
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -141,6 +170,43 @@ const userSlice = createSlice({
         state.fetchedUser.isLoading = false;
         state.fetchedUser.isError = true;
         state.errorMessages = action.payload;
+      })
+      // followUser
+      .addCase(followUser.pending, (state) => {
+        state.follow.isLoading = true;
+      })
+      .addCase(followUser.fulfilled, (state, action) => {
+        state.follow.isLoading = false;
+        switch (action.payload.result) {
+          case "followed":
+            state.fetchedUser.user.isUserFollowing = true;
+            state.fetchedUser.user.followers++;
+            break;
+          case "unfollowed":
+            state.fetchedUser.user.isUserFollowing = false;
+            state.fetchedUser.user.followers--;
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(followUser.rejected, (state, action) => {
+        state.follow.isLoading = false;
+        state.follow.isError = true;
+        state.follow.errorMessages = action.payload;
+      })
+
+      .addCase(getFollowedUsers.pending, (state) => {
+        state.followed.isLoading = true;
+      })
+      .addCase(getFollowedUsers.fulfilled, (state, action) => {
+        state.followed.isLoading = false;
+        state.followed.isSuccess = true;
+      })
+      .addCase(getFollowedUsers.rejected, (state, action) => {
+        state.followed.isLoading = false;
+        state.followed.isError = true;
+        state.followed.errorMessages = action.payload;
       });
   },
 });

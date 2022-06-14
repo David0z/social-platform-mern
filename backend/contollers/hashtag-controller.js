@@ -3,6 +3,8 @@ const User = require("../models/userModel");
 const Hashtag = require("../models/hashtagModel");
 const mongoose = require("mongoose");
 
+// -------------------------------------------------------------------------------------
+// GET A SINGLE HASHTAG
 const hashtag_getSingle = async (req, res) => {
   try {
     const { tagName } = req.params;
@@ -53,6 +55,8 @@ const hashtag_getSingle = async (req, res) => {
   }
 };
 
+// -------------------------------------------------------------------------------------
+// FOLLOW A SINGLE HASHTAG
 const hashtag_followSingle = async (req, res) => {
   try {
     const authUser = await User.findById(req.user.userId);
@@ -88,6 +92,8 @@ const hashtag_followSingle = async (req, res) => {
   }
 };
 
+// -------------------------------------------------------------------------------------
+// GET A LIST POPULAR AND FOLLOWED HASHTAGS
 const hashtag_getPopular = async (req, res) => {
   try {
     const { userId } = req.body;
@@ -138,6 +144,8 @@ const hashtag_getPopular = async (req, res) => {
   }
 };
 
+// -------------------------------------------------------------------------------------
+// GET POSTS FROM FOLLOWED HASHTAGS
 const hashtag_getFollowed = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -204,6 +212,7 @@ const hashtag_getFollowed = async (req, res) => {
   }
 };
 
+// -------------------------------------------------------------------------------------
 module.exports = {
   hashtag_getSingle,
   hashtag_followSingle,

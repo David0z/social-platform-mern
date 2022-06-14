@@ -1,7 +1,7 @@
 import styles from "./User.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchUser, userActions } from "../../store/user/userSlice";
+import { fetchUser, followUser, userActions } from "../../store/user/userSlice";
 import { postActions } from "../../store/post/postSlice";
 import { useParams } from "react-router-dom";
 import PostsList from "../../components/posts-list/PostsList";
@@ -32,6 +32,10 @@ const User = () => {
     return () => reset();
   }, [dispatch, userId]);
 
+  const handleUserFollow = () => {
+    dispatch(followUser(user._id))
+  }
+
   return (
     <>
       {!isLoading && !isError && user && (
@@ -45,7 +49,7 @@ const User = () => {
               />
               <div className={styles.userbar__details}>
                 <h1 className={styles.userbar__name}>{user.name}</h1>
-                <FollowButton token={token}/>
+                <FollowButton token={token} followCondition={user.isUserFollowing} onClick={handleUserFollow}/>
                 <p
                   className={styles.userbar__joined}
                 >{`Joined ${formatDistanceToNow(parseISO(user.createdAt), {
@@ -56,6 +60,9 @@ const User = () => {
                     ? `${posts.length} post`
                     : `${posts.length} posts`}
                 </p>
+                <p className={styles["userbar__followers-count"]}>{user.followers === 1
+                  ? `${user.followers} follower`
+                  : `${user.followers} followers`}</p>
               </div>
             </div>
           </div>

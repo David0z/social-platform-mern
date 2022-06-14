@@ -45,7 +45,7 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
               <h1 className={styles.head__name}>{post.creator.name}</h1>
             </Link>
             <Link to={`/posts/${post._id}`}>
-              <p className={styles.head__time}>
+              <p className={styles.head__time} title={parseISO(post.createdAt)}>
                 {formatDistanceToNow(parseISO(post.createdAt), {
                   addSuffix: true,
                 })}
