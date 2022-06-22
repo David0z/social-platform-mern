@@ -1,8 +1,11 @@
 @import "../../../variables";
 
 .no-token {
-  background: linear-gradient(to bottom, rgb(0, 0, 0, 0.2), transparent 50% 100%);
-  background-color: desaturate($primary, 60%) !important;
+  background-color: $post-bg !important;
+  
+  .menu .link {
+    color: $secondary;
+  }
 }
 
 .wrapper {

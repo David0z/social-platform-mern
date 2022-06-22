@@ -1,0 +1,91 @@
+@import "../../variables";
+
+.wrapper {
+  height: calc(100vh - $routes-wrapper-margin);
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 1fr 20rem;
+}
+
+.chat-area {
+  display: flex;
+  flex-direction: column;
+
+  .top-bar {
+    background-color: rgba($primary, 25%);
+    padding: 0.2rem $side-padding;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    &__image {
+      $size: 3rem;
+      width: $size;
+      height: $size;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    &__details {
+      
+    }
+
+    &__name {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+  }
+
+  .content {
+    background-color: $text;
+    padding: 0 $side-padding;
+    flex-grow: 1;
+  }
+
+  .bottom-bar {
+    background-color: $primary;
+    padding: 1rem $side-padding;
+    display: flex;
+
+    * {
+      border: none;
+    }
+
+    .input {
+      flex-grow: 1;
+      border-radius: 100vmax 0 0 100vmax;
+      padding: 0 1rem;
+      font-size: 1.2rem;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .send-btn {
+      font-size: 1.1rem;
+      padding: 0.5em 1em;
+      border-radius: 0 100vmax 100vmax 0;
+      background-color: $secondary;
+      color: $text;
+
+      &:hover {
+        background-color: $yellow;
+        cursor: pointer;
+        color: $black;
+      }
+    }
+  }
+}
+
+.sidebar {
+  background-color: rgba($primary, 50%);
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: lighter;
+    text-align: center;
+    margin: 0.5rem;
+  }
+}

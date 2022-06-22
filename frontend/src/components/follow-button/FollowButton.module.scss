@@ -1,8 +1,7 @@
 @import '../../variables';
 
 .follow-btn {
-  grid-column: 2;
-  justify-self: end;
+  display: block;
   height: min-content;
   font-size: 1.2rem;
   color: $text;

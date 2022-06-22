@@ -24,8 +24,8 @@
 
   &__details {
     flex-grow: 1;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    justify-content: space-between;
     align-content: center;
   }
 
@@ -56,5 +56,12 @@
     margin: 0;
     color: $text-secondary;
     grid-column: 1;
+  }
+
+  .action-buttons {
+    display: grid;
+    justify-items: end;
+    grid-auto-rows: max-content;
+    gap: 1rem;
   }
 }

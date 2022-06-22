@@ -19,6 +19,7 @@ import ScrollToTop from "./components/scroll-to-top/scrollToTop";
 import Hashtag from "./pages/hashtag/Hashtag";
 import Hashtags from "./pages/hashtags/Hashtags";
 import FollowedUsers from "./pages/followed-users/FollowedUsers";
+import Messages from "./pages/messages/Messages";
 
 function App() {
   const { token } = useSelector((state) => state.user);
@@ -57,7 +58,7 @@ function App() {
           />
           <Route
             path="/messages"
-            element={token ? <h1>Messages</h1> : <Navigate to="/login" />}
+            element={token ? <Messages /> : <Navigate to="/login" />}
           />
           <Route path="*" element={<NotFound />} />
         </Routes>

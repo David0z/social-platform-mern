@@ -1,7 +1,7 @@
 import styles from "./FollowButton.module.scss"
 import { Icon } from "@iconify/react";
 
-const FollowButton = ({followCondition, token, onClick}) => {
+const FollowButton = ({followCondition, onClick}) => {
   return (
     <button
       className={
@@ -10,7 +10,6 @@ const FollowButton = ({followCondition, token, onClick}) => {
           : styles["follow-btn"]
       }
       onClick={onClick}
-      style={{ visibility: token ? "visible" : "hidden" }}
     >
       {followCondition ? (
         <>

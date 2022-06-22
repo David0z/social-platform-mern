@@ -13,7 +13,7 @@ import styles from "./Hashtag.module.scss";
 import FollowButton from "../../components/follow-button/FollowButton";
 import HashtagSkeleton from "../../components/skeletons/HashtagSkeleton";
 
-const Hashtag = ({tag}) => {
+const Hashtag = ({ tag }) => {
   const dispatch = useDispatch();
   const tagName = useParams().tagName || tag;
   const { hashtag, isLoading, isSuccess, isError } = useSelector(
@@ -53,6 +53,8 @@ const Hashtag = ({tag}) => {
               <p className={styles.content__paragraph}>
                 {hashtag.followers === 1
                   ? `${hashtag.followers} follower`
+                  : hashtag.followers === 0
+                  ? "No followers"
                   : `${hashtag.followers} followers`}
               </p>
             </div>
@@ -63,7 +65,9 @@ const Hashtag = ({tag}) => {
       {!isLoading && !isError && hashtag && posts.length === 0 && (
         <h1 className={styles["no-posts"]}>No posts to display</h1>
       )}
-      {!isLoading && isError && <h1 className={styles["not-found"]}>Couldn't find the hashtag</h1>}
+      {!isLoading && isError && (
+        <h1 className={styles["not-found"]}>Couldn't find the hashtag</h1>
+      )}
       {isLoading && (
         <>
           <HashtagSkeleton />

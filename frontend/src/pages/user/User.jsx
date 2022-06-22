@@ -11,6 +11,7 @@ import UserSkeleton from "../../components/skeletons/UserSkeleton";
 import PostSkeletonList from "../../components/skeletons/PostSkeletonList";
 import ProfileImage from "../../components/profile-image/ProfileImage";
 import FollowButton from "../../components/follow-button/FollowButton";
+import MessageButton from "../../components/message-button/MessageButton";
 
 const User = () => {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const User = () => {
     (state) => state.user.fetchedUser
   );
   const { posts } = useSelector((state) => state.post.posts);
-  const { token } = useSelector(state => state.user)
+  const { token, uid } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(fetchUser(userId));
@@ -33,8 +34,8 @@ const User = () => {
   }, [dispatch, userId]);
 
   const handleUserFollow = () => {
-    dispatch(followUser(user._id))
-  }
+    dispatch(followUser(user._id));
+  };
 
   return (
     <>
@@ -48,21 +49,34 @@ const User = () => {
                 className={styles.userbar__image}
               />
               <div className={styles.userbar__details}>
-                <h1 className={styles.userbar__name}>{user.name}</h1>
-                <FollowButton token={token} followCondition={user.isUserFollowing} onClick={handleUserFollow}/>
-                <p
-                  className={styles.userbar__joined}
-                >{`Joined ${formatDistanceToNow(parseISO(user.createdAt), {
-                  addSuffix: true,
-                })}`}</p>
-                <p className={styles["userbar__posts-count"]}>
-                  {posts.length === 1
-                    ? `${posts.length} post`
-                    : `${posts.length} posts`}
-                </p>
-                <p className={styles["userbar__followers-count"]}>{user.followers === 1
-                  ? `${user.followers} follower`
-                  : `${user.followers} followers`}</p>
+                <div>
+                  <h1 className={styles.userbar__name}>{user.name}</h1>
+                  <p
+                    className={styles.userbar__joined}
+                  >{`Joined ${formatDistanceToNow(parseISO(user.createdAt), {
+                    addSuffix: true,
+                  })}`}</p>
+                  <p className={styles["userbar__posts-count"]}>
+                    {posts.length === 1
+                      ? `${posts.length} post`
+                      : `${posts.length} posts`}
+                  </p>
+                  <p className={styles["userbar__followers-count"]}>
+                    {user.followers === 1
+                      ? `${user.followers} follower`
+                      : user.followers === 0
+                      ? "No followers"
+                      : `${user.followers} followers`}
+                  </p>
+                </div>
+
+                {token && <div className={styles["action-buttons"]}>
+                  <FollowButton
+                    followCondition={user.isUserFollowing}
+                    onClick={handleUserFollow}
+                  />
+                  {uid !== userId && <MessageButton user={user} />}
+                </div>}
               </div>
             </div>
           </div>

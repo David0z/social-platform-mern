@@ -49,21 +49,27 @@ const userSchema = new mongoose.Schema(
         required: true,
         ref: "User",
       },
-    ]
+    ],
+    chats: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Chat",
+      },
+    ],
   },
   { timestamps: true }
 );
 
-userSchema.statics.login = async function(email, password) {
+userSchema.statics.login = async function (email, password) {
   const user = await this.findOne({ email });
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
     if (auth) {
       return user;
     }
-    throw Error('incorrect password');
+    throw Error("incorrect password");
   }
-  throw Error('incorrect email');
+  throw Error("incorrect email");
 };
 
 module.exports = mongoose.model("User", userSchema);
