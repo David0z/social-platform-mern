@@ -7,6 +7,7 @@ const path = require("path");
 const usersRoutes = require("./routes/user-routes");
 const postsRoutes = require("./routes/posts-routes");
 const hashtagRoutes = require("./routes/hashtag-routes");
+const chatRoutes = require("./routes/chat-routes")
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use((req, res, next) => {
 app.use("/api/users", usersRoutes);
 app.use("/api/posts", postsRoutes);
 app.use("/api/hashtags", hashtagRoutes);
+app.use("/api/chats", chatRoutes)
 
 app.use((error, req, res, next) => {
   if (req.file) {
