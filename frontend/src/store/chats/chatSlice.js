@@ -23,7 +23,7 @@ const initialState = {
     isLoading: false,
     errorMessages: {},
     isSuccess: false,
-  }
+  },
 };
 
 export const getChats = createAsyncThunk(
@@ -41,7 +41,10 @@ export const getConversation = createAsyncThunk(
   "chat/getConversation",
   async (conversationId, thunkAPI) => {
     try {
-      return await chatService.getConversation(conversationId, thunkAPI.getState().user.token);
+      return await chatService.getConversation(
+        conversationId,
+        thunkAPI.getState().user.token
+      );
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -52,7 +55,10 @@ export const sendMessage = createAsyncThunk(
   "chat/sendMessage",
   async (messageData, thunkAPI) => {
     try {
-      return await chatService.sendMessage(messageData ,thunkAPI.getState().user.token);
+      return await chatService.sendMessage(
+        messageData,
+        thunkAPI.getState().user.token
+      );
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -70,13 +76,13 @@ const chatSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // GET CHATS
+      // GET CHATS -----------------------------------------------------------------
       .addCase(getChats.pending, (state) => {
         state.chats.isLoading = true;
       })
       .addCase(getChats.fulfilled, (state, action) => {
         state.chats.isLoading = false;
-        // state.chats.data = action.payload.chats;
+        state.chats.data = action.payload.chats;
         state.chats.isSuccess = true;
       })
       .addCase(getChats.rejected, (state, action) => {
@@ -84,7 +90,7 @@ const chatSlice = createSlice({
         state.chats.isError = true;
         state.chats.errorMessages = action.payload;
       })
-      // GET CONVERSATION
+      // GET CONVERSATION ----------------------------------------------------------
       .addCase(getConversation.pending, (state) => {
         state.conversation.isLoading = true;
       })
@@ -98,20 +104,37 @@ const chatSlice = createSlice({
         state.conversation.isError = true;
         state.conversation.errorMessages = action.payload;
       })
-      // SEND MESSAGE
+      // SEND MESSAGE --------------------------------------------------------------
       .addCase(sendMessage.pending, (state) => {
         state.sendMessage.isLoading = true;
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
         state.sendMessage.isLoading = false;
+        if (!state.activeChat) {
+          state.activeChat = action.payload.sentMessage.conversationId;
+          state.chats.data.unshift({
+            _id: action.payload.sentMessage.conversationId,
+            participants: [
+              {
+                _id: action.payload.sentMessage.recepient,
+                name: state.userToChat.name,
+                image: state.userToChat.image,
+              },
+            ],
+            lastMessage: {
+              body: action.payload.sentMessage.messageBody,
+              author: action.payload.sentMessage.sender,
+            },
+          });
+        }
+        // send the message to sockets
         state.sendMessage.isSuccess = true;
       })
       .addCase(sendMessage.rejected, (state, action) => {
         state.sendMessage.isLoading = false;
         state.sendMessage.isError = true;
         state.sendMessage.errorMessages = action.payload;
-      })
-      
+      });
   },
 });
 
