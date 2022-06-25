@@ -19,6 +19,10 @@ const Messages = () => {
     )
     setSocket(newSocket)
 
+    newSocket.on('receive-message', (sendMessageData) => {
+      dispatch(chatActions.receiveMessage(sendMessageData))
+    })
+
     return () => {
       dispatch(chatActions.reset())
       newSocket.close()

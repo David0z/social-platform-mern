@@ -75,6 +75,57 @@ const chatSlice = createSlice({
     setUserToChat(state, action) {
       state.userToChat = action.payload;
     },
+    receiveMessage(state, action) {
+      // chats
+      if (state.chats.data.find(c => c._id === action.payload.conversationId)) {
+        const chatIndex = state.chats.data.indexOf(state.chats.data.find(c => c._id === action.payload.conversationId))
+          state.chats.data.unshift(state.chats.data.splice(chatIndex, 1)[0]);
+          state.chats.data = state.chats.data.map((chat) => {
+            if (chat._id === state.activeChat) {
+              return {
+                ...chat,
+                messages: [
+                  {
+                    body: action.payload.messageBody,
+                    author: action.payload.sender,
+                    createdAt: new Date().toISOString(),
+                  },
+                ],
+              };
+            } else {
+              return chat;
+            }
+          });
+      } else {
+        state.chats.data.unshift({
+          _id: action.payload.conversationId,
+          participants: [
+            {
+              _id: action.payload.senderData._id,
+              name: action.payload.senderData.name,
+              image: action.payload.senderData.image
+            },
+          ],
+          messages: [
+            {
+              body: action.payload.messageBody,
+              author: action.payload.sender,
+              createdAt: new Date().toISOString(),
+            },
+          ],
+        });
+      }
+
+      // conversation
+      if (state.activeChat === action.payload.conversationId) {
+        state.conversation.data.messages.push({
+          body: action.payload.messageBody,
+          author: action.payload.sender,
+          createdAt: new Date().toISOString(),
+          _id: uuidv4()
+        });
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -137,6 +188,26 @@ const chatSlice = createSlice({
               },
             ],
           });
+
+          state.conversation.data = {
+            participants: [
+              {
+              _id: state.userToChat._id,
+              name: state.userToChat.name,
+              image: state.userToChat.image
+            },
+            {
+              _id: action.payload.sentMessage.senderData._id,
+              name: action.payload.sentMessage.senderData.name,
+              image: action.payload.sentMessage.senderData.image
+            }],
+            messages: [{
+              body: action.payload.sentMessage.messageBody,
+              author: action.payload.sentMessage.sender,
+              createdAt: new Date().toISOString(),
+              _id: uuidv4()
+            }]
+          };
         } else {
           const chatIndex = state.chats.data.indexOf(state.chats.data.find(c => c._id === action.payload.sentMessage.conversationId))
           state.chats.data.unshift(state.chats.data.splice(chatIndex, 1)[0]);
@@ -156,15 +227,17 @@ const chatSlice = createSlice({
               return chat;
             }
           });
+
+          state.conversation.data.messages.push({
+            body: action.payload.sentMessage.messageBody,
+            author: action.payload.sentMessage.sender,
+            createdAt: new Date().toISOString(),
+            _id: uuidv4()
+          });
         }
 
-        state.conversation.data.messages.push({
-          body: action.payload.sentMessage.messageBody,
-          author: action.payload.sentMessage.sender,
-          createdAt: new Date().toISOString(),
-          _id: uuidv4()
-        });
         // send the message to sockets
+        state.sendMessage.data = action.payload.sentMessage
         state.sendMessage.isSuccess = true;
       })
       .addCase(sendMessage.rejected, (state, action) => {

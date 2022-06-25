@@ -1,18 +1,19 @@
 import styles from "../Messages.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import ProfileImage from "../../../components/profile-image/ProfileImage";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { sendMessage } from "../../../store/chats/chatSlice";
 import MessageItem from "./MessageItem";
 
-const Chat = ({socket}) => {
+const Chat = ({ socket }) => {
   const dispatch = useDispatch();
-  const { isSuccess, isLoading: sendMessagePending } = useSelector(state => state.chat.sendMessage)
-  const {
-    userToChat,
-    activeChat,
-  } = useSelector((state) => state.chat);
-  const { data: conversationData, isLoading } = useSelector(state => state.chat.conversation)
+  const { isSuccess, isLoading: sendMessagePending, data: sendMessageData } = useSelector(
+    (state) => state.chat.sendMessage
+  );
+  const { userToChat, activeChat } = useSelector((state) => state.chat);
+  const { data: conversationData, isLoading } = useSelector(
+    (state) => state.chat.conversation
+  );
   const { uid } = useSelector((state) => state.user);
   const [message, setMessage] = useState("");
 
@@ -35,9 +36,19 @@ const Chat = ({socket}) => {
 
   useEffect(() => {
     if (isSuccess === true) {
-      // socket.emit('send-message', { recipients, text })
+      if (socket === null) {
+        console.log('returned');
+        return;
+      }
+      socket.emit("send-message", sendMessageData);
     }
-  }, [isSuccess])
+  }, [isSuccess]);
+
+  const lastMessageRef = useCallback(node => {
+    if (node) {
+      node.scrollIntoView({ smooth: true})
+    }
+  }, [conversationData.messages])
 
   return (
     <div className={styles["chat-area"]}>
@@ -54,9 +65,17 @@ const Chat = ({socket}) => {
         </div>
       )}
       <div className={styles.content}>
-        {conversationData.length !== 0 && !isLoading && conversationData.messages.map(message => (
-          <MessageItem message={message} participants={conversationData.participants} key={message._id}/>
-        ))}
+        {conversationData.length !== 0 &&
+          !isLoading &&
+          conversationData.messages.map((message, index) => {
+            const lastMessage = conversationData.messages.length - 1 === index;
+            return <MessageItem
+              message={message}
+              participants={conversationData.participants}
+              key={message._id}
+              lastMessageRef={lastMessage ? lastMessageRef : null}
+            />
+          })}
       </div>
       <div className={styles["bottom-bar"]}>
         <input

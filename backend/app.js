@@ -60,6 +60,11 @@ mongoose
       const id = socket.handshake.query.id
 
       socket.join(id)
+
+      socket.on('send-message', (sendMessageData) => {
+        // console.log(sendMessageData);
+        socket.broadcast.to(sendMessageData.recepient).emit('receive-message', sendMessageData)
+      })
     })
   }
     

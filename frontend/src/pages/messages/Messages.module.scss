@@ -10,6 +10,7 @@
 .chat-area {
   display: flex;
   flex-direction: column;
+  height: inherit;
 
   .top-bar {
     background-color: rgba($primary, 25%);
@@ -41,6 +42,7 @@
     background-color: $text;
     padding: 0 $side-padding;
     flex-grow: 1;
+    overflow-y: auto;
   }
 
   .bottom-bar {

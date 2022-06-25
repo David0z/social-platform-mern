@@ -113,7 +113,11 @@ const chat_sendMessage = async (req, res) => {
       });
     }
 
-    res.status(200).json({ sentMessage: { ...req.body, conversationId } });
+    res.status(200).json({ sentMessage: { ...req.body, conversationId, senderData: {
+      _id: authUser._id,
+      name: authUser.name,
+      image: authUser.image
+    } } });
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
   }
