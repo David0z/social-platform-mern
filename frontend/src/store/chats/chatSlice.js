@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import chatService from "./chatService";
+import { v4 as uuidv4 } from 'uuid';
 
 const initialState = {
   activeChat: null,
@@ -19,6 +20,7 @@ const initialState = {
     isSuccess: false,
   },
   sendMessage: {
+    data: null,
     isError: false,
     isLoading: false,
     errorMessages: {},
@@ -98,7 +100,9 @@ const chatSlice = createSlice({
         state.conversation.isLoading = false;
         state.conversation.data = action.payload.conversation;
         state.activeChat = action.payload.conversation._id;
-        state.userToChat = action.payload.conversation.participants.find(u => u._id !== action.payload.userId)
+        state.userToChat = action.payload.conversation.participants.find(
+          (u) => u._id !== action.payload.userId
+        );
         state.conversation.isSuccess = true;
       })
       .addCase(getConversation.rejected, (state, action) => {
@@ -109,11 +113,13 @@ const chatSlice = createSlice({
       // SEND MESSAGE --------------------------------------------------------------
       .addCase(sendMessage.pending, (state) => {
         state.sendMessage.isLoading = true;
+        state.sendMessage.isSuccess = false;
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
         state.sendMessage.isLoading = false;
         if (!state.activeChat) {
           state.activeChat = action.payload.sentMessage.conversationId;
+          // this has to be changed!!!!!!!!!!
           state.chats.data.unshift({
             _id: action.payload.sentMessage.conversationId,
             participants: [
@@ -123,16 +129,46 @@ const chatSlice = createSlice({
                 image: state.userToChat.image,
               },
             ],
-            lastMessage: {
-              body: action.payload.sentMessage.messageBody,
-              author: action.payload.sentMessage.sender,
-            },
+            messages: [
+              {
+                body: action.payload.sentMessage.messageBody,
+                author: action.payload.sentMessage.sender,
+                createdAt: new Date().toISOString(),
+              },
+            ],
+          });
+        } else {
+          const chatIndex = state.chats.data.indexOf(state.chats.data.find(c => c._id === action.payload.sentMessage.conversationId))
+          state.chats.data.unshift(state.chats.data.splice(chatIndex, 1)[0]);
+          state.chats.data = state.chats.data.map((chat) => {
+            if (chat._id === state.activeChat) {
+              return {
+                ...chat,
+                messages: [
+                  {
+                    body: action.payload.sentMessage.messageBody,
+                    author: action.payload.sentMessage.sender,
+                    createdAt: new Date().toISOString(),
+                  },
+                ],
+              };
+            } else {
+              return chat;
+            }
           });
         }
+
+        state.conversation.data.messages.push({
+          body: action.payload.sentMessage.messageBody,
+          author: action.payload.sentMessage.sender,
+          createdAt: new Date().toISOString(),
+          _id: uuidv4()
+        });
         // send the message to sockets
         state.sendMessage.isSuccess = true;
       })
       .addCase(sendMessage.rejected, (state, action) => {
+        state.sendMessage.isSuccess = false;
         state.sendMessage.isLoading = false;
         state.sendMessage.isError = true;
         state.sendMessage.errorMessages = action.payload;

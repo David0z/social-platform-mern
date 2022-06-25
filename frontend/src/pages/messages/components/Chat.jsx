@@ -1,16 +1,16 @@
 import styles from "../Messages.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import ProfileImage from "../../../components/profile-image/ProfileImage";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { sendMessage } from "../../../store/chats/chatSlice";
 import MessageItem from "./MessageItem";
 
-const Chat = () => {
+const Chat = ({socket}) => {
   const dispatch = useDispatch();
+  const { isSuccess, isLoading: sendMessagePending } = useSelector(state => state.chat.sendMessage)
   const {
     userToChat,
     activeChat,
-    sendMessage: sendingMessage,
   } = useSelector((state) => state.chat);
   const { data: conversationData, isLoading } = useSelector(state => state.chat.conversation)
   const { uid } = useSelector((state) => state.user);
@@ -32,6 +32,12 @@ const Chat = () => {
 
     setMessage("");
   };
+
+  useEffect(() => {
+    if (isSuccess === true) {
+      // socket.emit('send-message', { recipients, text })
+    }
+  }, [isSuccess])
 
   return (
     <div className={styles["chat-area"]}>
@@ -62,7 +68,7 @@ const Chat = () => {
         <button
           className={styles["send-btn"]}
           onClick={handleMessageSend}
-          disabled={sendingMessage.isLoading}
+          disabled={sendMessagePending}
         >
           Send
         </button>

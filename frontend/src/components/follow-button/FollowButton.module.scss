@@ -10,6 +10,7 @@
   border-radius: $border-reg;
   background-color: $primary;
   user-select: none;
+  justify-self: end;
 
   &:hover {
     background-color: $secondary;
