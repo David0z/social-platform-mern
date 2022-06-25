@@ -96,7 +96,9 @@ const chatSlice = createSlice({
       })
       .addCase(getConversation.fulfilled, (state, action) => {
         state.conversation.isLoading = false;
-        // state.conversation.data = action.payload.conversation;
+        state.conversation.data = action.payload.conversation;
+        state.activeChat = action.payload.conversation._id;
+        state.userToChat = action.payload.conversation.participants.find(u => u._id !== action.payload.userId)
         state.conversation.isSuccess = true;
       })
       .addCase(getConversation.rejected, (state, action) => {

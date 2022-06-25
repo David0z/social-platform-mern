@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getChats } from "../../../store/chats/chatSlice";
+import { getChats, getConversation } from "../../../store/chats/chatSlice";
 import styles from "../Messages.module.scss";
 import ProfileImage from "../../../components/profile-image/ProfileImage";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
@@ -8,11 +8,12 @@ import parseISO from "date-fns/parseISO";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
+  const { activeChat } = useSelector(state => state.chat)
   const { data, isLoading } = useSelector((state) => state.chat.chats);
   const { uid } = useSelector((state) => state.user);
 
-  const handleConversationChange = () => {
-
+  const handleConversationChange = (convoId) => {
+    dispatch(getConversation(convoId))
   };
 
   useEffect(() => {
@@ -27,7 +28,7 @@ const Sidebar = () => {
           {data.map((item) => (
             <div
               key={item._id}
-              className={styles.sidebar__item}
+              className={`${styles.sidebar__item} ${item._id === activeChat && styles["sidebar__item--active"]}`}
               onClick={() => handleConversationChange(item._id)}
             >
               <ProfileImage

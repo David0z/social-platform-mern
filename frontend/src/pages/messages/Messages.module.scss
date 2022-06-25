@@ -107,6 +107,10 @@
     border-radius: $border-reg;
     padding: 0.4rem;
 
+    &--active {
+      background-color: $text;
+    }
+
     &:hover {
       cursor: pointer;
       background-color: $text;

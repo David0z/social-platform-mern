@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ProfileImage from "../../../components/profile-image/ProfileImage";
 import { useState } from "react";
 import { sendMessage } from "../../../store/chats/chatSlice";
+import MessageItem from "./MessageItem";
 
 const Chat = () => {
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ const Chat = () => {
     activeChat,
     sendMessage: sendingMessage,
   } = useSelector((state) => state.chat);
+  const { data: conversationData, isLoading } = useSelector(state => state.chat.conversation)
   const { uid } = useSelector((state) => state.user);
   const [message, setMessage] = useState("");
 
@@ -45,7 +47,11 @@ const Chat = () => {
           </div>
         </div>
       )}
-      <div className={styles.content}></div>
+      <div className={styles.content}>
+        {conversationData.length !== 0 && !isLoading && conversationData.messages.map(message => (
+          <MessageItem message={message} participants={conversationData.participants} key={message._id}/>
+        ))}
+      </div>
       <div className={styles["bottom-bar"]}>
         <input
           type="text"

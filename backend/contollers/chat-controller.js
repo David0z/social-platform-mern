@@ -6,6 +6,13 @@ const mongoose = require("mongoose");
 
 const chat_getAllChats = async (req, res) => {
   try {
+    const authUser = await User.findById(req.user.userId);
+
+    if (!authUser) {
+      res.status(401);
+      throw new Error("User not authorized");
+    }
+
     const userId = req.user.userId;
 
     const user = await User.aggregate([
@@ -40,11 +47,33 @@ const chat_getAllChats = async (req, res) => {
 
 const chat_getSingleConversation = async (req, res) => {
   try {
-  } catch (error) {}
+    const authUser = await User.findById(req.user.userId);
+
+    if (!authUser) {
+      res.status(401);
+      throw new Error("User not authorized");
+    }
+
+    const { conversationId } = req.params
+    const conversation = await Chat.findById(conversationId).populate([
+      {path: "participants", select: {_id: 1, name: 1, image: 1}}
+    ])
+
+    res.status(200).json({ conversation, userId: req.user.userId });
+  } catch (error) {
+    res.status(401).json({ message: "Unauthorized" });
+  }
 };
 
 const chat_sendMessage = async (req, res) => {
   try {
+    const authUser = await User.findById(req.user.userId);
+
+    if (!authUser) {
+      res.status(401);
+      throw new Error("User not authorized");
+    }
+
     let { conversationId } = req.body;
     const { sender, recepient, messageBody } = req.body;
 
