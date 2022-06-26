@@ -1,11 +1,21 @@
-import styles from './MessageItem.module.scss'
+import styles from "./MessageItem.module.scss";
+import ProfileImage from "../../../components/profile-image/ProfileImage";
 
-const MessageItem = ({message, participants, lastMessageRef}) => {
+const MessageItem = ({ message, participants, lastMessageRef, nextMessage, userMessage }) => {
   return (
-    <div className={styles.wrapper} ref={lastMessageRef}>
-      <p><span>{participants.find(p => p._id === message.author).name}:</span> {message.body}</p>
-    </div>
-  )
-}
+    <div className={`${styles.wrapper} ${userMessage ? styles["user-message"] : ''}`} ref={lastMessageRef}>
 
-export default MessageItem
+      {nextMessage?.author === message.author ? null : <ProfileImage
+        className={styles.image}
+        profileImage={participants.find(p => p._id === message.author).image}
+        alt="userPhoto"
+      />}
+
+      <p className={`${styles.content} ${nextMessage?.author !== message.author ? styles["last-message"] : ''}`}>
+        {message.body}
+      </p>
+    </div>
+  );
+};
+
+export default MessageItem;

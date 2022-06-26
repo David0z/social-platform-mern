@@ -1,5 +1,54 @@
-@import '../../../variables';
+@import "../../../variables";
+$border: calc($border-reg * 2);
 
 .wrapper {
-  
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 4rem 1fr 4rem;
+  gap: 1rem;
+  width: 100%;
+}
+
+.user-message {
+
+  .content {
+    grid-column: 2;
+    justify-self: end;
+    background-color: rgba($primary, 50%);
+  }
+
+  .image {
+    grid-column: 3;
+  }
+
+  .last-message {
+    border-radius: $border $border 0 $border;
+  }
+}
+
+.image {
+  grid-column: 1;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+  align-self: end;
+}
+
+.content {
+  grid-column: 2;
+  margin: 0;
+  background-color: $post-bg;
+  // width: max-content;
+  height: max-content;
+  padding: 0.5rem;
+  border-radius: $border;
+  box-shadow: 0.2em 0.2em 0.8em -0.1em rgba(#b1b1b1, 80%);
+  justify-self: start;
+  align-self: start;
+  white-space: pre-wrap;
+}
+
+.last-message {
+  border-radius: $border $border $border 0;
 }

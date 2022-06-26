@@ -59,7 +59,7 @@ const Chat = ({ socket }) => {
             profileImage={userToChat.image}
             alt="userToChat"
           />
-          <div className={styles["top-bar__details"]}>
+          <div>
             <h1 className={styles["top-bar__name"]}>{userToChat.name}</h1>
           </div>
         </div>
@@ -74,6 +74,8 @@ const Chat = ({ socket }) => {
               participants={conversationData.participants}
               key={message._id}
               lastMessageRef={lastMessage ? lastMessageRef : null}
+              nextMessage={conversationData.messages[index + 1]}
+              userMessage={uid === message.author}
             />
           })}
       </div>

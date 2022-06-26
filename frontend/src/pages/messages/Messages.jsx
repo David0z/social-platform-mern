@@ -25,6 +25,7 @@ const Messages = () => {
 
     return () => {
       dispatch(chatActions.reset())
+      newSocket.off('receive-message')
       newSocket.close()
     }
   }, [])

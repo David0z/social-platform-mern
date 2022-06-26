@@ -6,6 +6,8 @@ import ProfileImage from "../../../components/profile-image/ProfileImage";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import parseISO from "date-fns/parseISO";
 
+const maxTextLength = 16;
+
 const Sidebar = () => {
   const dispatch = useDispatch();
   const { activeChat } = useSelector(state => state.chat)
@@ -44,7 +46,8 @@ const Sidebar = () => {
                 </p>
                 <p className={styles["sidebar__item__last-msg"]}>
                   {item.messages[0].author === uid && "You: "}
-                  {item.messages[0].body}
+                  {item.messages[0].body.slice(0, maxTextLength)}
+                  {item.messages[0].body.length > maxTextLength && "..."}
                 </p>
                 <p className={styles.sidebar__item__date}>
                   {formatDistanceToNow(parseISO(item.messages[0].createdAt), {
