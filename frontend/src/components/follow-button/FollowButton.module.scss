@@ -1,20 +1,12 @@
 @import '../../variables';
+@import '../../templates';
 
 .follow-btn {
-  display: block;
-  height: min-content;
-  font-size: 1.2rem;
-  color: $text;
-  padding: 0 2rem;
-  border: 0.15rem solid $text;
-  border-radius: $border-reg;
+  @extend %user-action-btn;
   background-color: $primary;
-  user-select: none;
-  justify-self: end;
 
   &:hover {
     background-color: $secondary;
-    cursor: pointer;
   }
 
   &--followed {
@@ -22,10 +14,6 @@
     color: $secondary;
     border: 0.15rem solid $secondary;
     background-color: $text;
-    display: flex;
-    align-items: center;
-    gap: 0.2rem;
-    padding: 0 0.5rem;
 
     &:hover {
       background-color: $post-bg;

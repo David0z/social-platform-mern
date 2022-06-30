@@ -93,7 +93,7 @@ const User = () => {
         </>
       )}
       {!isLoading && !isError && user && posts.length === 0 && (
-        <h1>No posts to display</h1>
+        <h1 className={styles["no-posts"]}>No posts to display</h1>
       )}
       {/* 62794e0b481dd79190a7ec06 */}
       {!isLoading && isError && <h1>Couldn't find the user</h1>}

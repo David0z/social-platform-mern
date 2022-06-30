@@ -1,4 +1,5 @@
 @import "../../variables";
+@import "../../templates";
 
 .userbar {
   width: 100%;
@@ -62,6 +63,10 @@
     display: grid;
     justify-items: end;
     grid-auto-rows: max-content;
-    gap: 1rem;
+    gap: 0.5rem;
   }
+}
+
+.no-posts {
+  @extend %no-posts;
 }

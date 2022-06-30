@@ -1,6 +1,11 @@
 @import '../../variables';
+@import '../../templates';
 
 .button {
-  display: block;
-  height: min-content;
+  @extend %user-action-btn;
+  background-color: $text-secondary;
+
+  &:hover {
+    background-color: lighten($text-secondary, 20%);
+  }
 }

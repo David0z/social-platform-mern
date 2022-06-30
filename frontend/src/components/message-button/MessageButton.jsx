@@ -2,6 +2,7 @@ import styles from "./MessageButton.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { chatActions } from '../../store/chats/chatSlice'
+import { Icon } from '@iconify/react';
 
 const MessageButton = ({ user }) => {
   const navigate = useNavigate();
@@ -17,7 +18,8 @@ const MessageButton = ({ user }) => {
       className={styles.button}
       onClick={handleMessageUser}
     >
-      Message User
+      <Icon icon="bi:envelope-fill" />
+      Message
     </button>
   );
 };

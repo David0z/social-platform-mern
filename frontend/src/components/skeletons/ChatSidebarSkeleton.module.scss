@@ -1,0 +1,67 @@
+@import "../../variables";
+@import "../../templates";
+
+$skeleton-color: rgba($primary, 25%);
+
+%skeleton-content {
+  background-color: $skeleton-color;
+  border-radius: $border-reg;
+}
+
+.items-wrapper {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.4rem;
+  overflow-y: hidden;
+}
+
+.item {
+  position: relative;
+  overflow-x: clip;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba($text, 50%);
+  border-radius: $border-reg;
+  padding: 0.4rem;
+
+  &__image {
+    $size: 4rem;
+    width: $size;
+    height: $size;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background-color: $skeleton-color;
+  }
+
+  &__content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    gap: 0.2rem;
+    flex-direction: column;
+  }
+
+  &__name {
+    @extend %skeleton-content;
+    height: 1.4rem;
+    width: 80%;
+  }
+
+  &__message {
+    @extend %skeleton-content;
+    width: 80%;
+    height: 1rem;
+  }
+
+  &__date {
+    @extend %skeleton-content;
+    width: 40%;
+    height: 0.8rem;
+    margin-top: auto;
+  }
+}
+
+.shine {
+  @include shine;
+}

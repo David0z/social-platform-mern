@@ -70,8 +70,10 @@
     align-items: center;
 
     p {
-      margin: 0 1rem;
+      margin: 0;
       font-size: 1.2rem;
+      width: 5ch;
+      text-align: center;
 
       &:hover {
         cursor: pointer;

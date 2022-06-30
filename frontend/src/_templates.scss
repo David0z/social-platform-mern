@@ -60,3 +60,31 @@
   background: linear-gradient(-80deg, transparent 0 10%, $bgcolor 30% 70%, transparent 90% 100%);
   animation: shine-animation 1s infinite;
 }
+
+%user-action-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: min-content;
+  width: 8rem;
+  justify-self: end;
+  user-select: none;
+  gap: 0.2em;
+  font-size: 1.2rem;
+  color: $text;
+  padding: 0;
+  border: 0.15rem solid $text;
+  border-radius: $border-reg;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+%no-posts {
+  width: 100%;
+  text-align: center;
+  margin-top: 6rem;
+  color: $text-secondary;
+  opacity: 0.4;
+}

@@ -78,6 +78,7 @@ const Chat = ({ socket }) => {
               userMessage={uid === message.author}
             />
           })}
+          {isLoading && <h1>Loading...</h1>}
       </div>
       <div className={styles["bottom-bar"]}>
         <input

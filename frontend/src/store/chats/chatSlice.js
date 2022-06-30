@@ -151,9 +151,9 @@ const chatSlice = createSlice({
         state.conversation.isLoading = false;
         state.conversation.data = action.payload.conversation;
         state.activeChat = action.payload.conversation._id;
-        state.userToChat = action.payload.conversation.participants.find(
-          (u) => u._id !== action.payload.userId
-        );
+        // state.userToChat = action.payload.conversation.participants.find(
+        //   (u) => u._id !== action.payload.userId
+        // );
         state.conversation.isSuccess = true;
       })
       .addCase(getConversation.rejected, (state, action) => {
@@ -170,7 +170,6 @@ const chatSlice = createSlice({
         state.sendMessage.isLoading = false;
         if (!state.activeChat) {
           state.activeChat = action.payload.sentMessage.conversationId;
-          // this has to be changed!!!!!!!!!!
           state.chats.data.unshift({
             _id: action.payload.sentMessage.conversationId,
             participants: [

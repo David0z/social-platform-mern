@@ -1,21 +1,34 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getChats, getConversation } from "../../../store/chats/chatSlice";
+import {
+  getChats,
+  getConversation,
+  chatActions,
+} from "../../../store/chats/chatSlice";
 import styles from "../Messages.module.scss";
 import ProfileImage from "../../../components/profile-image/ProfileImage";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import parseISO from "date-fns/parseISO";
+import ChatSidebarSkeleton from "../../../components/skeletons/ChatSidebarSkeleton";
 
 const maxTextLength = 16;
 
 const Sidebar = () => {
   const dispatch = useDispatch();
-  const { activeChat } = useSelector(state => state.chat)
+  const { activeChat } = useSelector((state) => state.chat);
   const { data, isLoading } = useSelector((state) => state.chat.chats);
   const { uid } = useSelector((state) => state.user);
 
   const handleConversationChange = (convoId) => {
-    dispatch(getConversation(convoId))
+    if (activeChat === convoId) return;
+    dispatch(
+      chatActions.setUserToChat(
+        data
+          .find((chat) => chat._id === convoId)
+          .participants.find((p) => p._id !== uid)
+      )
+    );
+    dispatch(getConversation(convoId));
   };
 
   useEffect(() => {
@@ -30,7 +43,9 @@ const Sidebar = () => {
           {data.map((item) => (
             <div
               key={item._id}
-              className={`${styles.sidebar__item} ${item._id === activeChat && styles["sidebar__item--active"]}`}
+              className={`${styles.sidebar__item} ${
+                item._id === activeChat && styles["sidebar__item--active"]
+              }`}
               onClick={() => handleConversationChange(item._id)}
             >
               <ProfileImage
@@ -45,9 +60,10 @@ const Sidebar = () => {
                   {item.participants.filter((p) => p._id !== uid)[0].name}
                 </p>
                 <p className={styles["sidebar__item__last-msg"]}>
-                  {item.messages[0].author === uid && "You: "}
-                  {item.messages[0].body.slice(0, maxTextLength)}
-                  {item.messages[0].body.length > maxTextLength && "..."}
+                  {`${item.messages[0].author === uid ? "You: " : ""}
+                  ${item.messages[0].body.slice(0, maxTextLength)}${
+                    item.messages[0].body.length > maxTextLength ? "..." : ""
+                  }`}
                 </p>
                 <p className={styles.sidebar__item__date}>
                   {formatDistanceToNow(parseISO(item.messages[0].createdAt), {
@@ -59,6 +75,7 @@ const Sidebar = () => {
           ))}
         </div>
       )}
+      {isLoading && <ChatSidebarSkeleton number={5} />}
     </div>
   );
 };
