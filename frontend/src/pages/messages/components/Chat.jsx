@@ -1,9 +1,10 @@
 import styles from "../Messages.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import ProfileImage from "../../../components/profile-image/ProfileImage";
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { sendMessage } from "../../../store/chats/chatSlice";
 import MessageItem from "./MessageItem";
+import ChatSkeleton from "../../../components/skeletons/ChatSkeleton";
 
 const Chat = ({ socket }) => {
   const dispatch = useDispatch();
@@ -69,16 +70,20 @@ const Chat = ({ socket }) => {
           !isLoading &&
           conversationData.messages.map((message, index) => {
             const lastMessage = conversationData.messages.length - 1 === index;
-            return <MessageItem
-              message={message}
-              participants={conversationData.participants}
-              key={message._id}
-              lastMessageRef={lastMessage ? lastMessageRef : null}
-              nextMessage={conversationData.messages[index + 1]}
-              userMessage={uid === message.author}
-            />
+            return (
+            <React.Fragment key={message._id}>
+              {new Date(conversationData.messages[index - 1]?.createdAt).getDay() !== new Date(message.createdAt).getDay() && <p className={styles["optional-date"]}>{new Date(message.createdAt).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>}
+              <MessageItem
+                message={message}
+                participants={conversationData.participants}
+                lastMessageRef={lastMessage ? lastMessageRef : null}
+                nextMessage={conversationData.messages[index + 1]}
+                userMessage={uid === message.author}
+              />
+            </React.Fragment>
+            )
           })}
-          {isLoading && <h1>Loading...</h1>}
+          {isLoading && <ChatSkeleton />}
       </div>
       <div className={styles["bottom-bar"]}>
         <input

@@ -2,7 +2,9 @@ import styles from './ChatSkeleton.module.scss'
 
 const ChatSkeleton = () => {
   return (
-    <div>ChatSkeleton</div>
+    <div className={styles.wrapper}>
+      <h1>Loading messages...</h1>
+    </div>
   )
 }
 

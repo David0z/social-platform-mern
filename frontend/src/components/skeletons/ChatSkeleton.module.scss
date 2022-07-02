@@ -1,1 +1,13 @@
 @import "../../variables";
+
+.wrapper {
+  flex-grow: 1;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  h1 {
+    color: rgba($text-secondary, 50%);
+  }
+}

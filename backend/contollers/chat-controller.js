@@ -59,6 +59,11 @@ const chat_getSingleConversation = async (req, res) => {
       {path: "participants", select: {_id: 1, name: 1, image: 1}}
     ])
 
+    if (!conversation.participants.find(p => p._id.toString() === req.user.userId)) {
+      res.status(401);
+      throw new Error("User not authorized");
+    }
+
     res.status(200).json({ conversation, userId: req.user.userId });
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
@@ -76,6 +81,11 @@ const chat_sendMessage = async (req, res) => {
 
     let { conversationId } = req.body;
     const { sender, recepient, messageBody } = req.body;
+
+    if(sender !== req.user.userId) {
+      res.status(401);
+      throw new Error("User not authorized");
+    }
 
     if (!conversationId) {
       const chat = await Chat.create({
@@ -103,6 +113,12 @@ const chat_sendMessage = async (req, res) => {
 
       conversationId = chat.id;
     } else {
+
+      if (!authUser.chats.find(c => c.toString() === conversationId)) {
+        res.status(401);
+        throw new Error("User not authorized");
+      }
+
       await Chat.findByIdAndUpdate(conversationId, {
         $push: {
           messages: {

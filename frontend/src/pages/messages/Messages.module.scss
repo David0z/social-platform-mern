@@ -61,6 +61,12 @@
       border: 0.2rem solid transparent;
       background-clip: padding-box;
     }
+
+    .optional-date {
+      margin: 0;
+      text-align: center;
+      color: $text-secondary;
+    }
   }
 
   .bottom-bar {

@@ -62,14 +62,13 @@ const posts_postNew = async (req, res) => {
   const { creator, content, image } = req.body;
 
   try {
-    const authUser = await User.findById(req.user.userId);
+    const user = await User.findById(req.user.userId);
 
-    if (!authUser) {
+    if (!user) {
       res.status(401);
       throw new Error("User not authorized");
     }
 
-    const user = await User.findById(creator);
     const image = req.file ? req.file.path : "";
     const listOfHashtags = Array.from(new Set(content.match(/(#\w+)/gim)));
     let hashtags = [];
@@ -168,6 +167,11 @@ const posts_commentSingle = async (req, res) => {
     const postId = req.params.id;
 
     const comment = req.body;
+
+    if (comment.author !== req.user.userId) {
+      res.status(401);
+      throw new Error("User not authorized");
+    }
 
     const post = await Post.findById(postId);
     post.comments.push(comment);

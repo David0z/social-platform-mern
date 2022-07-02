@@ -5,6 +5,7 @@ import styles from "./Hashtags.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { getPopularAndFollowed } from "../../store/hashtag/hashtagSlice";
 import FollowedHashtags from "./components/FollowedHashtags";
+import HashtagsSkeleton from "../../components/skeletons/HashtagsSkeleton";
 
 const Hashtags = () => {
   const dispatch = useDispatch();
@@ -12,7 +13,9 @@ const Hashtags = () => {
   const { followed, popular, isError, isLoading, isSuccess } = useSelector(
     (state) => state.hashtag.hashtags
   );
-  const [displayedContent, setDisplayedContent] = useState(token ? "followed" : "");
+  const [displayedContent, setDisplayedContent] = useState(
+    token ? "followed" : ""
+  );
 
   useEffect(() => {
     dispatch(getPopularAndFollowed());
@@ -20,35 +23,38 @@ const Hashtags = () => {
 
   useEffect(() => {
     if (!token) {
-      setDisplayedContent("")
+      setDisplayedContent("");
     }
-  }, [token])
+  }, [token]);
 
   return (
     <>
-      {isLoading && <h1>Loading...</h1> }
-      {/* ADD NAVBAR SKELETON */}
-      {!isLoading && isSuccess && <div className={styles.navbar}>
-        {token && (
+      {isLoading && <HashtagsSkeleton />}
+      {!isLoading && isSuccess && (
+        <div className={styles.navbar}>
+          {token && (
+            <>
+              <HashtagList
+                title="Followed Hashtags:"
+                hashtags={followed}
+                onClick={() => setDisplayedContent("followed")}
+                setDisplayedContent={setDisplayedContent}
+                displayedContent={displayedContent}
+                content="followed"
+              />
+              <div className={styles.seperator} />
+            </>
+          )}
           <HashtagList
-            title="Followed Hashtags:"
-            hashtags={followed}
-            onClick={() => setDisplayedContent("followed")}
+            title="Popular this week:"
+            count
+            hashtags={popular}
+            seperator={token ? true : false}
             setDisplayedContent={setDisplayedContent}
             displayedContent={displayedContent}
-            content='followed'
           />
-        )}
-        {token && <div className={styles.seperator}/>}
-        <HashtagList
-          title="Popular this week:"
-          count
-          hashtags={popular}
-          seperator={token ? true : false}
-          setDisplayedContent={setDisplayedContent}
-          displayedContent={displayedContent}
-        />
-      </div>}
+        </div>
+      )}
       {displayedContent === "followed" ? (
         <>
           <h1 className={styles["followed-header"]}>
@@ -56,8 +62,8 @@ const Hashtags = () => {
           </h1>
           <FollowedHashtags />
         </>
-      ) : displayedContent !== "" && (
-        <Hashtag tag={displayedContent} />
+      ) : (
+        displayedContent !== "" && <Hashtag tag={displayedContent} />
       )}
     </>
   );

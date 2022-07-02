@@ -1,0 +1,36 @@
+@import '../../variables';
+@import '../../templates';
+
+.wrapper {
+  background-color: rgba($primary, 25%);
+  padding: 1rem 2rem;
+  display: grid;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.shine {
+  @include shine(rgba($post-bg, 50%));
+}
+
+%element {
+  height: 1rem;
+  background-color: rgba($text-secondary, 25%);
+  border-radius: $border-reg;
+}
+
+.title {
+  @extend %element;
+  width: 25%;
+}
+
+.content {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.element {
+  @extend %element;
+  width: 50%;
+}
