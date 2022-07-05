@@ -47,9 +47,9 @@ const logout = () => {
   localStorage.removeItem("userName");
 };
 
-const fetchUser = async (userId, followerId) => {
+const fetchUser = async (userId, page, followerId) => {
   const response = await axios.post(
-    `${process.env.REACT_APP_API_ENDPOINT}/users/${userId}`,
+    `${process.env.REACT_APP_API_ENDPOINT}/users/${userId}?page=${page}`,
     { followerId }
   );
 

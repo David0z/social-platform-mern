@@ -16,6 +16,7 @@ const initialState = {
   image: image || "",
   fetchedUser: {
     user: null,
+    hasMore: true,
     isLoading: false,
     isError: false,
     errorMessages: {},
@@ -64,9 +65,9 @@ export const logout = createAsyncThunk("user/logout", async () => {
 
 export const fetchUser = createAsyncThunk(
   "user/fetchUser",
-  async (userId, thunkAPI) => {
+  async (args, thunkAPI) => {
     try {
-      return await userService.fetchUser(userId, thunkAPI.getState().user.uid);
+      return await userService.fetchUser(args.userId, args.page, thunkAPI.getState().user.uid);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -160,6 +161,7 @@ const userSlice = createSlice({
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.fetchedUser.isLoading = false;
         state.fetchedUser.isSuccess = true;
+        state.fetchedUser.hasMore = action.payload.hasMore;
         state.fetchedUser.user = Object.keys(action.payload.user)
           .filter((key) => key !== "posts")
           .reduce((obj, key) => {

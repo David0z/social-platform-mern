@@ -246,7 +246,7 @@ const postSlice = createSlice({
         state.createdComment.errorMessages = action.payload;
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
-        state.posts.posts = action.payload.user.posts;
+        state.posts.posts = state.posts.posts.concat(action.payload.user.posts);
       })
       .addCase(getSingleHashtag.fulfilled, (state, action) => {
         state.posts.posts = state.posts.posts.concat(action.payload.hashtag.posts);

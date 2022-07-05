@@ -109,6 +109,7 @@ const users_login = async (req, res) => {
 // GET A SINGLE USER BY ID
 const users_getUser = async (req, res) => {
   try {
+    const page = req.query.page;
     const { followerId } = req.body;
     const existingUser = await User.aggregate([
       { $match: { _id: mongoose.Types.ObjectId(req.params.id) } },
@@ -119,6 +120,7 @@ const users_getUser = async (req, res) => {
             $in: [mongoose.Types.ObjectId(followerId), "$followers"],
           },
           followers: { $size: "$followers" },
+          numberOfPosts: {$size: "$posts"}
         },
       },
       {
@@ -128,6 +130,8 @@ const users_getUser = async (req, res) => {
           foreignField: "_id",
           pipeline: [
             { $sort: { createdAt: -1 } },
+            { $skip: page * POSTS_PER_PAGE_LIMIT},
+            { $limit: POSTS_PER_PAGE_LIMIT},
             { $set: { comments: [], commentCounter: { $size: "$comments" } } },
             {
               $lookup: {
@@ -144,7 +148,9 @@ const users_getUser = async (req, res) => {
       },
     ]);
 
-    res.status(200).json({ user: existingUser[0] });
+    const hasMore = existingUser[0].posts.length < POSTS_PER_PAGE_LIMIT ? false : true;
+
+    res.status(200).json({ user: existingUser[0], hasMore });
   } catch (error) {
     res.status(404).json({ message: "Could not find this user" });
   }

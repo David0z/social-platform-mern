@@ -12,25 +12,31 @@ import PostSkeletonList from "../../components/skeletons/PostSkeletonList";
 import ProfileImage from "../../components/profile-image/ProfileImage";
 import FollowButton from "../../components/follow-button/FollowButton";
 import MessageButton from "../../components/message-button/MessageButton";
+import usePagination from "../../hooks/usePagination";
 
 const User = () => {
   const dispatch = useDispatch();
   const { id: userId } = useParams();
-  const { user, isLoading, isSuccess, isError } = useSelector(
+  const { user, isLoading, isSuccess, isError, hasMore } = useSelector(
     (state) => state.user.fetchedUser
   );
   const { posts } = useSelector((state) => state.post.posts);
   const { token, uid } = useSelector((state) => state.user);
+  const { page, setPage, lastPostElementRef } = usePagination(
+    hasMore,
+    isLoading
+  );
 
   useEffect(() => {
-    dispatch(fetchUser(userId));
+    dispatch(fetchUser({ userId, page }));
+  }, [dispatch, userId, page]);
 
-    const reset = () => {
+  useEffect(() => {
+    return () => {
       dispatch(userActions.resetFetchedUser());
       dispatch(postActions.reset());
+      setPage(0);
     };
-
-    return () => reset();
   }, [dispatch, userId]);
 
   const handleUserFollow = () => {
@@ -39,69 +45,68 @@ const User = () => {
 
   return (
     <>
-      {!isLoading && !isError && user && (
-        <>
-          <div className={styles.userbar}>
-            <div className={styles.userbar__wrapper}>
-              <ProfileImage
-                profileImage={user.image}
-                alt="Profile Image"
-                className={styles.userbar__image}
-              />
-              <div className={styles.userbar__details}>
-                <div>
-                  <h1 className={styles.userbar__name}>{user.name}</h1>
-                  <p
-                    className={styles.userbar__joined}
-                  >{`Joined ${formatDistanceToNow(parseISO(user.createdAt), {
-                    addSuffix: true,
-                  })}`}</p>
-                  <p className={styles["userbar__posts-count"]}>
-                    {posts.length === 1
-                      ? `${posts.length} post`
-                      : `${posts.length} posts`}
-                  </p>
-                  <p className={styles["userbar__followers-count"]}>
-                    {user.followers === 1
-                      ? `${user.followers} follower`
-                      : user.followers === 0
-                      ? "No followers"
-                      : `${user.followers} followers`}
-                  </p>
-                </div>
+      {isLoading && !user && <UserSkeleton />}
+      {!isError && user && (
+        <div className={styles.userbar}>
+          <div className={styles.userbar__wrapper}>
+            <ProfileImage
+              profileImage={user.image}
+              alt="Profile Image"
+              className={styles.userbar__image}
+            />
+            <div className={styles.userbar__details}>
+              <div>
+                <h1 className={styles.userbar__name}>{user.name}</h1>
+                <p
+                  className={styles.userbar__joined}
+                >{`Joined ${formatDistanceToNow(parseISO(user.createdAt), {
+                  addSuffix: true,
+                })}`}</p>
+                <p className={styles["userbar__posts-count"]}>
+                  {user.numberOfPosts === 1
+                    ? `${user.numberOfPosts} post`
+                    : `${user.numberOfPosts} posts`}
+                </p>
+                <p className={styles["userbar__followers-count"]}>
+                  {user.followers === 1
+                    ? `${user.followers} follower`
+                    : user.followers === 0
+                    ? "No followers"
+                    : `${user.followers} followers`}
+                </p>
+              </div>
 
-                {token && <div className={styles["action-buttons"]}>
+              {token && (
+                <div className={styles["action-buttons"]}>
                   <FollowButton
                     followCondition={user.isUserFollowing}
                     onClick={handleUserFollow}
                   />
                   {uid !== userId && <MessageButton user={user} />}
-                </div>}
-              </div>
+                </div>
+              )}
             </div>
           </div>
-          <PostsList
-            posts={posts.map((post) => ({
-              ...post,
-              creator: {
-                _id: user._id,
-                name: user.name,
-                image: user.image,
-              },
-            }))}
-          />
-        </>
+        </div>
+      )}
+      {posts.length > 0 && user && (
+        <PostsList
+          posts={posts.map((post) => ({
+            ...post,
+            creator: {
+              _id: user._id,
+              name: user.name,
+              image: user.image,
+            },
+          }))}
+          lastPostElementRef={lastPostElementRef}
+        />
       )}
       {!isLoading && !isError && user && posts.length === 0 && (
         <h1 className={styles["no-posts"]}>No posts to display</h1>
       )}
       {!isLoading && isError && <h1>Couldn't find the user</h1>}
-      {isLoading && (
-        <>
-          <UserSkeleton />
-          <PostSkeletonList number={3} />
-        </>
-      )}
+      {isLoading && <PostSkeletonList number={3} />}
     </>
   );
 };
