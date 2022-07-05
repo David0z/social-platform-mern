@@ -11,6 +11,7 @@ const Modal = ({children, onClose}) => {
   const content = (
     <div className={styles.wrapper} onClick={onClose}>
       {children}
+      <button className={styles.button} onClick={onClose}/>
     </div>
   );
 

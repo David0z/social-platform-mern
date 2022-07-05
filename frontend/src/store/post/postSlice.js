@@ -19,9 +19,9 @@ export const createPost = createAsyncThunk(
 
 export const getAllPosts = createAsyncThunk(
   "post/getAllPosts",
-  async (_, thunkAPI) => {
+  async (page, thunkAPI) => {
     try {
-      return await postService.getPosts();
+      return await postService.getPosts(page);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -114,6 +114,7 @@ export const getHotPosts = createAsyncThunk(
 const initialState = {
   posts: {
     posts: [],
+    hasMore: true,
     isError: false,
     isLoading: false,
     errorMessages: {},
@@ -204,7 +205,11 @@ const postSlice = createSlice({
       })
       .addCase(getAllPosts.fulfilled, (state, action) => {
         state.posts.isLoading = false;
-        state.posts.posts = state.posts.posts.concat(action.payload.posts);
+        if (action.payload.posts.length === 0) {
+          state.posts.hasMore = false;
+        } else {
+          state.posts.posts = state.posts.posts.concat(action.payload.posts);
+        }
         state.posts.isSuccess = true;
       })
       .addCase(getAllPosts.rejected, (state, action) => {

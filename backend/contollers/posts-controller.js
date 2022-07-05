@@ -2,6 +2,8 @@ const Post = require("../models/postModel");
 const User = require("../models/userModel");
 const Hashtag = require("../models/hashtagModel");
 
+const POSTS_PER_PAGE_LIMIT = 10;
+
 // -------------------------------------------------------------------------------------
 // error handler function
 const handleErrors = (err) => {
@@ -20,8 +22,11 @@ const handleErrors = (err) => {
 // GET ALL POSTS
 const posts_getAll = async (req, res) => {
   try {
+    const page = req.query.page;
     const posts = await Post.aggregate([
       { $sort: { createdAt: -1 } },
+      { $skip: page * POSTS_PER_PAGE_LIMIT},
+      { $limit: POSTS_PER_PAGE_LIMIT},
       {
         $lookup: {
           from: "users",

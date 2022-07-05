@@ -15,10 +15,19 @@ import { getComments } from "../../store/post/postSlice";
 import { useState } from "react";
 import ModifiedContent from "./ModifiedContent";
 
-const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
+const PostPreview = ({ post, allowCommentFetch = true, instantComments, lastPostElementRef }) => {
   const { uid, token } = useSelector((state) => state.user);
   const { isLoading } = useSelector((state) => state.post.vote);
-  const { closeModal, openModal, isModalOpened } = useModal();
+  const {
+    closeModal: closeVotesModal,
+    openModal: openVotesModal,
+    isModalOpened: isVotesModalOpened,
+  } = useModal();
+  const {
+    closeModal: closeImageModal,
+    openModal: openImageModal,
+    isModalOpened: isImageModalOpened,
+  } = useModal();
   const dispatch = useDispatch();
   const [commentsFetched, setCommentsFetched] = useState(false);
 
@@ -30,7 +39,7 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
   };
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} ref={lastPostElementRef}>
       <div className={styles.main}>
         <div className={styles.head}>
           <Link to={`/users/${post.creator._id}`}>
@@ -66,11 +75,24 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
             )}
           </p>
           {post.image !== "" && (
-            <img
-              src={`http://localhost:5000/${post.image}`}
-              alt="Post Image"
-              className={styles.content__image}
-            />
+            <>
+              <img
+                src={`http://localhost:5000/${post.image}`}
+                alt="Post Image"
+                className={styles.content__image}
+                onClick={openImageModal}
+              />
+              {isImageModalOpened && (
+                <Modal onClose={closeImageModal}>
+                  <img
+                    src={`http://localhost:5000/${post.image}`}
+                    alt="Post Image"
+                    className={styles["content__image--modal"]}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </Modal>
+              )}
+            </>
           )}
         </div>
 
@@ -112,12 +134,14 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments }) => {
                   ? styles.voted
                   : ""
               }`}
-              onClick={openModal}
+              onClick={openVotesModal}
             >
-              {post.votes.upvotes.length - post.votes.downvotes.length}
+              {post.votes.upvotes.length - post.votes.downvotes.length > 0
+                ? `+${post.votes.upvotes.length - post.votes.downvotes.length}`
+                : post.votes.upvotes.length - post.votes.downvotes.length}
             </p>
-            {isModalOpened && (
-              <Modal onClose={closeModal}>
+            {isVotesModalOpened && (
+              <Modal onClose={closeVotesModal}>
                 <VotesList
                   postId={post._id}
                   upvoteCount={post.votes.upvotes.length}

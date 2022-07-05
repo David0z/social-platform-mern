@@ -3,7 +3,8 @@
 .wrapper {
   background-color: $post-bg;
   border-radius: $post-border-radius;
-  width: $max-content;
+  margin: 0 auto;
+  width: min($max-content, 90%);
 }
 
 .main {
@@ -46,6 +47,16 @@
 
   &__image {
     width: 100%;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &--modal {
+      user-select: none;
+      min-width: 50%;
+      max-width: 100%;
+    }
   }
 }
 

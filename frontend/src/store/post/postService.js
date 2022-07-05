@@ -18,9 +18,9 @@ const createPost = async (postData, token) => {
   return response.data;
 };
 
-const getPosts = async () => {
+const getPosts = async (page) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/posts/`
+    `${process.env.REACT_APP_API_ENDPOINT}/posts?page=${page}`
   );
 
   return response.data;
