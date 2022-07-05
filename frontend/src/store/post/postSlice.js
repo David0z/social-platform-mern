@@ -102,9 +102,9 @@ export const getComments = createAsyncThunk(
 
 export const getHotPosts = createAsyncThunk(
   "post/getHotPosts",
-  async (hotNumber, thunkAPI) => {
+  async (args, thunkAPI) => {
     try {
-      return await postService.getHotPosts(hotNumber);
+      return await postService.getHotPosts(args.hotNumber, args.page);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -205,11 +205,8 @@ const postSlice = createSlice({
       })
       .addCase(getAllPosts.fulfilled, (state, action) => {
         state.posts.isLoading = false;
-        if (action.payload.posts.length === 0) {
-          state.posts.hasMore = false;
-        } else {
-          state.posts.posts = state.posts.posts.concat(action.payload.posts);
-        }
+        state.posts.hasMore = action.payload.hasMore;
+        state.posts.posts = state.posts.posts.concat(action.payload.posts);
         state.posts.isSuccess = true;
       })
       .addCase(getAllPosts.rejected, (state, action) => {
@@ -348,6 +345,7 @@ const postSlice = createSlice({
       })
       .addCase(getHotPosts.fulfilled, (state, action) => {
         state.posts.isLoading = false;
+        state.posts.hasMore = action.payload.hasMore
         state.posts.posts = state.posts.posts.concat(action.payload.posts);
         state.posts.isSuccess = true;
       })

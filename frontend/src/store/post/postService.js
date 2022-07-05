@@ -70,9 +70,9 @@ const getComments = async (postId, token) => {
   return response.data;
 };
 
-const getHotPosts = async (hotNumber) => {
+const getHotPosts = async (hotNumber, page) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/posts/hot/${hotNumber}`
+    `${process.env.REACT_APP_API_ENDPOINT}/posts/hot/${hotNumber}?page=${page}`
   );
 
   return response.data;

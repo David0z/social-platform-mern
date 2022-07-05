@@ -3,16 +3,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { getHotPosts, postActions } from "../../store/post/postSlice";
 import PostsList from "../../components/posts-list/PostsList";
 import PostSkeletonList from "../../components/skeletons/PostSkeletonList";
+import usePagination from "../../hooks/usePagination";
 import styles from "./Posts.module.scss";
 
 const PostsHot = ({ hotNumber }) => {
   const dispatch = useDispatch();
-  const { posts, isLoading } = useSelector((state) => state.post.posts);
+  const { posts, isLoading, hasMore } = useSelector((state) => state.post.posts);
+  const { page, setPage, lastPostElementRef } = usePagination(hasMore, isLoading);
 
   useEffect(() => {
-    dispatch(getHotPosts(hotNumber));
-
-    return () => dispatch(postActions.reset());
+    dispatch(getHotPosts({hotNumber, page}));
+  }, [dispatch, hotNumber, page]);
+  
+  useEffect(() => {
+    return () => {
+      dispatch(postActions.reset());
+      setPage(0);
+    };
   }, [dispatch, hotNumber]);
 
   return (
@@ -22,11 +29,10 @@ const PostsHot = ({ hotNumber }) => {
           className={styles["no-posts"]}
         >{`No hot posts to display from last ${hotNumber} hours`}</h1>
       )}
-      {posts && !isLoading ? (
-        <PostsList posts={posts} />
-      ) : (
-        <PostSkeletonList number={3} />
+      {posts && (
+        <PostsList posts={posts} lastPostElementRef={lastPostElementRef} />
       )}
+      {isLoading && <PostSkeletonList number={3} />}
     </>
   );
 };

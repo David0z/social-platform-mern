@@ -18,7 +18,7 @@ const usePagination = (hasMore, isLoading) => {
     },
     [isLoading]
   );
-  return { page, lastPostElementRef }
+  return { page, setPage, lastPostElementRef }
 }
 
 export default usePagination

@@ -55,7 +55,9 @@ const posts_getAll = async (req, res) => {
       { $set: { comments: [], commentCounter: { $size: "$comments" } } },
     ]);
 
-    res.status(200).json({ posts });
+    const hasMore = posts.length < POSTS_PER_PAGE_LIMIT ? false : true;
+
+    res.status(200).json({ posts, hasMore });
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
   }
@@ -307,6 +309,7 @@ const posts_getComments = async (req, res) => {
 
 const posts_getHotPosts = async (req, res) => {
   const { hotNumber } = req.params;
+  const page = req.query.page
 
   try {
     const posts = await Post.aggregate([
@@ -317,6 +320,8 @@ const posts_getHotPosts = async (req, res) => {
           },
         },
       },
+      { $skip: page * POSTS_PER_PAGE_LIMIT},
+      { $limit: POSTS_PER_PAGE_LIMIT},
       {
         $lookup: {
           from: "users",
@@ -355,7 +360,9 @@ const posts_getHotPosts = async (req, res) => {
       { $project: { votesCounter: 0 } },
     ]);
 
-    res.status(200).json({ posts });
+    const hasMore = posts.length < POSTS_PER_PAGE_LIMIT ? false : true;
+
+    res.status(200).json({ posts, hasMore });
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
   }
