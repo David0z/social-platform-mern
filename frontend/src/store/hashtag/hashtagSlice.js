@@ -3,10 +3,11 @@ import hashtagService from "./hashtagService";
 
 export const getSingleHashtag = createAsyncThunk(
   "hashtag/getSingleHashtag",
-  async (tagName, thunkAPI) => {
+  async (args, thunkAPI) => {
     try {
       return await hashtagService.getSingleHashtag(
-        tagName,
+        args.tagName,
+        args.page,
         thunkAPI.getState().user.uid
       );
     } catch (error) {
@@ -45,9 +46,9 @@ export const getPopularAndFollowed = createAsyncThunk(
 
 export const getFollowedHashtags = createAsyncThunk(
   "hashtag/getFollowedHashtags",
-  async (_, thunkAPI) => {
+  async (page, thunkAPI) => {
     try {
-      return await hashtagService.getFollowedHashtags(
+      return await hashtagService.getFollowedHashtags(page, 
         thunkAPI.getState().user.uid
       );
     } catch (error) {
@@ -59,6 +60,7 @@ export const getFollowedHashtags = createAsyncThunk(
 const initialState = {
   hashtag: {
     hashtag: null,
+    hasMore: true,
     isError: false,
     isLoading: false,
     errorMessages: {},
@@ -79,6 +81,7 @@ const initialState = {
     isSuccess: false,
   },
   followed: {
+    hasMore: true,
     isError: false,
     isLoading: false,
     errorMessages: {},
@@ -115,6 +118,7 @@ const hashtagSlice = createSlice({
       })
       .addCase(getSingleHashtag.fulfilled, (state, action) => {
         state.hashtag.isLoading = false;
+        state.hashtag.hasMore = action.payload.hasMore;
         state.hashtag.hashtag = Object.keys(action.payload.hashtag)
           .filter((key) => key !== "posts")
           .reduce((obj, key) => {
@@ -174,6 +178,7 @@ const hashtagSlice = createSlice({
       .addCase(getFollowedHashtags.fulfilled, (state, action) => {
         state.followed.isLoading = false;
         state.followed.isSuccess = true;
+        state.followed.hasMore = action.payload.hasMore;
       })
       .addCase(getFollowedHashtags.rejected, (state, action) => {
         state.followed.isLoading = false;

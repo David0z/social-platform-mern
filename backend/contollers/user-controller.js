@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
+const POSTS_PER_PAGE_LIMIT = 10;
 
 // -------------------------------------------------------------------------------------
 // error handler function
@@ -198,6 +199,7 @@ const user_followSingle = async (req, res) => {
 const user_getFollowedUsers = async (req, res) => {
   try {
     const userId = req.user.userId;
+    const page = req.query.page;
 
     const posts = await User.aggregate([
       {$match: {_id: mongoose.Types.ObjectId(userId)}},
@@ -250,12 +252,16 @@ const user_getFollowedUsers = async (req, res) => {
           as: "_id"
       }},
       {$unwind: "$_id"},
-      {$sort: {"_id.createdAt": -1}}
+      {$sort: {"_id.createdAt": -1}},
+      { $skip: page * POSTS_PER_PAGE_LIMIT},
+      { $limit: POSTS_PER_PAGE_LIMIT}
     ]);
 
     const formatedPosts = posts.map(post => post._id)
 
-    res.status(200).json({ posts: formatedPosts });
+    const hasMore = formatedPosts.length < POSTS_PER_PAGE_LIMIT ? false : true;
+
+    res.status(200).json({ posts: formatedPosts, hasMore });
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
   }

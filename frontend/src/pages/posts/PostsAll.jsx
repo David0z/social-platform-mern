@@ -24,7 +24,7 @@ const PostsAll = () => {
       {!isLoading && posts.length === 0 && (
         <h1 className={styles["no-posts"]}>No posts to display</h1>
       )}
-      {posts && (
+      {posts.length > 0 && (
         <PostsList posts={posts} lastPostElementRef={lastPostElementRef} />
       )}
       {isLoading && <PostSkeletonList number={3} />}

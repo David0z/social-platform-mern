@@ -5,17 +5,21 @@ import { getFollowedUsers, userActions } from "../../store/user/userSlice"
 import { postActions } from "../../store/post/postSlice"
 import PostsList from "../../components/posts-list/PostsList"
 import PostSkeletonList from "../../components/skeletons/PostSkeletonList"
+import usePagination from "../../hooks/usePagination";
 
 const FollowedUsers = () => {
   const dispatch = useDispatch();
-  const { isLoading, isError, isSuccess } = useSelector(
+  const { isLoading, isError, isSuccess, hasMore } = useSelector(
     (state) => state.user.followed
   );
   const { posts } = useSelector((state) => state.post.posts);
+  const { page, lastPostElementRef } = usePagination(hasMore, isLoading);
 
   useEffect(() => {
-    dispatch(getFollowedUsers());
+    dispatch(getFollowedUsers(page));
+  }, [dispatch, page])
 
+  useEffect(() => {
     return () => {
       dispatch(postActions.reset())
       dispatch(userActions.resetFollowed())
@@ -28,11 +32,10 @@ const FollowedUsers = () => {
         Recent posts from followed users:
       </h1>
       {!isLoading && posts.length === 0 && <h1 className={styles["no-posts"]}>No posts to display</h1>}
-      {posts && !isLoading ? (
-        <PostsList posts={posts} />
-      ) : (
-        <PostSkeletonList number={3} />
+      {posts.length > 0 && (
+        <PostsList posts={posts} lastPostElementRef={lastPostElementRef} />
       )}
+      {isLoading && <PostSkeletonList number={3} />}
     </>
   );
 };

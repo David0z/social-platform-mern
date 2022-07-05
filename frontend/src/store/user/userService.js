@@ -66,9 +66,9 @@ const followUser = async (userId, token) => {
   return response.data;
 }
 
-const getFollowedUsers = async (token) => {
+const getFollowedUsers = async (token, page) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/users/followed`,
+    `${process.env.REACT_APP_API_ENDPOINT}/users/followed?page=${page}`,
     authConfig(token)
   );
 

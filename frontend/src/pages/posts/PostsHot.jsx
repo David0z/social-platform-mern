@@ -29,7 +29,7 @@ const PostsHot = ({ hotNumber }) => {
           className={styles["no-posts"]}
         >{`No hot posts to display from last ${hotNumber} hours`}</h1>
       )}
-      {posts && (
+      {posts.length > 0 && (
         <PostsList posts={posts} lastPostElementRef={lastPostElementRef} />
       )}
       {isLoading && <PostSkeletonList number={3} />}

@@ -28,6 +28,7 @@ const initialState = {
     isSuccess: false,
   },
   followed: {
+    hasMore: true,
     isError: false,
     isLoading: false,
     errorMessages: {},
@@ -80,9 +81,9 @@ export const followUser = createAsyncThunk("user/followUser", async (userId, thu
   }
 })
 
-export const getFollowedUsers = createAsyncThunk("user/getFollowedUsers", async (_, thunkAPI) => {
+export const getFollowedUsers = createAsyncThunk("user/getFollowedUsers", async (page, thunkAPI) => {
   try {
-    return await userService.getFollowedUsers(thunkAPI.getState().user.token);
+    return await userService.getFollowedUsers(thunkAPI.getState().user.token, page);
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data.message);
   }
@@ -202,6 +203,7 @@ const userSlice = createSlice({
       .addCase(getFollowedUsers.fulfilled, (state, action) => {
         state.followed.isLoading = false;
         state.followed.isSuccess = true;
+        state.followed.hasMore = action.payload.hasMore;
       })
       .addCase(getFollowedUsers.rejected, (state, action) => {
         state.followed.isLoading = false;

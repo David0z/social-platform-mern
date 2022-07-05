@@ -3,10 +3,13 @@ const User = require("../models/userModel");
 const Hashtag = require("../models/hashtagModel");
 const mongoose = require("mongoose");
 
+const POSTS_PER_PAGE_LIMIT = 10;
+
 // -------------------------------------------------------------------------------------
 // GET A SINGLE HASHTAG
 const hashtag_getSingle = async (req, res) => {
   try {
+    const page = req.query.page;
     const { tagName } = req.params;
     const userId = req.body.userId;
     const hashtag = await Hashtag.aggregate([
@@ -19,6 +22,8 @@ const hashtag_getSingle = async (req, res) => {
           as: "posts",
           pipeline: [
             { $sort: { createdAt: -1 } },
+            { $skip: page * POSTS_PER_PAGE_LIMIT},
+            { $limit: POSTS_PER_PAGE_LIMIT},
             { $set: { comments: [], commentCounter: { $size: "$comments" } } },
             {
               $lookup: {
@@ -49,7 +54,9 @@ const hashtag_getSingle = async (req, res) => {
       throw new Error("Could not find the hashtag");
     }
 
-    res.status(200).json({ hashtag: hashtag[0] });
+    const hasMore = hashtag[0].posts.length < POSTS_PER_PAGE_LIMIT ? false : true;
+
+    res.status(200).json({ hashtag: hashtag[0], hasMore });
   } catch (error) {
     res.status(401).json({ message: error.message || "Unauthorized" });
   }
@@ -148,6 +155,7 @@ const hashtag_getPopular = async (req, res) => {
 // GET POSTS FROM FOLLOWED HASHTAGS
 const hashtag_getFollowed = async (req, res) => {
   try {
+    const page = req.query.page;
     const { userId } = req.params;
 
     const posts = await User.aggregate([
@@ -201,12 +209,16 @@ const hashtag_getFollowed = async (req, res) => {
           as: "_id"
       }},
       {$unwind: "$_id"},
-      {$sort: {"_id.createdAt": -1}}
+      {$sort: {"_id.createdAt": -1}},
+      { $skip: page * POSTS_PER_PAGE_LIMIT},
+      { $limit: POSTS_PER_PAGE_LIMIT}
     ]);
 
     const formatedPosts = posts.map(post => post._id)
 
-    res.status(200).json({ posts: formatedPosts });
+    const hasMore = formatedPosts.length < POSTS_PER_PAGE_LIMIT ? false : true;
+
+    res.status(200).json({ posts: formatedPosts, hasMore });
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
   }

@@ -249,14 +249,14 @@ const postSlice = createSlice({
         state.posts.posts = action.payload.user.posts;
       })
       .addCase(getSingleHashtag.fulfilled, (state, action) => {
-        state.posts.posts = action.payload.hashtag.posts;
+        state.posts.posts = state.posts.posts.concat(action.payload.hashtag.posts);
       })
       .addCase(getFollowedHashtags.fulfilled, (state, action) => {
-        state.posts.posts = action.payload.posts;
+        state.posts.posts = state.posts.posts.concat(action.payload.posts);
       })
       // getFollowedUsers
       .addCase(getFollowedUsers.fulfilled, (state, action) => {
-        state.posts.posts = action.payload.posts;
+        state.posts.posts = state.posts.posts.concat(action.payload.posts);
       })
       .addCase(voteForPost.pending, (state) => {
         state.vote.isLoading = true;

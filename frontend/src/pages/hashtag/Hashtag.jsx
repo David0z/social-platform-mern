@@ -12,25 +12,28 @@ import { useEffect } from "react";
 import styles from "./Hashtag.module.scss";
 import FollowButton from "../../components/follow-button/FollowButton";
 import HashtagSkeleton from "../../components/skeletons/HashtagSkeleton";
+import usePagination from "../../hooks/usePagination";
 
 const Hashtag = ({ tag }) => {
   const dispatch = useDispatch();
   const tagName = useParams().tagName || tag;
-  const { hashtag, isLoading, isSuccess, isError } = useSelector(
+  const { hashtag, isLoading, isSuccess, isError, hasMore } = useSelector(
     (state) => state.hashtag.hashtag
   );
   const { posts } = useSelector((state) => state.post.posts);
   const { uid, token } = useSelector((state) => state.user);
+  const { page, setPage, lastPostElementRef } = usePagination(hasMore, isLoading);
 
   useEffect(() => {
-    dispatch(getSingleHashtag(tagName));
+    dispatch(getSingleHashtag({tagName, page}));
+  }, [dispatch, tagName, page])
 
-    const reset = () => {
+  useEffect(() => {
+    return () => {
       dispatch(hashtagActions.resetSingleHashtag());
       dispatch(postActions.reset());
+      setPage(0);
     };
-
-    return () => reset();
   }, [dispatch, tagName]);
 
   const handleHashtagFollow = () => {
@@ -40,7 +43,8 @@ const Hashtag = ({ tag }) => {
 
   return (
     <>
-      {!isLoading && !isError && hashtag && (
+      {isLoading && !hashtag && <HashtagSkeleton />}
+      {!isError && hashtag && (
         <>
           <div className={styles.wrapper}>
             <div className={styles.content}>
@@ -59,21 +63,16 @@ const Hashtag = ({ tag }) => {
               </p>
             </div>
           </div>
-          <PostsList posts={posts} />
         </>
       )}
+      {posts.length > 0 && <PostsList posts={posts} lastPostElementRef={lastPostElementRef}/>}
       {!isLoading && !isError && hashtag && posts.length === 0 && (
         <h1 className={styles["no-posts"]}>No posts to display</h1>
       )}
       {!isLoading && isError && (
         <h1 className={styles["not-found"]}>Couldn't find the hashtag</h1>
       )}
-      {isLoading && (
-        <>
-          <HashtagSkeleton />
-          <PostSkeletonList number={3} />
-        </>
-      )}
+      {isLoading && <PostSkeletonList number={3} />}
     </>
   );
 };
