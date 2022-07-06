@@ -8,6 +8,7 @@ import Chat from "./components/Chat";
 
 const Messages = () => {
   const [socket, setSocket] = useState(null)
+  const [customPage, setCustomPage] = useState(0);
   const dispatch = useDispatch()
   const { uid } = useSelector(state => state.user)
   const { userToChat, chats } = useSelector(state => state.chat)
@@ -47,14 +48,15 @@ const Messages = () => {
       }
 
       if (found === true) {
-        dispatch(getConversation(convoId))
+        dispatch(getConversation({conversationId: convoId, page: 0}))
+        setCustomPage(1);
       }
     }
   }, [chats.isSuccess])
 
   return (
     <div className={styles.wrapper}>
-      <Chat socket={socket}/>
+      <Chat socket={socket} customPage={customPage} setCustomPage={setCustomPage} />
       <Sidebar />
     </div>
   );

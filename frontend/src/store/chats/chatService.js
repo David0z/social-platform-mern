@@ -17,9 +17,9 @@ const getChats = async (token) => {
   return response.data;
 };
 
-const getConversation = async (conversationId, token) => {
+const getConversation = async (conversationId, page, token) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/chats/${conversationId}`,
+    `${process.env.REACT_APP_API_ENDPOINT}/chats/${conversationId}?page=${page}`,
     authConfig(token)
   );
 

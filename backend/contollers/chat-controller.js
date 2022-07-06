@@ -4,6 +4,8 @@ const Chat = require("../models/chatModel");
 const Hashtag = require("../models/hashtagModel");
 const mongoose = require("mongoose");
 
+const MESSAGES_PER_FETCH_LIMIT = 20;
+
 const chat_getAllChats = async (req, res) => {
   try {
     const authUser = await User.findById(req.user.userId);
@@ -55,16 +57,35 @@ const chat_getSingleConversation = async (req, res) => {
     }
 
     const { conversationId } = req.params
-    const conversation = await Chat.findById(conversationId).populate([
-      {path: "participants", select: {_id: 1, name: 1, image: 1}}
+    const page = parseInt(req.query.page);
+    // const conversation = await Chat.findById(conversationId).populate([
+    //   {path: "participants", select: {_id: 1, name: 1, image: 1}}
+    // ])
+
+    const conversation = await Chat.aggregate([
+      {$match: {_id: mongoose.Types.ObjectId(conversationId)}},
+      {$lookup: {
+        from: 'users',
+        localField: 'participants',
+        foreignField: '_id',
+        pipeline: [
+          {$project: {_id: 1, name: 1, image: 1}}
+        ],
+        as: 'participants',
+      }},
+      {$set: {messages: {$reverseArray: "$messages"}}},
+      {$set: {messages: {$slice: ["$messages", page * MESSAGES_PER_FETCH_LIMIT, MESSAGES_PER_FETCH_LIMIT]}}},
+      {$set: {messages: {$reverseArray: "$messages"}}}
     ])
 
-    if (!conversation.participants.find(p => p._id.toString() === req.user.userId)) {
+    if (!conversation[0].participants.find(p => p._id.toString() === req.user.userId)) {
       res.status(401);
       throw new Error("User not authorized");
     }
 
-    res.status(200).json({ conversation, userId: req.user.userId });
+    const hasMore = conversation[0].messages.length < MESSAGES_PER_FETCH_LIMIT ? false : true;
+
+    res.status(200).json({ conversation: conversation[0], userId: req.user.userId, hasMore });
   } catch (error) {
     res.status(401).json({ message: "Unauthorized" });
   }

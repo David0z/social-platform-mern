@@ -1,9 +1,9 @@
 import styles from "./MessageItem.module.scss";
 import ProfileImage from "../../../components/profile-image/ProfileImage";
 
-const MessageItem = ({ message, participants, lastMessageRef, nextMessage, userMessage }) => {
+const MessageItem = ({ message, participants, lastMessageRef, nextMessage, userMessage, firstMessageRef }) => {
   return (
-    <div className={`${styles.wrapper} ${userMessage ? styles["user-message"] : ''}`} ref={lastMessageRef}>
+    <div className={`${styles.wrapper} ${userMessage ? styles["user-message"] : ''}`} ref={firstMessageRef || lastMessageRef}>
 
       {nextMessage?.author === message.author ? null : <ProfileImage
         className={styles.image}

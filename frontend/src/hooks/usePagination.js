@@ -1,8 +1,8 @@
 import { useState, useRef, useCallback } from "react";
 
-const usePagination = (hasMore, isLoading) => {
+const usePagination = (hasMore, isLoading, customPage = 0) => {
   const observer = useRef();
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(customPage);
   const lastPostElementRef = useCallback(
     (node) => {
       if (isLoading) return;

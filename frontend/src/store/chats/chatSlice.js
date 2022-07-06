@@ -13,7 +13,10 @@ const initialState = {
   },
   userToChat: null,
   conversation: {
-    data: [],
+    data: {
+      messages: []
+    },
+    hasMore: true,
     isError: false,
     isLoading: false,
     errorMessages: {},
@@ -41,10 +44,11 @@ export const getChats = createAsyncThunk(
 
 export const getConversation = createAsyncThunk(
   "chat/getConversation",
-  async (conversationId, thunkAPI) => {
+  async (args, thunkAPI) => {
     try {
       return await chatService.getConversation(
-        conversationId,
+        args.conversationId,
+        args.page,
         thunkAPI.getState().user.token
       );
     } catch (error) {
@@ -72,6 +76,16 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => initialState,
+    resetConversation (state) {
+      state.conversation = {
+        data: [],
+        hasMore: true,
+        isError: false,
+        isLoading: false,
+        errorMessages: {},
+        isSuccess: false,
+      }
+    },
     setUserToChat(state, action) {
       state.userToChat = action.payload;
     },
@@ -149,8 +163,13 @@ const chatSlice = createSlice({
       })
       .addCase(getConversation.fulfilled, (state, action) => {
         state.conversation.isLoading = false;
-        state.conversation.data = action.payload.conversation;
+        if (action.payload.conversation._id === state.conversation.data._id) {
+          state.conversation.data = {...action.payload.conversation, messages: [...action.payload.conversation.messages, ...state.conversation.data.messages]};
+        } else {
+          state.conversation.data = action.payload.conversation;
+        }
         state.activeChat = action.payload.conversation._id;
+        state.conversation.hasMore = action.payload.hasMore;
         // state.userToChat = action.payload.conversation.participants.find(
         //   (u) => u._id !== action.payload.userId
         // );
@@ -169,6 +188,7 @@ const chatSlice = createSlice({
       .addCase(sendMessage.fulfilled, (state, action) => {
         state.sendMessage.isLoading = false;
         if (!state.activeChat) {
+          state.conversation.hasMore = false;
           state.activeChat = action.payload.sentMessage.conversationId;
           state.chats.data.unshift({
             _id: action.payload.sentMessage.conversationId,

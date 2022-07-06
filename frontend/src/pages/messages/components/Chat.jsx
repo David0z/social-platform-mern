@@ -2,21 +2,23 @@ import styles from "../Messages.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import ProfileImage from "../../../components/profile-image/ProfileImage";
 import React, { useState, useEffect, useCallback } from "react";
-import { sendMessage } from "../../../store/chats/chatSlice";
+import { sendMessage, getConversation, chatActions } from "../../../store/chats/chatSlice";
 import MessageItem from "./MessageItem";
 import ChatSkeleton from "../../../components/skeletons/ChatSkeleton";
+import usePagination from "../../../hooks/usePagination";
 
-const Chat = ({ socket }) => {
+const Chat = ({ socket, customPage, setCustomPage }) => {
   const dispatch = useDispatch();
   const { isSuccess, isLoading: sendMessagePending, data: sendMessageData } = useSelector(
     (state) => state.chat.sendMessage
   );
   const { userToChat, activeChat } = useSelector((state) => state.chat);
-  const { data: conversationData, isLoading } = useSelector(
+  const { data: conversationData, isLoading, hasMore } = useSelector(
     (state) => state.chat.conversation
   );
   const { uid } = useSelector((state) => state.user);
   const [message, setMessage] = useState("");
+  const { page, setPage, lastPostElementRef: firstMessageRef } = usePagination(hasMore, isLoading, customPage)
 
   const handleMessageSend = () => {
     if (message === "" || (!activeChat && !userToChat)) {
@@ -49,7 +51,23 @@ const Chat = ({ socket }) => {
     if (node) {
       node.scrollIntoView({ smooth: true})
     }
-  }, [conversationData.messages])
+  }, [isSuccess])
+
+  const handleEnterPress = (e) => {
+    if (e.key === "Enter") {
+      handleMessageSend()
+    }
+  }
+
+  useEffect(() => {
+    if (conversationData.messages?.length !== 0 && hasMore && !isLoading) {
+      dispatch(getConversation({conversationId: conversationData._id, page}))
+    }
+  }, [dispatch, page])
+
+  useEffect(() => {
+    setPage(0)
+  }, [conversationData._id])
 
   return (
     <div className={styles["chat-area"]}>
@@ -66,8 +84,8 @@ const Chat = ({ socket }) => {
         </div>
       )}
       <div className={styles.content}>
+        {isLoading && <ChatSkeleton />}
         {conversationData.length !== 0 &&
-          !isLoading &&
           conversationData.messages.map((message, index) => {
             const lastMessage = conversationData.messages.length - 1 === index;
             return (
@@ -76,6 +94,7 @@ const Chat = ({ socket }) => {
               <MessageItem
                 message={message}
                 participants={conversationData.participants}
+                firstMessageRef={index === 0 && conversationData.messages.length > 1 ? firstMessageRef : null}
                 lastMessageRef={lastMessage ? lastMessageRef : null}
                 nextMessage={conversationData.messages[index + 1]}
                 userMessage={uid === message.author}
@@ -83,7 +102,6 @@ const Chat = ({ socket }) => {
             </React.Fragment>
             )
           })}
-          {isLoading && <ChatSkeleton />}
       </div>
       <div className={styles["bottom-bar"]}>
         <input
@@ -91,6 +109,7 @@ const Chat = ({ socket }) => {
           className={styles.input}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleEnterPress}
         />
         <button
           className={styles["send-btn"]}

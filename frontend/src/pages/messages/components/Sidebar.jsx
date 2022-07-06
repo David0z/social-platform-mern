@@ -21,6 +21,7 @@ const Sidebar = () => {
 
   const handleConversationChange = (convoId) => {
     if (activeChat === convoId) return;
+    dispatch(chatActions.resetConversation());
     dispatch(
       chatActions.setUserToChat(
         data
@@ -28,7 +29,7 @@ const Sidebar = () => {
           .participants.find((p) => p._id !== uid)
       )
     );
-    dispatch(getConversation(convoId));
+    dispatch(getConversation({conversationId: convoId, page: 0}));
   };
 
   useEffect(() => {
