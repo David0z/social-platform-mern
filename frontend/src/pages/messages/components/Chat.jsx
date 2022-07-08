@@ -7,7 +7,7 @@ import MessageItem from "./MessageItem";
 import ChatSkeleton from "../../../components/skeletons/ChatSkeleton";
 import usePagination from "../../../hooks/usePagination";
 
-const Chat = ({ socket, customPage, setCustomPage }) => {
+const Chat = ({ socket, customPage, setCustomPage, date, setDate }) => {
   const dispatch = useDispatch();
   const { isSuccess, isLoading: sendMessagePending, data: sendMessageData } = useSelector(
     (state) => state.chat.sendMessage
@@ -61,7 +61,7 @@ const Chat = ({ socket, customPage, setCustomPage }) => {
 
   useEffect(() => {
     if (conversationData.messages?.length !== 0 && hasMore && !isLoading) {
-      dispatch(getConversation({conversationId: conversationData._id, page}))
+      dispatch(getConversation({conversationId: conversationData._id, page, date}))
     }
   }, [dispatch, page])
 

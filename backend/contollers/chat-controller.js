@@ -58,6 +58,7 @@ const chat_getSingleConversation = async (req, res) => {
 
     const { conversationId } = req.params
     const page = parseInt(req.query.page);
+    const date = req.query.date;
     // const conversation = await Chat.findById(conversationId).populate([
     //   {path: "participants", select: {_id: 1, name: 1, image: 1}}
     // ])
@@ -73,6 +74,13 @@ const chat_getSingleConversation = async (req, res) => {
         ],
         as: 'participants',
       }},
+      {$set: {messages: {
+        $filter: {
+           input: "$messages",
+           as: "message",
+           cond: { $lte: [ "$$message.createdAt", new Date(date) ] }
+        }
+     }}},
       {$set: {messages: {$reverseArray: "$messages"}}},
       {$set: {messages: {$slice: ["$messages", page * MESSAGES_PER_FETCH_LIMIT, MESSAGES_PER_FETCH_LIMIT]}}},
       {$set: {messages: {$reverseArray: "$messages"}}}
@@ -87,6 +95,7 @@ const chat_getSingleConversation = async (req, res) => {
 
     res.status(200).json({ conversation: conversation[0], userId: req.user.userId, hasMore });
   } catch (error) {
+    console.log(error);
     res.status(401).json({ message: "Unauthorized" });
   }
 };

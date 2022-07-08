@@ -13,7 +13,7 @@ import ChatSidebarSkeleton from "../../../components/skeletons/ChatSidebarSkelet
 
 const maxTextLength = 16;
 
-const Sidebar = () => {
+const Sidebar = ({date, setDate}) => {
   const dispatch = useDispatch();
   const { activeChat } = useSelector((state) => state.chat);
   const { data, isLoading } = useSelector((state) => state.chat.chats);
@@ -29,7 +29,9 @@ const Sidebar = () => {
           .participants.find((p) => p._id !== uid)
       )
     );
-    dispatch(getConversation({conversationId: convoId, page: 0}));
+    const newDate = new Date();
+    setDate(newDate)
+    dispatch(getConversation({conversationId: convoId, page: 0, date: newDate}));
   };
 
   useEffect(() => {

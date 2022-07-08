@@ -7,6 +7,7 @@ import Sidebar from "./components/Sidebar";
 import Chat from "./components/Chat";
 
 const Messages = () => {
+  const [date, setDate] = useState(null);
   const [socket, setSocket] = useState(null)
   const [customPage, setCustomPage] = useState(0);
   const dispatch = useDispatch()
@@ -48,7 +49,9 @@ const Messages = () => {
       }
 
       if (found === true) {
-        dispatch(getConversation({conversationId: convoId, page: 0}))
+        const newDate = new Date()
+        setDate(newDate)
+        dispatch(getConversation({conversationId: convoId, page: 0, date: newDate}))
         setCustomPage(1);
       }
     }
@@ -56,8 +59,8 @@ const Messages = () => {
 
   return (
     <div className={styles.wrapper}>
-      <Chat socket={socket} customPage={customPage} setCustomPage={setCustomPage} />
-      <Sidebar />
+      <Chat socket={socket} customPage={customPage} setCustomPage={setCustomPage} date={date} setDate={setDate} />
+      <Sidebar date={date} setDate={setDate}/>
     </div>
   );
 };

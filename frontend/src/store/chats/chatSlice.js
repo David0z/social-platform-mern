@@ -49,6 +49,7 @@ export const getConversation = createAsyncThunk(
       return await chatService.getConversation(
         args.conversationId,
         args.page,
+        args.date,
         thunkAPI.getState().user.token
       );
     } catch (error) {
