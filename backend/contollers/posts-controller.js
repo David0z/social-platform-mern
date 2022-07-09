@@ -22,8 +22,10 @@ const handleErrors = (err) => {
 // GET ALL POSTS
 const posts_getAll = async (req, res) => {
   try {
-    const page = req.query.page;
+    const page = parseInt(req.query.page);
+    const date = req.query.date;
     const posts = await Post.aggregate([
+      { $match: {createdAt: {$lte: new Date(date)}} },
       { $sort: { createdAt: -1 } },
       { $skip: page * POSTS_PER_PAGE_LIMIT},
       { $limit: POSTS_PER_PAGE_LIMIT},

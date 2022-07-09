@@ -7,12 +7,19 @@ import styles from "./Posts.module.scss";
 import usePagination from "../../hooks/usePagination";
 
 const PostsAll = () => {
+  const [date, setDate] = useState(null)
   const dispatch = useDispatch();
   const { posts, isLoading, hasMore } = useSelector((state) => state.post.posts);
   const { page, lastPostElementRef } = usePagination(hasMore, isLoading);
 
   useEffect(() => {
-    dispatch(getAllPosts(page));
+    if (date) {
+      dispatch(getAllPosts({page, date}));
+    } else {
+      const newDate = new Date();
+      setDate(newDate)
+      dispatch(getAllPosts({page, date: newDate}));
+    }
   }, [dispatch, page]);
 
   useEffect(() => {
