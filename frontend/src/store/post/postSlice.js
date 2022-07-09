@@ -104,7 +104,7 @@ export const getHotPosts = createAsyncThunk(
   "post/getHotPosts",
   async (args, thunkAPI) => {
     try {
-      return await postService.getHotPosts(args.hotNumber, args.page);
+      return await postService.getHotPosts(args.hotNumber, args.page, args.date);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }

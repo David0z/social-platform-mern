@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllPosts, postActions } from "../../store/post/postSlice";
 import PostsList from "../../components/posts-list/PostsList";
@@ -7,10 +7,9 @@ import styles from "./Posts.module.scss";
 import usePagination from "../../hooks/usePagination";
 
 const PostsAll = () => {
-  const [date, setDate] = useState(null)
   const dispatch = useDispatch();
   const { posts, isLoading, hasMore } = useSelector((state) => state.post.posts);
-  const { page, lastPostElementRef } = usePagination(hasMore, isLoading);
+  const { page, lastPostElementRef, date, setDate } = usePagination(hasMore, isLoading);
 
   useEffect(() => {
     if (date) {

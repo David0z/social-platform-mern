@@ -312,6 +312,7 @@ const posts_getComments = async (req, res) => {
 const posts_getHotPosts = async (req, res) => {
   const { hotNumber } = req.params;
   const page = req.query.page
+  const date = req.query.date
 
   try {
     const posts = await Post.aggregate([
@@ -319,6 +320,7 @@ const posts_getHotPosts = async (req, res) => {
         $match: {
           createdAt: {
             $gte: new Date(new Date() - hotNumber * 60 * 60 * 1000),
+            $lte: new Date(date)
           },
         },
       },

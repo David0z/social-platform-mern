@@ -3,6 +3,7 @@ import { useState, useRef, useCallback } from "react";
 const usePagination = (hasMore, isLoading, customPage = 0) => {
   const observer = useRef();
   const [page, setPage] = useState(customPage);
+  const [date, setDate] = useState(null);
   const lastPostElementRef = useCallback(
     (node) => {
       if (isLoading) return;
@@ -18,7 +19,7 @@ const usePagination = (hasMore, isLoading, customPage = 0) => {
     },
     [isLoading]
   );
-  return { page, setPage, lastPostElementRef }
+  return { page, setPage, lastPostElementRef, date, setDate }
 }
 
 export default usePagination

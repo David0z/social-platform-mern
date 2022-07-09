@@ -9,16 +9,23 @@ import styles from "./Posts.module.scss";
 const PostsHot = ({ hotNumber }) => {
   const dispatch = useDispatch();
   const { posts, isLoading, hasMore } = useSelector((state) => state.post.posts);
-  const { page, setPage, lastPostElementRef } = usePagination(hasMore, isLoading);
+  const { page, setPage, lastPostElementRef, date, setDate } = usePagination(hasMore, isLoading);
 
   useEffect(() => {
-    dispatch(getHotPosts({hotNumber, page}));
+    if (date) {
+      dispatch(getHotPosts({hotNumber, page, date}));
+    } else {
+      const newDate = new Date();
+      setDate(newDate);
+      dispatch(getHotPosts({hotNumber, page, date: newDate}));
+    }
   }, [dispatch, hotNumber, page]);
   
   useEffect(() => {
     return () => {
       dispatch(postActions.reset());
       setPage(0);
+      setDate(null);
     };
   }, [dispatch, hotNumber]);
 
