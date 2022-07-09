@@ -22,10 +22,16 @@ const Hashtag = ({ tag }) => {
   );
   const { posts } = useSelector((state) => state.post.posts);
   const { uid, token } = useSelector((state) => state.user);
-  const { page, setPage, lastPostElementRef } = usePagination(hasMore, isLoading);
+  const { page, setPage, lastPostElementRef, date, setDate } = usePagination(hasMore, isLoading);
 
   useEffect(() => {
-    dispatch(getSingleHashtag({tagName, page}));
+    if (date) {
+      dispatch(getSingleHashtag({tagName, page, date}));
+    } else {
+      const newDate = new Date()
+      setDate(newDate)
+      dispatch(getSingleHashtag({tagName, page, date: newDate}));
+    }
   }, [dispatch, tagName, page])
 
   useEffect(() => {
@@ -33,6 +39,7 @@ const Hashtag = ({ tag }) => {
       dispatch(hashtagActions.resetSingleHashtag());
       dispatch(postActions.reset());
       setPage(0);
+      setDate(null)
     };
   }, [dispatch, tagName]);
 

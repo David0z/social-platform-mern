@@ -8,6 +8,7 @@ export const getSingleHashtag = createAsyncThunk(
       return await hashtagService.getSingleHashtag(
         args.tagName,
         args.page,
+        args.date,
         thunkAPI.getState().user.uid
       );
     } catch (error) {
@@ -46,9 +47,9 @@ export const getPopularAndFollowed = createAsyncThunk(
 
 export const getFollowedHashtags = createAsyncThunk(
   "hashtag/getFollowedHashtags",
-  async (page, thunkAPI) => {
+  async (args, thunkAPI) => {
     try {
-      return await hashtagService.getFollowedHashtags(page, 
+      return await hashtagService.getFollowedHashtags(args.page, args.date, 
         thunkAPI.getState().user.uid
       );
     } catch (error) {

@@ -67,7 +67,7 @@ export const fetchUser = createAsyncThunk(
   "user/fetchUser",
   async (args, thunkAPI) => {
     try {
-      return await userService.fetchUser(args.userId, args.page, thunkAPI.getState().user.uid);
+      return await userService.fetchUser(args.userId, args.page, args.date, thunkAPI.getState().user.uid);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
@@ -82,9 +82,9 @@ export const followUser = createAsyncThunk("user/followUser", async (userId, thu
   }
 })
 
-export const getFollowedUsers = createAsyncThunk("user/getFollowedUsers", async (page, thunkAPI) => {
+export const getFollowedUsers = createAsyncThunk("user/getFollowedUsers", async (args, thunkAPI) => {
   try {
-    return await userService.getFollowedUsers(thunkAPI.getState().user.token, page);
+    return await userService.getFollowedUsers(thunkAPI.getState().user.token, args.page, args.date);
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data.message);
   }

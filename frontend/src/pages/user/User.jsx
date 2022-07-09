@@ -13,6 +13,7 @@ import ProfileImage from "../../components/profile-image/ProfileImage";
 import FollowButton from "../../components/follow-button/FollowButton";
 import MessageButton from "../../components/message-button/MessageButton";
 import usePagination from "../../hooks/usePagination";
+import { setDate } from "date-fns/esm";
 
 const User = () => {
   const dispatch = useDispatch();
@@ -22,13 +23,19 @@ const User = () => {
   );
   const { posts } = useSelector((state) => state.post.posts);
   const { token, uid } = useSelector((state) => state.user);
-  const { page, setPage, lastPostElementRef } = usePagination(
+  const { page, setPage, lastPostElementRef, date, setDate } = usePagination(
     hasMore,
     isLoading
   );
 
   useEffect(() => {
-    dispatch(fetchUser({ userId, page }));
+    if (date) {
+      dispatch(fetchUser({ userId, page, date }));
+    } else {
+      const newDate = new Date()
+      setDate(newDate)
+      dispatch(fetchUser({ userId, page, date: newDate }));
+    }
   }, [dispatch, userId, page]);
 
   useEffect(() => {
@@ -36,6 +43,7 @@ const User = () => {
       dispatch(userActions.resetFetchedUser());
       dispatch(postActions.reset());
       setPage(0);
+      setDate(null);
     };
   }, [dispatch, userId]);
 

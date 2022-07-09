@@ -10,6 +10,7 @@ const POSTS_PER_PAGE_LIMIT = 10;
 const hashtag_getSingle = async (req, res) => {
   try {
     const page = req.query.page;
+    const date = req.query.date;
     const { tagName } = req.params;
     const userId = req.body.userId;
     const hashtag = await Hashtag.aggregate([
@@ -21,6 +22,7 @@ const hashtag_getSingle = async (req, res) => {
           foreignField: "_id",
           as: "posts",
           pipeline: [
+            {$match: {createdAt: {$lte: new Date(date)}}},
             { $sort: { createdAt: -1 } },
             { $skip: page * POSTS_PER_PAGE_LIMIT},
             { $limit: POSTS_PER_PAGE_LIMIT},
@@ -156,6 +158,7 @@ const hashtag_getPopular = async (req, res) => {
 const hashtag_getFollowed = async (req, res) => {
   try {
     const page = req.query.page;
+    const date = req.query.date;
     const { userId } = req.params;
 
     const posts = await User.aggregate([
@@ -179,6 +182,7 @@ const hashtag_getFollowed = async (req, res) => {
           localField: "_id",
           foreignField: "_id",
           pipeline: [
+            { $match: {createdAt: {$lte: new Date(date)}}},
             {
               $lookup: {
                 from: "users",

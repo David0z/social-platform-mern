@@ -13,10 +13,16 @@ const FollowedUsers = () => {
     (state) => state.user.followed
   );
   const { posts } = useSelector((state) => state.post.posts);
-  const { page, lastPostElementRef } = usePagination(hasMore, isLoading);
+  const { page, lastPostElementRef, date, setDate } = usePagination(hasMore, isLoading);
 
   useEffect(() => {
-    dispatch(getFollowedUsers(page));
+    if (date) {
+      dispatch(getFollowedUsers({page, date}));
+    } else {
+      const newDate = new Date()
+      setDate(newDate)
+      dispatch(getFollowedUsers({page, date: newDate}));
+    }
   }, [dispatch, page])
 
   useEffect(() => {

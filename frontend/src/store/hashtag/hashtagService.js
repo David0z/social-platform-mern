@@ -8,9 +8,9 @@ const authConfig = (token) => {
   };
 };
 
-const getSingleHashtag = async (tagName, page, userId) => {
+const getSingleHashtag = async (tagName, page, date, userId) => {
   const response = await axios.post(
-    `${process.env.REACT_APP_API_ENDPOINT}/hashtags/${tagName}?page=${page}`,
+    `${process.env.REACT_APP_API_ENDPOINT}/hashtags/${tagName}?page=${page}&date=${new Date(date).toISOString()}`,
     { userId }
   );
 
@@ -36,9 +36,9 @@ const getPopularAndFollowed = async (userId) => {
   return response.data;
 };
 
-const getFollowedHashtags = async (page, userId) => {
+const getFollowedHashtags = async (page, date, userId) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/hashtags/followed/${userId}?page=${page}`
+    `${process.env.REACT_APP_API_ENDPOINT}/hashtags/followed/${userId}?page=${page}&date=${new Date(date).toISOString()}`
   );
 
   return response.data;

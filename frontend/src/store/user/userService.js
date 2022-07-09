@@ -47,9 +47,9 @@ const logout = () => {
   localStorage.removeItem("userName");
 };
 
-const fetchUser = async (userId, page, followerId) => {
+const fetchUser = async (userId, page, date, followerId) => {
   const response = await axios.post(
-    `${process.env.REACT_APP_API_ENDPOINT}/users/${userId}?page=${page}`,
+    `${process.env.REACT_APP_API_ENDPOINT}/users/${userId}?page=${page}&date=${new Date(date).toISOString()}`,
     { followerId }
   );
 
@@ -66,9 +66,9 @@ const followUser = async (userId, token) => {
   return response.data;
 }
 
-const getFollowedUsers = async (token, page) => {
+const getFollowedUsers = async (token, page, date) => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_ENDPOINT}/users/followed?page=${page}`,
+    `${process.env.REACT_APP_API_ENDPOINT}/users/followed?page=${page}&date=${new Date(date).toISOString()}`,
     authConfig(token)
   );
 

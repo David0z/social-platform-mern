@@ -110,6 +110,7 @@ const users_login = async (req, res) => {
 const users_getUser = async (req, res) => {
   try {
     const page = req.query.page;
+    const date = req.query.date;
     const { followerId } = req.body;
     const existingUser = await User.aggregate([
       { $match: { _id: mongoose.Types.ObjectId(req.params.id) } },
@@ -129,6 +130,7 @@ const users_getUser = async (req, res) => {
           localField: "posts",
           foreignField: "_id",
           pipeline: [
+            {$match: {createdAt: {$lte: new Date(date)}}},
             { $sort: { createdAt: -1 } },
             { $skip: page * POSTS_PER_PAGE_LIMIT},
             { $limit: POSTS_PER_PAGE_LIMIT},
@@ -206,6 +208,7 @@ const user_getFollowedUsers = async (req, res) => {
   try {
     const userId = req.user.userId;
     const page = req.query.page;
+    const date = req.query.date;
 
     const posts = await User.aggregate([
       {$match: {_id: mongoose.Types.ObjectId(userId)}},
@@ -228,6 +231,7 @@ const user_getFollowedUsers = async (req, res) => {
           localField: "_id",
           foreignField: "_id",
           pipeline: [
+            {$match: {createdAt: {$lte: new Date(date)}}},
             {
               $lookup: {
                 from: "users",
