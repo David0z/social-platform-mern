@@ -4,7 +4,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Navbar from "./components/navbar/Navbar";
 import NotFound from "./pages/404/NotFound";
 import Login from "./pages/login/Login";
@@ -20,9 +20,24 @@ import Hashtag from "./pages/hashtag/Hashtag";
 import Hashtags from "./pages/hashtags/Hashtags";
 import FollowedUsers from "./pages/followed-users/FollowedUsers";
 import Messages from "./pages/messages/Messages";
+import { useEffect } from "react";
+import { logout } from './store/user/userSlice'
+import jwt_decode from "jwt-decode";
 
 function App() {
+  const dispatch = useDispatch();
   const { token } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    let logoutTimeout;
+    if (token) {
+      const {exp} = jwt_decode(token)
+      const remainingTime = exp * 1000 - Date.now()
+      logoutTimeout = setTimeout(() => dispatch(logout()), remainingTime)
+    }
+
+    return () => clearTimeout(logoutTimeout)
+  }, [token])
 
   return (
     <Router>
