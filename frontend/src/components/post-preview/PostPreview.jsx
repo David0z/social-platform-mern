@@ -77,7 +77,7 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments, lastPost
           {post.image !== "" && (
             <>
               <img
-                src={`http://localhost:5000/${post.image}`}
+                src={process.env.REACT_APP_SERVER + post.image}
                 alt="Post Image"
                 className={styles.content__image}
                 onClick={openImageModal}
@@ -85,7 +85,7 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments, lastPost
               {isImageModalOpened && (
                 <Modal onClose={closeImageModal}>
                   <img
-                    src={`http://localhost:5000/${post.image}`}
+                    src={process.env.REACT_APP_SERVER + post.image}
                     alt="Post Image"
                     className={styles["content__image--modal"]}
                     onClick={(e) => e.stopPropagation()}
@@ -160,7 +160,7 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments, lastPost
       </div>
       {(instantComments || commentsFetched) && (
         <>
-          <hr className={styles.line} />
+          {post.commentCounter > 0 && <hr className={styles.line} />}
           {post.comments.length === 0 && post.commentCounter > 0 && (
             <h1>Loading comments...</h1> //change it later for something cool
           )}
