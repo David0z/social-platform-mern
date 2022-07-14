@@ -1,5 +1,6 @@
 @import "../../../variables";
 @import "../../../templates";
+@import "../../../query";
 
 .wrapper {
   background-color: rgba($primary, 0.5);
@@ -12,8 +13,7 @@
     justify-self: center;
     padding: 1rem 2rem 0.7rem 2rem;
     gap: 2rem;
-    min-width: $max-content;
-    max-width: 100%;
+    width: min(90%, $max-content);
   }
 
   &__image {
@@ -21,6 +21,12 @@
     aspect-ratio: 1;
     border-radius: 50%;
     object-fit: cover;
+
+    &__link {
+      @include medium {
+        display: none;
+      }
+    }
   }
 }
 
@@ -41,6 +47,12 @@
   display: block;
   margin-bottom: 0.7rem;
 
+  @include medium {
+    font-size: 1rem;
+    min-height: 3rem;
+    border-radius: 1.5rem;
+  }
+
   &:focus {
     outline: none;
   }
@@ -54,6 +66,10 @@
     aspect-ratio: 1;
     background-color: $text;
     clip-path: polygon(0 0, 100% 100%, 100% 0);
+
+    @include medium {
+      display: none;
+    }
   }
 }
 
@@ -61,6 +77,12 @@
   display: flex;
   flex-grow: 1;
   gap: 1rem;
+
+  @include medium {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+  }
 
   input {
     display: none;
@@ -72,18 +94,51 @@
   display: flex;
   gap: 0.2rem;
   align-items: center;
+
   &:disabled {
     color: $black;
+  }
+
+  @include medium {
+    padding: 0.3rem 0;
+    justify-content: center;
+    width: 100%;
+  }
+
+  @include small {
+    grid-column: 1 / -1 !important;
   }
 
   &__icon {
     font-size: 1.5rem;
     @extend %icon;
+
+    @include medium {
+      font-size: 1.2rem;
+    }
+  }
+
+  &__text {
+    @include large {
+      display: none;
+    }
+
+    @include medium {
+      display: inline;
+    }
   }
 
   &--cancel {
     @extend .post-button;
     margin-left: auto;
+
+    @include medium {
+      grid-column: 2;
+    }
+
+    @include small {
+      grid-row: 2;
+    }
   }
 }
 
@@ -92,6 +147,14 @@
   border: none;
   background-color: $primary;
   box-shadow: 0.3rem 0.3rem 0 -0.1rem transparent;
+
+  @include medium {
+    grid-column: 3;
+  }
+
+  @include small {
+    grid-row: 1;
+  }
 
   .icon {
     font-size: 1.5rem;
@@ -132,4 +195,13 @@
 .file-name {
   margin: 0;
   align-self: center;
+
+  @include medium {
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  @include small {
+    grid-row: 4;
+  }
 }

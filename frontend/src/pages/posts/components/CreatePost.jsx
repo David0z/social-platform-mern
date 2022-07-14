@@ -120,7 +120,7 @@ const CreatePost = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.wrapper__content}>
-        <Link to={`/users/${uid}`}>
+        <Link to={`/users/${uid}`} className={styles.wrapper__image__link}>
           <ProfileImage
             profileImage={profileImage}
             className={styles.wrapper__image}
@@ -156,18 +156,19 @@ const CreatePost = () => {
               className={styles["post-button"]}
               onClick={() => imageRef.current.click()}
               disabled={isLoading}
+              title='Add picture'
             >
               <Icon
                 icon="icon-park-outline:picture-one"
                 className={styles["post-button__icon"]}
               />
-              Add picture
+              <span className={styles["post-button__text"]}>Add picture</span>
             </Button>
-            <p title={fileName} className={styles["file-name"]}>
+            {fileName && <p title={fileName} className={styles["file-name"]}>
               {fileName && fileName.length > 20
                 ? `${fileName.slice(0, 20)}...`
                 : fileName}
-            </p>
+            </p>}
             <Button
               className={styles["post-button--cancel"]}
               onClick={cancelPost}
