@@ -5,15 +5,14 @@
   width: 100%;
   display: grid;
   place-items: center;
+  padding: 2rem 0;
 
   &__title {
-    margin: 2rem 0;
     font-weight: 400;
   }
 
   .form {
     @extend %form;
-    width: min-content;
 
     &__button {
       @extend %form-btn;

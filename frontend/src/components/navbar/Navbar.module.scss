@@ -1,4 +1,5 @@
 @import "../../variables";
+@import "../../query";
 
 .navbar {
   box-sizing: border-box;
@@ -8,14 +9,28 @@
   left: 0;
   width: 100%;
   display: flex;
-  // justify-content: space-between;
   background-color: $primary;
   padding: 0 $side-padding;
   gap: 2rem;
 
+  @include small {
+    justify-content: flex-end;
+  }
+
+  @include medium {
+    height: $routes-wrapper-margin;
+    padding: 0 calc($side-padding / 2);
+  }
+
   &__logo {
     width: 11rem;
     height: 100%;
+
+    &__link {
+      @include medium {
+        display: none;
+      }
+    }
     path {
       fill: $text;
     }
@@ -29,6 +44,10 @@
     margin: 0;
     padding: 0;
     width: 100%;
+
+    @include small {
+      display: none;
+    }
 
     li, .button__nav {
       height: 100%;
@@ -51,6 +70,47 @@
       }
     }
   }
+
+  &_list {
+    box-sizing: border-box;
+    list-style: none;
+    display: grid;
+    // justify-content: center;
+    gap: 2rem;
+    margin: 0;
+    padding: 0 10%;
+    width: 100%;
+
+    .list_btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-sizing: border-box;
+      color: $text;
+      font-size: 1.8rem;
+
+      @include xsmall {
+        font-size: 1.4rem;
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .action_btn {
+      @extend .list_btn;
+      background-color: transparent;
+      border: 0.2rem solid $text;
+      justify-content: center;
+
+      &:hover {
+        background-color: $text !important;
+        color: $text-secondary;
+      }
+    }
+  }
 }
 
 .button {
@@ -66,12 +126,27 @@
     width: 4rem;
 
     &:hover {
-      background-color: rgba($secondary, 0.3)
+      background-color: rgba($secondary, 0.3);
     }
 
     &--active {
-      @extend .button__nav;
       border-bottom: 0.3rem solid $text;
     }
+  }
+}
+
+.hammenu {
+  display: none;
+  color: $text;
+  align-self: center;
+  height: max-content;
+  font-size: 2.4rem;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  @include small {
+    display: block;
   }
 }

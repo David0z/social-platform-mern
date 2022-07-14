@@ -12,7 +12,8 @@ label {
 .input {
   border: none;
   height: 2.5rem;
-  width: 24rem;
+  width: 100%;
+  box-sizing: border-box;
   border-radius: $border-reg;
   font-size: 1.2rem;
 

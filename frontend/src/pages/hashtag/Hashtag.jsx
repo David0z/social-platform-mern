@@ -56,11 +56,11 @@ const Hashtag = ({ tag }) => {
           <div className={styles.wrapper}>
             <div className={styles.content}>
               <h1 className={styles.content__name}>{hashtag.name}</h1>
-              <FollowButton
+              {token && <FollowButton
                 followCondition={hashtag.isUserFollowing}
                 onClick={handleHashtagFollow}
                 token={token}
-              />
+              />}
               <p className={styles.content__paragraph}>
                 {hashtag.followers === 1
                   ? `${hashtag.followers} follower`
