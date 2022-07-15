@@ -6,6 +6,8 @@
   border-radius: $post-border-radius;
   box-shadow: .2rem .2rem 1rem -0.5rem $text-secondary;
   box-sizing: border-box;
+  overflow-x: hidden;
+
 
   &__op {
     border-left: 0.25rem solid $vote-up;
@@ -35,11 +37,18 @@
     }
   }
 
+  &__data {
+    overflow: hidden;
+  }
+
   &__name {
     margin: 0;
     color: $black;
     font-size: 1.4rem;
     line-height: 1.4rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 
     @include small {
       font-size: 1.2rem;

@@ -26,7 +26,7 @@ const Comment = ({ comment, postAuthorId }) => {
             className={styles.author__image}
           />
         </Link>
-        <div>
+        <div className={styles.author__data}>
           <Link to={`/users/${comment.author._id}`}>
             <p className={styles.author__name}>{comment.author.name}</p>
           </Link>
