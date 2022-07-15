@@ -146,6 +146,14 @@
     font-weight: lighter;
     text-align: center;
     margin: 0.5rem;
+
+    @include small {
+      font-size: 1.2rem;
+    }
+
+    @include xsmall {
+      margin-top: 3.4rem;
+    }
   }
 
   &__items-wrapper {
@@ -199,6 +207,12 @@
       aspect-ratio: 1;
       border-radius: 50%;
       object-fit: cover;
+
+      @include small {
+        $size: 2.5rem;
+        width: $size;
+        height: $size;
+      }
     }
 
     &__content {
@@ -210,6 +224,10 @@
     &__name {
       font-weight: bold;
       font-size: 1.4rem;
+
+      @include small {
+        font-size: 1.1rem;
+      }
     }
 
     &__last-msg {
@@ -245,6 +263,10 @@
 
 .inverted {
   transform: translateX(-100%) scaleX(-1);
+
+  @include xsmall {
+    transform: scaleX(-1);
+  }
 }
 
 .visible {
