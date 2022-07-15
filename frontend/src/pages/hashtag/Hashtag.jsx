@@ -60,6 +60,7 @@ const Hashtag = ({ tag }) => {
                 followCondition={hashtag.isUserFollowing}
                 onClick={handleHashtagFollow}
                 token={token}
+                className={styles.follow}
               />}
               <p className={styles.content__paragraph}>
                 {hashtag.followers === 1

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getChats,
@@ -10,10 +10,11 @@ import ProfileImage from "../../../components/profile-image/ProfileImage";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import parseISO from "date-fns/parseISO";
 import ChatSidebarSkeleton from "../../../components/skeletons/ChatSidebarSkeleton";
+import { Icon } from "@iconify/react";
 
 const maxTextLength = 16;
 
-const Sidebar = ({date, setDate}) => {
+const Sidebar = ({ date, setDate, isSidebarVisible, setIsSidebarVisible }) => {
   const dispatch = useDispatch();
   const { activeChat } = useSelector((state) => state.chat);
   const { data, isLoading } = useSelector((state) => state.chat.chats);
@@ -30,8 +31,10 @@ const Sidebar = ({date, setDate}) => {
       )
     );
     const newDate = new Date();
-    setDate(newDate)
-    dispatch(getConversation({conversationId: convoId, page: 0, date: newDate}));
+    setDate(newDate);
+    dispatch(
+      getConversation({ conversationId: convoId, page: 0, date: newDate })
+    );
   };
 
   useEffect(() => {
@@ -39,7 +42,10 @@ const Sidebar = ({date, setDate}) => {
   }, []);
 
   return (
-    <div className={styles.sidebar}>
+    <div
+      className={`${styles.sidebar} ${isSidebarVisible ? styles.visible : ""}`}
+      onClick={(e) => e.stopPropagation()}
+    >
       <h1 className={styles.sidebar__title}>Most recent chats:</h1>
       {data.length !== 0 && !isLoading && (
         <div className={styles["sidebar__items-wrapper"]}>
@@ -49,7 +55,9 @@ const Sidebar = ({date, setDate}) => {
               className={`${styles.sidebar__item} ${
                 item._id === activeChat && styles["sidebar__item--active"]
               }`}
-              onClick={() => handleConversationChange(item._id)}
+              onClick={() => {
+                setIsSidebarVisible(false)
+                handleConversationChange(item._id)}}
             >
               <ProfileImage
                 className={styles.sidebar__item__image}
@@ -79,6 +87,11 @@ const Sidebar = ({date, setDate}) => {
         </div>
       )}
       {isLoading && <ChatSidebarSkeleton number={5} />}
+      <Icon
+        icon="ant-design:arrow-left-outlined"
+        className={`${styles.side_toggler} ${isSidebarVisible ? styles.inverted : ""}`}
+        onClick={(e) => setIsSidebarVisible((prev) => !prev)}
+      />
     </div>
   );
 };

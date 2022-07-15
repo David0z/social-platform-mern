@@ -1,18 +1,23 @@
 @import "../../variables";
 @import "../../templates";
+@import "../../query";
 
 .userbar {
   width: 100%;
   background-color: rgba($primary, 0.5);
-  display: grid;
-  justify-content: center;
   padding: 1rem 0;
 
   &__wrapper {
+    margin-inline: auto;
     display: flex;
     gap: 2rem;
-    min-width: 60rem;
-    max-width: 100%;
+    width: min(60rem, 90%);
+
+    @include small {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
   }
 
   &__image {
@@ -21,6 +26,12 @@
     height: $size;
     border-radius: 50%;
     object-fit: cover;
+
+    @include xsmall {
+      $size: 4.5rem;
+      width: $size;
+      height: $size;
+    }
   }
 
   &__details {
@@ -28,6 +39,15 @@
     display: flex;
     justify-content: space-between;
     align-content: center;
+
+    @include medium {
+      flex-direction: column;
+      flex-grow: 0;
+    }
+
+    @include small {
+      width: 100%;
+    }
   }
 
   &__name {
@@ -37,6 +57,13 @@
     margin: 0;
     color: $black;
     grid-column: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    @include xsmall {
+      font-size: 2rem;
+    }
   }
 
   &__joined {
@@ -64,6 +91,20 @@
     justify-items: end;
     grid-auto-rows: max-content;
     gap: 0.5rem;
+
+    @include medium {
+      display: flex;
+    }
+
+    @include xsmall {
+      flex-direction: column;
+    }
+
+    .action_btn {
+      @include small {
+        width: 100%;
+      }
+    }
   }
 }
 

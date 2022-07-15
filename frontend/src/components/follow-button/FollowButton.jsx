@@ -1,13 +1,13 @@
 import styles from "./FollowButton.module.scss"
 import { Icon } from "@iconify/react";
 
-const FollowButton = ({followCondition, onClick}) => {
+const FollowButton = ({followCondition, onClick, className}) => {
   return (
     <button
-      className={
+      className={`${
         followCondition
           ? styles["follow-btn--followed"]
-          : styles["follow-btn"]
+          : styles["follow-btn"]} ${className}`
       }
       onClick={onClick}
     >

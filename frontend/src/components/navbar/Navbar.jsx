@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Navbar.module.scss";
 import { ReactComponent as Logo } from "../../utils/logo.svg";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../store/user/userSlice";
 import { Icon } from "@iconify/react";
@@ -9,12 +9,14 @@ import Modal from "../modal/Modal";
 import useModal from "../../hooks/useModal";
 
 const Navbar = () => {
+  const navigate = useNavigate()
   const { token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const { openModal, closeModal, isModalOpened } = useModal();
 
-  const onLogout = () => {
-    dispatch(logout());
+  const onLogout = async () => {
+    await dispatch(logout());
+    navigate('/');
   };
 
   return (

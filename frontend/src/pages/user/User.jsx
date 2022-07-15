@@ -89,8 +89,9 @@ const User = () => {
                   <FollowButton
                     followCondition={user.isUserFollowing}
                     onClick={handleUserFollow}
+                    className={styles.action_btn}
                   />
-                  {uid !== userId && <MessageButton user={user} />}
+                  {uid !== userId && <MessageButton user={user} className={styles.action_btn}/>}
                 </div>
               )}
             </div>

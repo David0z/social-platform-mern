@@ -1,18 +1,22 @@
 @import "../../variables";
+@import "../../query";
 
 .wrapper {
   width: 100%;
   background-color: rgba($primary, 0.5);
-  display: grid;
-  justify-content: center;
   padding: 1rem 0;
 
   .content {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    min-width: $max-content;
-    max-width: 100%;
+    width: min(90%, $max-content);
+    margin-inline: auto;
+
+    @include xsmall {
+      grid-template-columns: 1fr;
+
+    }
 
     &__paragraph {
       grid-column: 1;
@@ -22,8 +26,17 @@
 
     &__name {
       font-size: 2.6rem;
-      line-height: 2.6rem;
+      line-height: 3.2rem;
       margin: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .follow {
+      @include xsmall {
+        width: 100%;
+      }
     }
   }
 }

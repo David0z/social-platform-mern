@@ -1,10 +1,17 @@
 @import "../../variables";
+@import "../../query";
 
 .wrapper {
   height: calc(100vh - $routes-wrapper-margin);
   display: grid;
   grid-auto-flow: column;
   grid-template-columns: 1fr 20rem;
+  overflow: hidden;
+  position: relative;
+  
+  @include medium {
+    grid-template-columns: none;
+  }
 }
 
 .chat-area {
@@ -28,10 +35,6 @@
       object-fit: cover;
     }
 
-    // &__details {
-      
-    // }
-
     &__name {
       margin: 0;
       font-size: 1.2rem;
@@ -46,6 +49,10 @@
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
+
+    @include small {
+      padding: 2rem calc($side-padding / 2);
+    }
 
     &::-webkit-scrollbar {
       width: 0.9rem;
@@ -74,12 +81,16 @@
     padding: 1rem $side-padding;
     display: flex;
 
+    @include small {
+      padding: 1rem calc($side-padding / 2);
+    }
+
     * {
       border: none;
     }
 
     .input {
-      flex-grow: 1;
+      width: 100%;
       border-radius: 100vmax 0 0 100vmax;
       padding: 0 1rem;
       font-size: 1.2rem;
@@ -95,6 +106,10 @@
       border-radius: 0 100vmax 100vmax 0;
       background-color: $secondary;
       color: $text;
+
+      @include small {
+        font-size: 0.9rem;
+      }
 
       &:disabled {
         background-color: gray;
@@ -114,6 +129,17 @@
   height: inherit;
   display: flex;
   flex-direction: column;
+
+  @include medium {
+    transition: transform 0.3s;
+    transform: translateX(100%);
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-image: linear-gradient(white, white);
+    background-blend-mode: multiply;
+    box-shadow: none;
+  }
 
   &__title {
     font-size: 1.5rem;
@@ -198,4 +224,30 @@
     }
 
   }
+}
+
+.side_toggler {
+  $size: 3.4rem;
+  width: $size;
+  height: $size;
+  background-color: $secondary;
+  color: $text;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(-100%);
+  display: none;
+
+  @include medium {
+    display: block;
+  }
+}
+
+.inverted {
+  transform: translateX(-100%) scaleX(-1);
+}
+
+.visible {
+  transform: none;
+  box-shadow: -1rem 0 3rem -1rem $text-secondary;
 }
