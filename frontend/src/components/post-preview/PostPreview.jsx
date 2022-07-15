@@ -15,7 +15,12 @@ import { getComments } from "../../store/post/postSlice";
 import { useState } from "react";
 import ModifiedContent from "./ModifiedContent";
 
-const PostPreview = ({ post, allowCommentFetch = true, instantComments, lastPostElementRef }) => {
+const PostPreview = ({
+  post,
+  allowCommentFetch = true,
+  instantComments,
+  lastPostElementRef,
+}) => {
   const { uid, token } = useSelector((state) => state.user);
   const { isLoading } = useSelector((state) => state.post.vote);
   const {
@@ -49,7 +54,7 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments, lastPost
               alt="Author Avatar"
             />
           </Link>
-          <div>
+          <div className={styles.head__data}>
             <Link to={`/users/${post.creator._id}`}>
               <h1 className={styles.head__name}>{post.creator.name}</h1>
             </Link>
@@ -104,12 +109,16 @@ const PostPreview = ({ post, allowCommentFetch = true, instantComments, lastPost
             >
               {post.commentCounter === 0
                 ? "No comments yet"
+                : post.commentCounter === 1
+                ? `${post.commentCounter} comment`
                 : `${post.commentCounter} comments`}
             </p>
           ) : (
             <p className={styles.feedback__comments}>
               {post.commentCounter === 0
                 ? "No comments yet"
+                : post.commentCounter === 1
+                ? `${post.commentCounter} comment`
                 : `${post.commentCounter} comments`}
             </p>
           )}

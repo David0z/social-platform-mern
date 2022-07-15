@@ -1,4 +1,5 @@
 @import "../../variables";
+@import "../../query";
 
 .wrapper {
   padding: $post-padding;
@@ -26,6 +27,12 @@
     aspect-ratio: 1;
     border-radius: 50%;
     object-fit: cover;
+
+    @include small {
+      $size: 3rem;
+      width: $size;
+      height: $size;
+    }
   }
 
   &__name {
@@ -33,12 +40,20 @@
     color: $black;
     font-size: 1.4rem;
     line-height: 1.4rem;
+
+    @include small {
+      font-size: 1.2rem;
+    }
   }
 
   &__date {
     margin: 0;
     font-size: 0.9rem;
     color: $text-secondary;
+
+    @include small {
+      font-size: 0.7rem;
+    }
   }
 }
 
@@ -47,4 +62,8 @@
   margin: 0;
   white-space: pre-wrap;
   word-break: break-word;
+
+  @include small {
+    font-size: 1rem;
+  }
 }

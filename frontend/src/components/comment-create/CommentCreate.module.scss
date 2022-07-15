@@ -1,5 +1,6 @@
 @import "../../variables";
 @import "../../templates";
+@import "../../query";
 
 .wrapper {
   box-sizing: border-box;
@@ -22,6 +23,10 @@
   aspect-ratio: 1;
   border-radius: 50%;
   object-fit: cover;
+
+  @include xsmall {
+    display: none;
+  }
 }
 
 .content {
@@ -58,6 +63,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    @include xsmall {
+      width: 100%;
+    }
 
     &:disabled {
       background-color: gray;

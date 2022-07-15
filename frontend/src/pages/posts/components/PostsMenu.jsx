@@ -27,7 +27,7 @@ const PostsMenu = () => {
               isActive ? styles.link__active : styles.link
             }
           >
-            <Icon icon="bxs:hot" />6 hours
+            <Icon icon="bxs:hot" />6 <span>h<span className={styles.link__text}>ours</span></span>
           </NavLink>
         </li>
         <li>
@@ -38,7 +38,7 @@ const PostsMenu = () => {
             }
           >
             <Icon icon="bxs:hot" />
-            12 hours
+            12 <span>h<span className={styles.link__text}>ours</span></span>
           </NavLink>
         </li>
         <li>
@@ -49,7 +49,7 @@ const PostsMenu = () => {
             }
           >
             <Icon icon="bxs:hot" />
-            24 hours
+            24 <span>h<span className={styles.link__text}>ours</span></span>
           </NavLink>
         </li>
       </menu>
