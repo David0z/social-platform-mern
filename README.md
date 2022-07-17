@@ -5,3 +5,8 @@ This app allows you to:
 - create, comment and vote on posts
 - add, preview and follow hashtags
 - follow and message users in a real-time chat
+
+For full user experience (as a signed up user), here are some login credentials that allow you to check 2 additional pages (live chat included):
+
+Login: test8@test.com
+Password: test12345
