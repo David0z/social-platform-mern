@@ -10,3 +10,5 @@ For full user experience (as a signed up user), here are some login credentials 
 
 Login: test8@test.com
 Password: test12345
+
+NOTE: Heroku backend server gets a reset, so uploaded images might not be displayed after 30 minutes of no server activity
