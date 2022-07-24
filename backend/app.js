@@ -49,10 +49,10 @@ mongoose
     `mongodb+srv://${process.env.DATABASE_LOGIN}:${process.env.DATABASE_PASSWORD}@cluster0.pb70t.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`
   )
   .then(() => {
-    const server = app.listen(5000)
+    const server = app.listen(process.env.PORT || 5000)
     const io = require('socket.io')(server, {
       cors: {
-        origin: ['http://localhost:3000'] // client link
+        origin: ['https://social-platform-davidozz.web.app'] // client link
       }
     });
 

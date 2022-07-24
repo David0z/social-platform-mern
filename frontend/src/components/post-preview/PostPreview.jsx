@@ -14,6 +14,7 @@ import CommentCreate from "../../components/comment-create/CommentCreate";
 import { getComments } from "../../store/post/postSlice";
 import { useState } from "react";
 import ModifiedContent from "./ModifiedContent";
+import ErrorImage from '../../utils/cat-meme.png'
 
 const PostPreview = ({
   post,
@@ -42,6 +43,11 @@ const PostPreview = ({
       dispatch(getComments(post._id));
     }
   };
+
+  const handleImageError = (e) => {
+    console.clear();
+    e.target.src = ErrorImage;
+  }
 
   return (
     <div className={styles.wrapper} ref={lastPostElementRef}>
@@ -86,6 +92,7 @@ const PostPreview = ({
                 alt="Post Image"
                 className={styles.content__image}
                 onClick={openImageModal}
+                onError={handleImageError}
               />
               {isImageModalOpened && (
                 <Modal onClose={closeImageModal}>
@@ -94,6 +101,7 @@ const PostPreview = ({
                     alt="Post Image"
                     className={styles["content__image--modal"]}
                     onClick={(e) => e.stopPropagation()}
+                    onError={handleImageError}
                   />
                 </Modal>
               )}

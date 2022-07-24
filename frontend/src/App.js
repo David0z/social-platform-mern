@@ -18,11 +18,14 @@ import WelcomePage from "./pages/welcome-page/WelcomePage";
 import ScrollToTop from "./components/scroll-to-top/scrollToTop";
 import Hashtag from "./pages/hashtag/Hashtag";
 import Hashtags from "./pages/hashtags/Hashtags";
-import FollowedUsers from "./pages/followed-users/FollowedUsers";
-import Messages from "./pages/messages/Messages";
-import { useEffect } from "react";
-import { logout } from './store/user/userSlice'
+import React, { useEffect, Suspense } from "react";
+import { logout } from "./store/user/userSlice";
 import jwt_decode from "jwt-decode";
+
+const FollowedUsers = React.lazy(() =>
+  import("./pages/followed-users/FollowedUsers")
+);
+const Messages = React.lazy(() => import("./pages/messages/Messages"));
 
 function App() {
   const dispatch = useDispatch();
@@ -31,19 +34,20 @@ function App() {
   useEffect(() => {
     let logoutTimeout;
     if (token) {
-      const {exp} = jwt_decode(token)
-      const remainingTime = exp * 1000 - Date.now()
-      logoutTimeout = setTimeout(() => dispatch(logout()), remainingTime)
+      const { exp } = jwt_decode(token);
+      const remainingTime = exp * 1000 - Date.now();
+      logoutTimeout = setTimeout(() => dispatch(logout()), remainingTime);
     }
 
-    return () => clearTimeout(logoutTimeout)
-  }, [token])
+    return () => clearTimeout(logoutTimeout);
+  }, [token]);
 
   return (
     <Router>
       <Navbar />
       <div className="routes-wrapper">
         <ScrollToTop />
+        <Suspense fallback={<h1>Loading...</h1>}>
         <Routes>
           <Route
             path="/"
@@ -77,6 +81,7 @@ function App() {
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </div>
     </Router>
   );
