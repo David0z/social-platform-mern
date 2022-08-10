@@ -15,3 +15,5 @@ NOTE: Heroku backend server gets a reset, so uploaded images might not be displa
 
 DESIGN:
 https://www.figma.com/file/RKn3jbdVgzDDMJ5smHQaH9/Social-Platform?node-id=0%3A1
+
+YOUTUBE PRESENTATION: https://youtu.be/3qumBSgG7Io
