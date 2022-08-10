@@ -11,9 +11,9 @@ For full user experience (as a signed up user), here are some login credentials 
 Login: test8@test.com
 Password: test12345
 
-NOTE: Heroku backend server gets a reset, so uploaded images might not be displayed after 30 minutes of no server activity
+**NOTE:** Heroku backend server gets a reset, so uploaded images might not be displayed after 30 minutes of no server activity
 
-DESIGN:
+**DESIGN:**
 https://www.figma.com/file/RKn3jbdVgzDDMJ5smHQaH9/Social-Platform?node-id=0%3A1
 
-YOUTUBE PRESENTATION: https://youtu.be/3qumBSgG7Io
+**YOUTUBE PRESENTATION:** https://youtu.be/3qumBSgG7Io
