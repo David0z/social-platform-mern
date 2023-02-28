@@ -195,7 +195,7 @@ const CreatePost = () => {
               ) : (
                 <Icon icon="eos-icons:loading" className={styles.icon} />
               )}
-              SENT POST
+              SEND POST
             </Button>
           </div>
         </div>
