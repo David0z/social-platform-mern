@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import DefaultProfileImage from "../../utils/profile-template.svg";
+import DefaultProfileImage from "../../images/profile-template.svg";
 
 const ProfileImage = ({ profileImage, className, alt }) => {
   const handleError = useCallback((e) => {

@@ -14,7 +14,7 @@ import CommentCreate from "../../components/comment-create/CommentCreate";
 import { getComments } from "../../store/post/postSlice";
 import { useState } from "react";
 import ModifiedContent from "./ModifiedContent";
-import ErrorImage from '../../utils/cat-meme.png'
+import ErrorImage from '../../images/cat-meme.png'
 
 const PostPreview = ({
   post,

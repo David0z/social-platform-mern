@@ -95,7 +95,6 @@ const chat_getSingleConversation = async (req, res) => {
 
     res.status(200).json({ conversation: conversation[0], userId: req.user.userId, hasMore });
   } catch (error) {
-    console.log(error);
     res.status(401).json({ message: "Unauthorized" });
   }
 };

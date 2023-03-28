@@ -21,6 +21,7 @@ import Hashtags from "./pages/hashtags/Hashtags";
 import React, { useEffect, Suspense } from "react";
 import { logout } from "./store/user/userSlice";
 import jwt_decode from "jwt-decode";
+import { RootState } from "./store";
 
 const FollowedUsers = React.lazy(() =>
   import("./pages/followed-users/FollowedUsers")
@@ -29,18 +30,18 @@ const Messages = React.lazy(() => import("./pages/messages/Messages"));
 
 function App() {
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.user);
+  const { token } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    let logoutTimeout;
+    let logoutTimeout: any;
     if (token) {
-      const { exp } = jwt_decode(token);
+      const { exp }: {exp: number} = jwt_decode(token);
       const remainingTime = exp * 1000 - Date.now();
       logoutTimeout = setTimeout(() => dispatch(logout()), remainingTime);
     }
 
     return () => clearTimeout(logoutTimeout);
-  }, [token]);
+  }, [token, dispatch]);
 
   return (
     <Router>

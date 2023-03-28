@@ -33,9 +33,7 @@ app.use("/api/chats", chatRoutes)
 
 app.use((error, req, res, next) => {
   if (req.file) {
-    fs.unlink(req.file.path, (err) => {
-      console.log(err);
-    });
+    fs.unlink(req.file.path);
   }
   if (res.headerSent) {
     return next(error);
@@ -62,11 +60,9 @@ mongoose
       socket.join(id)
 
       socket.on('send-message', (sendMessageData) => {
-        // console.log(sendMessageData);
         socket.broadcast.to(sendMessageData.recepient).emit('receive-message', sendMessageData)
       })
     })
   }
     
     )
-  .catch((err) => console.log(err));

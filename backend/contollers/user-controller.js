@@ -7,7 +7,6 @@ const POSTS_PER_PAGE_LIMIT = 10;
 // -------------------------------------------------------------------------------------
 // error handler function
 const handleErrors = (err) => {
-  console.log(err.message, err.code);
   let errors = { email: "", password: "", name: "" };
 
   // incorrect email
@@ -22,7 +21,6 @@ const handleErrors = (err) => {
 
   // duplicate error
   if (err.code === 11000) {
-    console.log(err);
     switch (Object.keys(err.keyValue)[0]) {
       case "email":
         errors.email = "Account with this email already exists";

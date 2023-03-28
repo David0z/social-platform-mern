@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Navbar.module.scss";
-import { ReactComponent as Logo } from "../../utils/logo.svg";
+import { ReactComponent as Logo } from "../../images/logo.svg";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../store/user/userSlice";

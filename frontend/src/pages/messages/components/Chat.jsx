@@ -40,7 +40,6 @@ const Chat = ({ socket, customPage, setCustomPage, date, setDate }) => {
   useEffect(() => {
     if (isSuccess === true) {
       if (socket === null) {
-        console.log('returned');
         return;
       }
       socket.emit("send-message", sendMessageData);

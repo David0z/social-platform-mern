@@ -8,20 +8,25 @@ import {
   hashtagActions,
 } from "../../store/hashtag/hashtagSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, FC } from "react";
 import styles from "./Hashtag.module.scss";
 import FollowButton from "../../components/follow-button/FollowButton";
 import HashtagSkeleton from "../../components/skeletons/HashtagSkeleton";
 import usePagination from "../../hooks/usePagination";
+import { RootState } from "../../store";
 
-const Hashtag = ({ tag }) => {
+type HastagProps = {
+  tag?: string
+}
+
+const Hashtag: FC<HastagProps> = ({ tag }) => {
   const dispatch = useDispatch();
   const tagName = useParams().tagName || tag;
-  const { hashtag, isLoading, isSuccess, isError, hasMore } = useSelector(
-    (state) => state.hashtag.hashtag
+  const { hashtag, isLoading, isError, hasMore } = useSelector(
+    (state: RootState) => state.hashtag.hashtag
   );
-  const { posts } = useSelector((state) => state.post.posts);
-  const { uid, token } = useSelector((state) => state.user);
+  const { posts } = useSelector((state: RootState) => state.post.posts);
+  const { uid, token } = useSelector((state: RootState) => state.user);
   const { page, setPage, lastPostElementRef, date, setDate } = usePagination(hasMore, isLoading);
 
   useEffect(() => {

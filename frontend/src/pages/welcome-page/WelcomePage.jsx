@@ -1,6 +1,6 @@
 import styles from "./WelcomePage.module.scss";
-import { ReactComponent as Watermark } from "../../utils/watermark.svg";
-import { ReactComponent as Logo } from "../../utils/main-logo.svg";
+import { ReactComponent as Watermark } from "../../images/watermark.svg";
+import { ReactComponent as Logo } from "../../images/main-logo.svg";
 import { Link } from "react-router-dom";
 
 const WelcomePage = () => {
