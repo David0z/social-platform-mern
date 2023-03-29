@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const authConfig = (token) => {
+const authConfig = (token: string) => {
   return {
     headers: {
       Authorization: `Bearer ${token}`,

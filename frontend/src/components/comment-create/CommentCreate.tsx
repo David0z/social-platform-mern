@@ -3,7 +3,7 @@ import useForm from "../../hooks/useForm";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./CommentCreate.module.scss";
 import Button from "../button/Button";
-import ErrorMessage from "../../components/error-message/ErrorMessage";
+import ErrorMessage from "../error-message/ErrorMessage";
 import VALIDATORS from "../../validators/validators";
 import { commentPost, postActions } from "../../store/post/postSlice";
 import LoadingBar from "../loading-bar/LoadingBar";

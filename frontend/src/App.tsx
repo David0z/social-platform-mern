@@ -21,7 +21,7 @@ import Hashtags from "./pages/hashtags/Hashtags";
 import React, { useEffect, Suspense } from "react";
 import { logout } from "./store/user/userSlice";
 import jwt_decode from "jwt-decode";
-import { RootState } from "./store";
+import { RootState, AppDispatch } from "./store";
 
 const FollowedUsers = React.lazy(() =>
   import("./pages/followed-users/FollowedUsers")
@@ -29,7 +29,7 @@ const FollowedUsers = React.lazy(() =>
 const Messages = React.lazy(() => import("./pages/messages/Messages"));
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { token } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {

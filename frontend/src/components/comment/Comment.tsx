@@ -4,9 +4,15 @@ import parseISO from "date-fns/parseISO";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ProfileImage from "../profile-image/ProfileImage";
+import { RootState } from "../../store";
+import {FC} from 'react';
 
-const Comment = ({ comment, postAuthorId }) => {
-  const { uid } = useSelector((state) => state.user);
+type CommentProps = {
+
+}
+
+const Comment: FC<CommentProps> = ({ comment, postAuthorId }) => {
+  const { uid } = useSelector((state: RootState) => state.user);
 
   return (
     <div

@@ -1,4 +1,4 @@
-const emptyText = (text) => {
+const emptyText = (text: string) => {
   if (text.trim() === "") {
     return false
   } else {
